@@ -1,15 +1,22 @@
 import typer
 
+from mlrepromutate import __version__
+
 app = typer.Typer(
-    help="Mutation testing for reproducibility safeguards in ML experiments."
+    name="mlrepromutate",
+    help="Mutation testing for reproducibility safeguards in ML experiments.",
+    no_args_is_help=True,
 )
+
+
+@app.callback()
+def main() -> None:
+    """MLReproMutate command-line interface."""
 
 
 @app.command()
 def version() -> None:
     """Print the current MLReproMutate version."""
-    from mlrepromutate import __version__
-
     typer.echo(__version__)
 
 
