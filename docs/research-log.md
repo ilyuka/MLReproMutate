@@ -37,3 +37,22 @@ changes that compromise experimental reproducibility.
 
 Implement one deterministic dependency-related mutation and evaluate it on a
 small CPU-runnable ML example.
+
+### Decision
+
+Introduced separate representations for mutation candidates and mutation
+results.
+
+Mutation outcomes explicitly distinguish `KILLED`, `SURVIVED`, `INVALID`,
+`EQUIVALENT`, `TIMEOUT`, and `ERROR`.
+
+### Rationale
+
+Infrastructure failures and invalid or equivalent mutants must not be
+conflated with successfully detected reproducibility faults, because doing so
+would bias future empirical mutation scores.
+
+### Architectural decision
+
+Mutation operators will not restore modified files themselves. Mutations will
+later be applied only inside isolated workspaces managed by a sandbox layer.
