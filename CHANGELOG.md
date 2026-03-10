@@ -16,3 +16,4 @@ public API.
 - Continuous integration setup.
 - Core mutation outcome, candidate, and result models.
 - Base interface for reproducibility mutation operators.
+- Isolated temporary project sandbox for safe mutation execution.

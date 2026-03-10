@@ -56,3 +56,32 @@ would bias future empirical mutation scores.
 
 Mutation operators will not restore modified files themselves. Mutations will
 later be applied only inside isolated workspaces managed by a sandbox layer.
+
+## 2026-03 — Isolated project sandbox
+
+### Decision
+
+Mutation operators will execute against temporary isolated copies of target
+projects instead of modifying the original repository directly.
+
+### Rationale
+
+Mutation testing deliberately introduces potentially destructive changes.
+Applying these changes directly to a research repository would create
+unnecessary risk and would make reliable cleanup difficult.
+
+The initial implementation therefore creates a temporary project copy,
+executes mutations inside that workspace, and removes the workspace after
+evaluation.
+
+### Initial implementation
+
+The sandbox excludes development-specific directories such as `.git`,
+virtual environments, and Python cache directories.
+
+Symbolic links are preserved rather than followed when creating the sandbox.
+
+### Future consideration
+
+A Git worktree-based sandbox may later be evaluated for large repositories
+where copying the entire project becomes a significant performance cost.
