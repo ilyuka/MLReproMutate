@@ -1,8 +1,8 @@
 import subprocess
 import time
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from collections.abc import Sequence
 
 
 @dataclass(frozen=True)
