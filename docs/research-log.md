@@ -84,4 +84,36 @@ Symbolic links are preserved rather than followed when creating the sandbox.
 ### Future consideration
 
 A Git worktree-based sandbox may later be evaluated for large repositories
-where copying the entire project becomes a significant performance cost.
+where copying the entire project becomes a significant performance cost.    
+
+## 2026-03 — Experiment command runner
+
+### Decision
+
+Introduced a generic command runner for executing experiment and validation
+commands inside isolated project workspaces.
+
+### Rationale
+
+MLReproMutate must distinguish the act of modifying an experiment from the
+mechanism used to execute its validation safeguards.
+
+The runner therefore operates independently from mutation operators and
+returns structured execution metadata including the exit status, standard
+output, standard error, runtime, and timeout state.
+
+### Safety decision
+
+Commands are executed directly as argument sequences rather than through a
+shell.
+
+This avoids unnecessary shell interpretation and makes execution behavior
+more predictable.
+
+### Timeout handling
+
+Timeouts are represented explicitly rather than being treated as killed
+mutations or generic failures.
+
+Final mutation classification will be handled by a higher-level evaluation
+layer.

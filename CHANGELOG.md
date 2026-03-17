@@ -17,3 +17,4 @@ public API.
 - Core mutation outcome, candidate, and result models.
 - Base interface for reproducibility mutation operators.
 - Isolated temporary project sandbox for safe mutation execution.
+- Experiment command runner with captured output, exit status, runtime, and timeout handling.
