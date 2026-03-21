@@ -117,3 +117,30 @@ mutations or generic failures.
 
 Final mutation classification will be handled by a higher-level evaluation
 layer.
+
+## 2026-03 — First reproducibility mutation operator
+
+### Implementation
+
+Implemented the first domain-specific reproducibility mutation operator.
+
+The operator detects exact dependency pins in `requirements*.txt` files and
+relaxes them from `==version` to `>=version`.
+
+### Research rationale
+
+Exact dependency versions constrain the software environment associated with
+an experiment. Relaxing such a constraint models a loss of environment
+specificity that may permit future executions to resolve a different package
+version.
+
+### Current limitation
+
+Changing a dependency specification does not itself guarantee that the
+runtime environment changes.
+
+A later evaluation layer must distinguish mutation of dependency metadata from
+actual environment re-resolution.
+
+This operator therefore currently validates mutation detection and
+application, not behavioral dependency drift.
