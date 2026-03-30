@@ -144,3 +144,46 @@ actual environment re-resolution.
 
 This operator therefore currently validates mutation detection and
 application, not behavioral dependency drift.
+
+## 2026-03 — Mutation evaluation pipeline
+
+### Decision
+
+Introduced an evaluation layer that compares validation behavior before and
+after applying a reproducibility mutation.
+
+### Evaluation sequence
+
+Each candidate is evaluated using two independent temporary workspaces:
+
+1. an unmodified baseline workspace;
+2. a fresh mutated workspace.
+
+The original project is never modified.
+
+### Initial classification
+
+A mutation is classified as `SURVIVED` when the baseline succeeds and the
+validation command continues to succeed after mutation.
+
+A mutation is classified as `KILLED` when the baseline succeeds but the
+validation command returns a non-zero exit status after mutation.
+
+Mutation execution timeouts are recorded separately as `TIMEOUT`.
+
+### Baseline requirement
+
+A project whose baseline validation fails is not eligible for mutation
+classification during that evaluation.
+
+Baseline failures therefore raise a validation error instead of being counted
+as killed mutations.
+
+### Current limitation
+
+The initial evaluator uses validation command exit status as the detection
+signal.
+
+Future work must address invalid and equivalent mutants and distinguish
+failures genuinely caused by the intended reproducibility fault from unrelated
+execution failures.

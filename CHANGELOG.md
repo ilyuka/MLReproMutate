@@ -19,3 +19,4 @@ public API.
 - Isolated temporary project sandbox for safe mutation execution.
 - Experiment command runner with captured output, exit status, runtime, and timeout handling.
 - Dependency mutation operator for relaxing exact pins in requirements files.
+- Mutation evaluation pipeline with baseline validation and KILLED, SURVIVED, and TIMEOUT classification.
