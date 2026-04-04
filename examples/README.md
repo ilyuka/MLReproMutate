@@ -10,3 +10,11 @@ Examples should be:
 - independent of proprietary data;
 - suitable for automated testing;
 - focused on one reproducibility concept at a time.
+
+## Available examples
+
+### Dependency pin mutation
+
+[`dependency-pin/`](dependency-pin/) demonstrates how relaxation of an exact
+dependency constraint survives validation without a reproducibility safeguard
+and is killed after the safeguard is introduced.

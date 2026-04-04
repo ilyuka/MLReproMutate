@@ -1,6 +1,5 @@
 from experiment import run_experiment
 
-
 score = run_experiment()
 
 if score != 2.0:
