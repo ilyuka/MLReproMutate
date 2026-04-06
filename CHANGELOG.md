@@ -20,3 +20,4 @@ public API.
 - Experiment command runner with captured output, exit status, runtime, and timeout handling.
 - Dependency mutation operator for relaxing exact pins in requirements files.
 - Mutation evaluation pipeline with baseline validation and KILLED, SURVIVED, and TIMEOUT classification.
+- End-to-end dependency mutation fixture demonstrating both surviving and killed reproducibility mutations.
