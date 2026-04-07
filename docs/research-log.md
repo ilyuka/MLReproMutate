@@ -187,3 +187,33 @@ signal.
 Future work must address invalid and equivalent mutants and distinguish
 failures genuinely caused by the intended reproducibility fault from unrelated
 execution failures.
+
+## 2026-04 — First end-to-end reproducibility mutation
+
+### Experiment
+
+Created a controlled dependency-pin fixture and evaluated the same dependency
+mutation against two validation configurations.
+
+### Result
+
+Without a dependency safeguard, relaxing an exact dependency pin from
+`==1.5.2` to `>=1.5.2` was classified as `SURVIVED`.
+
+After adding a validation safeguard that verifies the exact dependency
+constraint, the same mutation was classified as `KILLED`.
+
+### Interpretation
+
+The result demonstrates the intended core semantics of MLReproMutate:
+reproducibility mutations can expose safeguards that are absent from an
+experiment workflow, while the introduction of an appropriate safeguard
+changes the mutation outcome.
+
+### Limitation
+
+This controlled fixture demonstrates safeguard detection rather than actual
+package-version drift.
+
+The mutation changes dependency metadata but does not itself force dependency
+re-resolution.

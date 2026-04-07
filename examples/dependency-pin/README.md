@@ -1,19 +1,49 @@
-# Dependency pin fixture
+# Dependency Pin Mutation Fixture
 
-This fixture demonstrates a dependency reproducibility mutation.
+This fixture provides a small deterministic demonstration of a dependency reproducibility mutation.
 
-The project declares an exact dependency pin:
+The project declares an exact dependency constraint:
 
 ```text
 scikit-learn==1.5.2
 ```
 
-The initial validation command checks only the experiment result and does not
-verify that the dependency specification remains exactly pinned.
+MLReproMutate relaxes this constraint to:
 
-MLReproMutate should therefore classify relaxation of the dependency pin as
-SURVIVED.
+```text
+scikit-learn>=1.5.2
+```
 
-A dependency-manifest safeguard can then be added to demonstrate the same
-mutation being classified as KILLED.
+## Unguarded validation
 
+`validate_unguarded.py` checks only the experiment output.
+
+It does not verify the dependency specification.
+
+The dependency mutation therefore survives:
+
+```text
+baseline PASS
+mutation applied
+validation PASS
+→ SURVIVED
+```
+
+## Guarded validation
+
+`validate_guarded.py` additionally verifies that the exact dependency pin remains present.
+
+The same mutation is therefore detected:
+
+```text
+baseline PASS
+mutation applied
+validation FAIL
+→ KILLED
+```
+
+## Purpose
+
+This fixture demonstrates the core MLReproMutate evaluation semantics in a small controlled environment.
+
+It does not attempt to demonstrate actual dependency resolution drift. Changing a dependency specification does not guarantee that a different package version is installed.
