@@ -4,7 +4,6 @@ from typer.testing import CliRunner
 
 from mlrepromutate.cli import app
 
-
 runner = CliRunner()
 
 

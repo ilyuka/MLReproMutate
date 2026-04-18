@@ -1,5 +1,6 @@
 import shlex
 from pathlib import Path
+from typing import Annotated
 
 import typer
 
@@ -32,26 +33,32 @@ def version() -> None:
 
 @app.command()
 def run(
-    project: Path = typer.Argument(
-        ...,
-        exists=True,
-        file_okay=False,
-        dir_okay=True,
-        readable=True,
-        resolve_path=True,
-        help="Project directory to evaluate.",
-    ),
-    command: str = typer.Option(
-        ...,
-        "--command",
-        "-c",
-        help='Validation command, for example: "python validate.py".',
-    ),
-    timeout: float = typer.Option(
-        300.0,
-        "--timeout",
-        help="Validation timeout in seconds.",
-    ),
+    project: Annotated[
+        Path,
+        typer.Argument(
+            exists=True,
+            file_okay=False,
+            dir_okay=True,
+            readable=True,
+            resolve_path=True,
+            help="Project directory to evaluate.",
+        ),
+    ],
+    command: Annotated[
+        str,
+        typer.Option(
+            "--command",
+            "-c",
+            help='Validation command, for example: "python validate.py".',
+        ),
+    ],
+    timeout: Annotated[
+        float,
+        typer.Option(
+            "--timeout",
+            help="Validation timeout in seconds.",
+        ),
+    ] = 300.0,
 ) -> None:
     """Evaluate dependency reproducibility mutations in a project."""
 
