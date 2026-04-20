@@ -217,3 +217,35 @@ package-version drift.
 
 The mutation changes dependency metadata but does not itself force dependency
 re-resolution.
+
+## 2026-04 — First end-to-end command-line workflow
+
+### Decision
+
+Added an orchestration layer connecting mutation detection with candidate
+evaluation.
+
+The command-line interface now allows a user to provide a project directory
+and validation command and receive mutation outcomes without writing Python
+integration code.
+
+### Initial scope
+
+The initial CLI currently evaluates the requirements dependency-pin operator
+only.
+
+Operator selection and registries will be introduced after additional
+mutation categories exist.
+
+### Command execution
+
+Validation commands are parsed into argument sequences and continue to be
+executed without a shell.
+
+### Current limitation
+
+Baseline validation is currently performed independently for each candidate.
+
+This prioritizes correctness and isolation in the initial implementation.
+Future benchmark work will determine whether baseline reuse is necessary for
+performance.

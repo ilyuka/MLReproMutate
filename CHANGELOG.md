@@ -21,3 +21,5 @@ public API.
 - Dependency mutation operator for relaxing exact pins in requirements files.
 - Mutation evaluation pipeline with baseline validation and KILLED, SURVIVED, and TIMEOUT classification.
 - End-to-end dependency mutation fixture demonstrating both surviving and killed reproducibility mutations.
+- Mutation orchestration layer for detecting and evaluating operator candidates.
+- Initial `mlrepromutate run` command for end-to-end dependency mutation evaluation.
