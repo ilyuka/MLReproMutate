@@ -1,0 +1,2 @@
+run_id,repository,commit_sha,validation_command,baseline_exit_code,baseline_seconds,mutation_operator,candidates,outcome,status,notes
+cage-001,tdsai-lab/cage-agent-authorization,978c4e540c8ae7d2aa11efa700c7270d79e71330,"python -m pytest -q",0,172.40,relax_requirements_pin,7,,stopped,"Stopped before completion because baseline was redundantly re-executed per candidate"
