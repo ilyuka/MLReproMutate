@@ -20,8 +20,13 @@ class MutationOrchestrator:
 
         candidates = list(operator.detect(project_root))
 
+        if not candidates:
+            return []
+
+        self.evaluator.validate_baseline(project_root)
+
         return [
-            self.evaluator.evaluate(
+            self.evaluator.evaluate_mutation(
                 project_root,
                 operator,
                 candidate,

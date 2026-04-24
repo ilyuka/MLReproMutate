@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from mlrepromutate.engine.runner import ExperimentRunner
+from mlrepromutate.engine.runner import ExecutionResult, ExperimentRunner
 from mlrepromutate.engine.sandbox import ProjectSandbox
 from mlrepromutate.models import (
     MutationCandidate,
@@ -20,29 +20,37 @@ class MutationEvaluator:
     def __init__(self, runner: ExperimentRunner) -> None:
         self.runner = runner
 
-    def evaluate(
+    def validate_baseline(
+        self,
+        project_root: Path,
+    ) -> ExecutionResult:
+        """Validate the unmodified project once."""
+
+        with ProjectSandbox(project_root) as sandbox:
+            result = self.runner.run(sandbox)
+
+        if result.timed_out:
+            raise BaselineValidationError(
+                "Baseline validation timed out."
+            )
+
+        if result.return_code != 0:
+            raise BaselineValidationError(
+                "Baseline validation failed before mutation."
+            )
+
+        return result
+
+    def evaluate_mutation(
         self,
         project_root: Path,
         operator: MutationOperator,
         candidate: MutationCandidate,
     ) -> MutationResult:
-        """Evaluate one mutation candidate."""
-
-        baseline_result = self._run_baseline(project_root)
-
-        if baseline_result.timed_out:
-            raise BaselineValidationError(
-                "Baseline validation timed out."
-            )
-
-        if baseline_result.return_code != 0:
-            raise BaselineValidationError(
-                "Baseline validation failed before mutation."
-            )
+        """Evaluate one mutation after a successful baseline."""
 
         with ProjectSandbox(project_root) as sandbox:
             operator.apply(sandbox, candidate)
-
             mutation_execution = self.runner.run(sandbox)
 
         if mutation_execution.timed_out:
@@ -72,6 +80,18 @@ class MutationEvaluator:
             },
         )
 
-    def _run_baseline(self, project_root: Path):
-        with ProjectSandbox(project_root) as sandbox:
-            return self.runner.run(sandbox)
+    def evaluate(
+        self,
+        project_root: Path,
+        operator: MutationOperator,
+        candidate: MutationCandidate,
+    ) -> MutationResult:
+        """Validate the baseline and evaluate one mutation."""
+
+        self.validate_baseline(project_root)
+
+        return self.evaluate_mutation(
+            project_root,
+            operator,
+            candidate,
+        )

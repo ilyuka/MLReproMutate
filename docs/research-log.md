@@ -249,3 +249,39 @@ Baseline validation is currently performed independently for each candidate.
 This prioritizes correctness and isolation in the initial implementation.
 Future benchmark work will determine whether baseline reuse is necessary for
 performance.
+
+## 2026-04 — Baseline reuse discovered through real-world pilot
+
+### Observation
+
+The first external repository pilot used
+`tdsai-lab/cage-agent-authorization` at commit
+`978c4e540c8ae7d2aa11efa700c7270d79e71330`.
+
+Its baseline validation command:
+
+`python -m pytest -q`
+
+completed successfully with exit code 0 and required 172.40 seconds.
+
+The initial orchestration implementation repeated this unchanged baseline
+before every mutation candidate.
+
+With multiple dependency-pin candidates, this introduced substantial redundant
+execution cost.
+
+### Decision
+
+A successful baseline is now validated once per project/operator orchestration
+run.
+
+Each mutation candidate continues to execute in its own fresh isolated
+sandbox.
+
+### Rationale
+
+Baseline reuse removes redundant validation work without weakening mutation
+isolation.
+
+The change was motivated by observed behavior on a real research repository
+rather than by synthetic performance assumptions.

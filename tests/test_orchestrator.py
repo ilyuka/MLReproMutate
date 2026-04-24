@@ -69,3 +69,46 @@ def test_orchestrator_returns_empty_results_when_no_candidates(
     results = orchestrator.run(project, operator)
 
     assert results == []
+
+def test_orchestrator_runs_baseline_only_once(
+    tmp_path: Path,
+) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+
+    (project / "requirements.txt").write_text(
+        "numpy==2.1.0\n"
+        "pandas==2.2.3\n"
+        "scipy==1.14.0\n",
+        encoding="utf-8",
+    )
+
+    counter_file = tmp_path / "counter.txt"
+    counter_file.write_text("0", encoding="utf-8")
+
+    validation_script = project / "validate.py"
+    validation_script.write_text(
+        (
+            "from pathlib import Path\n"
+            "\n"
+            f"counter = Path({str(counter_file)!r})\n"
+            "value = int(counter.read_text())\n"
+            "counter.write_text(str(value + 1))\n"
+            "raise SystemExit(0)\n"
+        ),
+        encoding="utf-8",
+    )
+
+    runner = ExperimentRunner(
+        [sys.executable, "validate.py"],
+    )
+    evaluator = MutationEvaluator(runner)
+    orchestrator = MutationOrchestrator(evaluator)
+    operator = RelaxRequirementsPinOperator()
+
+    results = orchestrator.run(project, operator)
+
+    assert len(results) == 3
+
+    # One baseline run + one run for each of the three mutants.
+    assert counter_file.read_text(encoding="utf-8") == "4"

@@ -6,7 +6,9 @@ The project is currently in early development and does not yet have a stable
 public API.
 
 ## Unreleased
+### Changed
 
+- Reuse a successful baseline validation across all mutation candidates in a single orchestration run.
 
 ### Added
 
