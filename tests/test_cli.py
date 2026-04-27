@@ -46,6 +46,12 @@ def test_run_reports_survived_mutation(
     assert "0 killed" in result.stdout
     assert "1 survived" in result.stdout
 
+    assert "Detected 1 mutation candidates." in result.stdout
+    assert "Validating baseline..." in result.stdout
+    assert "Baseline passed." in result.stdout
+    assert "[1/1]" in result.stdout
+    assert "SURVIVED" in result.stdout
+
 
 def test_run_reports_no_applicable_mutations(
     tmp_path: Path,

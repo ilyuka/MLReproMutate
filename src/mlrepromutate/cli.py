@@ -85,8 +85,50 @@ def run(
     orchestrator = MutationOrchestrator(evaluator)
     operator = RelaxRequirementsPinOperator()
 
+    candidates = list(operator.detect(project))
+
+    if not candidates:
+        typer.echo("No applicable mutations found.")
+        return
+
+    typer.echo(f"Detected {len(candidates)} mutation candidates.")
+    typer.echo("Validating baseline...")
+
+
+    def report_baseline_passed() -> None:
+        typer.echo("Baseline passed.")
+
+
+    def report_candidate_start(
+        index: int,
+        total: int,
+        candidate,
+    ) -> None:
+        typer.echo()
+        typer.echo(
+            f"[{index}/{total}] {candidate.description}"
+        )
+
+
+    def report_candidate_result(
+        index: int,
+        total: int,
+        result,
+    ) -> None:
+        del index, total
+
+        typer.echo(
+            f"  {result.outcome.value.upper()}: {result.reason}"
+        )
+
     try:
-        results = orchestrator.run(project, operator)
+        results = orchestrator.run(
+            project,
+            operator,
+            on_baseline_passed=report_baseline_passed,
+            on_candidate_start=report_candidate_start,
+            on_candidate_result=report_candidate_result,
+        )
     except BaselineValidationError as exc:
         typer.echo(f"Baseline error: {exc}", err=True)
         raise typer.Exit(code=2) from exc
@@ -95,14 +137,6 @@ def run(
         typer.echo("No applicable mutations found.")
         return
 
-    for result in results:
-        typer.echo(
-            f"{result.outcome.value.upper()}: "
-            f"{result.candidate.description}"
-        )
-
-        if result.reason is not None:
-            typer.echo(f"  {result.reason}")
 
     killed = sum(
         result.outcome.value == "killed"
