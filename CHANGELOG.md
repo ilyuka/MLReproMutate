@@ -25,3 +25,4 @@ public API.
 - End-to-end dependency mutation fixture demonstrating both surviving and killed reproducibility mutations.
 - Mutation orchestration layer for detecting and evaluating operator candidates.
 - Initial `mlrepromutate run` command for end-to-end dependency mutation evaluation.
+- Added incremental CLI progress reporting for baseline validation and individual mutation evaluation.

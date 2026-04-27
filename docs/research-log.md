@@ -285,3 +285,22 @@ isolation.
 
 The change was motivated by observed behavior on a real research repository
 rather than by synthetic performance assumptions.
+
+## 2026-04 — Progress reporting during real repository evaluation
+
+### Observation
+
+During the first CAGE pilot, a baseline validation required 172.40 seconds.
+The CLI produced no output while validation was executing, making a normal
+long-running evaluation appear stalled.
+
+### Decision
+
+The CLI now reports baseline validation progress and emits each mutation
+result immediately after evaluation.
+
+### Rationale
+
+Long-running research workflows require observable progress. This change was
+motivated directly by behavior observed during the first external repository
+pilot.
