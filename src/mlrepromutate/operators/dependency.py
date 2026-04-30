@@ -16,6 +16,12 @@ _EXACT_PIN_PATTERN = re.compile(
 class RelaxRequirementsPinOperator(MutationOperator):
     """Relax exact dependency pins in requirements files."""
 
+    def __init__(
+        self,
+        requirements_file: Path | None = None,
+    ) -> None:
+        self.requirements_file = requirements_file
+
     @property
     def name(self) -> str:
         return "relax_requirements_pin"
@@ -25,9 +31,12 @@ class RelaxRequirementsPinOperator(MutationOperator):
         return "dependency"
 
     def detect(self, project_root: Path) -> list[MutationCandidate]:
+        project_root = project_root.resolve()
         candidates: list[MutationCandidate] = []
 
-        for requirements_file in sorted(project_root.glob("requirements*.txt")):
+        requirements_files = self._get_requirements_files(project_root)
+
+        for requirements_file in requirements_files:
             if not requirements_file.is_file():
                 continue
 
@@ -60,6 +69,43 @@ class RelaxRequirementsPinOperator(MutationOperator):
                 )
 
         return candidates
+
+    def _get_requirements_files(
+        self,
+        project_root: Path,
+    ) -> list[Path]:
+        if self.requirements_file is None:
+            return sorted(
+                path
+                for path in project_root.glob("requirements*.txt")
+                if path.is_file()
+            )
+
+        if self.requirements_file.is_absolute():
+            raise ValueError(
+                "Requirements file must be relative to the project root."
+            )
+
+        target = (project_root / self.requirements_file).resolve()
+
+        try:
+            target.relative_to(project_root)
+        except ValueError as exc:
+            raise ValueError(
+                "Requirements file must be inside the project root."
+            ) from exc
+
+        if not target.exists():
+            raise FileNotFoundError(
+                f"Requirements file does not exist: {self.requirements_file}"
+            )
+
+        if not target.is_file():
+            raise ValueError(
+                f"Requirements path is not a file: {self.requirements_file}"
+            )
+
+        return [target]
 
     def apply(
         self,

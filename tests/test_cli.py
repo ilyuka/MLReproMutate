@@ -106,3 +106,42 @@ def test_run_reports_baseline_failure(
 
     assert result.exit_code == 2
     assert "Baseline error" in result.output
+
+def test_run_can_scope_dependency_mutations_to_one_file(
+    tmp_path: Path,
+) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+
+    (project / "requirements.txt").write_text(
+        "numpy==2.1.0\n",
+        encoding="utf-8",
+    )
+
+    (project / "requirements-optional.txt").write_text(
+        "torch==2.8.0\n",
+        encoding="utf-8",
+    )
+
+    (project / "validate.py").write_text(
+        "raise SystemExit(0)\n",
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(
+        app,
+        [
+            "run",
+            str(project),
+            "--command",
+            "python validate.py",
+            "--requirements-file",
+            "requirements.txt",
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert "Detected 1 mutation candidates." in result.stdout
+    assert "requirements.txt:1" in result.stdout
+    assert "numpy" in result.stdout
+    assert "torch" not in result.stdout

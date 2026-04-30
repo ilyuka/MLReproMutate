@@ -26,3 +26,5 @@ public API.
 - Mutation orchestration layer for detecting and evaluating operator candidates.
 - Initial `mlrepromutate run` command for end-to-end dependency mutation evaluation.
 - Added incremental CLI progress reporting for baseline validation and individual mutation evaluation.
+- Added workflow-aware dependency mutation scoping through `--requirements-file`.
+- Mutation progress output now includes the source file and line number.

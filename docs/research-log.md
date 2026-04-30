@@ -304,3 +304,36 @@ result immediately after evaluation.
 Long-running research workflows require observable progress. This change was
 motivated directly by behavior observed during the first external repository
 pilot.
+
+## 2026-04 — Workflow-aware dependency candidate scoping
+
+### Observation
+
+The first completed CAGE pilot detected 10 exact dependency pins across both
+`requirements.txt` and `requirements-optional.txt`.
+
+Three candidates (`torch`, `orthogonium`, and `zen-engine`) came from the
+optional dependency manifest but were not exercised by the selected
+certificate-evaluation workflow.
+
+### Methodological concern
+
+Treating every detected dependency pin as equally applicable to a particular
+validation workflow would inflate the mutation-score denominator with
+dependencies outside the workflow's execution scope.
+
+### Decision
+
+Dependency mutation detection can now be restricted to a specific
+requirements file.
+
+The CLI exposes this through `--requirements-file`.
+
+Candidate progress output also records the source file and line number.
+
+### Interpretation
+
+Mutation detection and mutation applicability are distinct concepts.
+
+A candidate may be syntactically valid while remaining outside the dependency
+scope of the validation workflow under study.

@@ -135,3 +135,54 @@ def test_apply_rejects_changed_target(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="no longer matches"):
         operator.apply(tmp_path, candidate)
+
+def test_detect_can_be_scoped_to_one_requirements_file(
+    tmp_path: Path,
+) -> None:
+    (tmp_path / "requirements.txt").write_text(
+        "numpy==2.1.0\n",
+        encoding="utf-8",
+    )
+
+    (tmp_path / "requirements-optional.txt").write_text(
+        "torch==2.8.0\n",
+        encoding="utf-8",
+    )
+
+    operator = RelaxRequirementsPinOperator(
+        requirements_file=Path("requirements.txt")
+    )
+
+    candidates = operator.detect(tmp_path)
+
+    assert len(candidates) == 1
+    assert candidates[0].target == Path("requirements.txt")
+    assert candidates[0].metadata["package"] == "numpy"
+
+
+def test_scoped_requirements_file_must_exist(
+    tmp_path: Path,
+) -> None:
+    operator = RelaxRequirementsPinOperator(
+        requirements_file=Path("missing.txt")
+    )
+
+    with pytest.raises(
+        FileNotFoundError,
+        match="Requirements file does not exist",
+    ):
+        operator.detect(tmp_path)
+
+
+def test_scoped_requirements_file_must_stay_inside_project(
+    tmp_path: Path,
+) -> None:
+    operator = RelaxRequirementsPinOperator(
+        requirements_file=Path("../requirements.txt")
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="inside the project root",
+    ):
+        operator.detect(tmp_path)

@@ -11,6 +11,7 @@ from mlrepromutate.engine import (
     MutationEvaluator,
     MutationOrchestrator,
 )
+from mlrepromutate.models import MutationCandidate
 from mlrepromutate.operators.dependency import RelaxRequirementsPinOperator
 
 app = typer.Typer(
@@ -59,6 +60,16 @@ def run(
             help="Validation timeout in seconds.",
         ),
     ] = 300.0,
+    requirements_file: Annotated[
+        Path | None,
+        typer.Option(
+            "--requirements-file",
+            help=(
+                "Restrict dependency mutations to one requirements file "
+                "relative to the project root."
+            ),
+        ),
+    ] = None,
 ) -> None:
     """Evaluate dependency reproducibility mutations in a project."""
 
@@ -83,7 +94,9 @@ def run(
 
     evaluator = MutationEvaluator(runner)
     orchestrator = MutationOrchestrator(evaluator)
-    operator = RelaxRequirementsPinOperator()
+    operator = RelaxRequirementsPinOperator(
+        requirements_file=requirements_file,
+    )
 
     candidates = list(operator.detect(project))
 
@@ -102,12 +115,18 @@ def run(
     def report_candidate_start(
         index: int,
         total: int,
-        candidate,
+        candidate: MutationCandidate,
     ) -> None:
+        line_number = candidate.metadata.get("line_number")
+
+        location = str(candidate.target)
+
+        if isinstance(line_number, int):
+            location = f"{location}:{line_number}"
+
         typer.echo()
-        typer.echo(
-            f"[{index}/{total}] {candidate.description}"
-        )
+        typer.echo(f"[{index}/{total}] {location}")
+        typer.echo(f"  {candidate.description}")
 
 
     def report_candidate_result(

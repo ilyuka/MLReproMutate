@@ -62,3 +62,40 @@ removed before mutation evaluation.
 
 This observation reinforces the use of isolated temporary workspaces for both
 baseline and mutated validation runs.
+
+## First completed MLReproMutate run
+
+The first completed external-repository mutation run used:
+
+`python bridge_benchmark/cert/evaluate_certificates.py`
+
+MLReproMutate detected 10 exact dependency pins and completed all mutation
+evaluations.
+
+Result:
+
+- `SURVIVED`: 10
+- `KILLED`: 0
+- `TIMEOUT`: 0
+
+The original repository remained unchanged after the run.
+
+### Interpretation
+
+The result means that the configured validation command did not detect
+relaxation of the declared exact dependency constraints.
+
+It does not demonstrate execution under different resolved dependency
+versions, because the current dependency operator changes dependency metadata
+without re-resolving the environment.
+
+Three detected candidates (`torch`, `orthogonium`, and `zen-engine`) came from
+`requirements-optional.txt`. These optional dependencies are not exercised by
+the selected certificate-evaluation workflow.
+
+This revealed a need to distinguish mutation detection from applicability to a
+specific validation workflow before computing empirical mutation scores.
+
+MLReproMutate commit:
+f701206220654319293437f487aebd51e5ec464f
+
