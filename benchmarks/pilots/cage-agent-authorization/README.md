@@ -96,6 +96,30 @@ the selected certificate-evaluation workflow.
 This revealed a need to distinguish mutation detection from applicability to a
 specific validation workflow before computing empirical mutation scores.
 
-MLReproMutate commit:
-f701206220654319293437f487aebd51e5ec464f
+MLReproMutate commit: f701206220654319293437f487aebd51e5ec464f
 
+
+## Scoped dependency run
+
+Run ID: `cage-003`
+
+The dependency mutation operator was restricted to:
+
+`requirements.txt`
+
+This excluded optional dependencies that were outside the selected validation
+workflow.
+
+Results:
+
+- candidates: 7
+- survived: 7
+- killed: 0
+- timeout: 0
+- original repository modified: no
+
+This result records failure to detect relaxation of declared dependency
+constraints. It does not imply successful execution with newly resolved
+dependency versions.
+
+MLReproMutate commit: 96b135d110b03674cc56f2426e086cd1c490d003
