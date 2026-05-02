@@ -337,3 +337,25 @@ Mutation detection and mutation applicability are distinct concepts.
 
 A candidate may be syntactically valid while remaining outside the dependency
 scope of the validation workflow under study.
+
+## 2026-05 — Machine-readable run provenance
+
+The first external pilot required manual transcription of repository revision,
+framework revision, validation configuration, mutation locations, outcomes,
+and execution metadata.
+
+MLReproMutate now supports JSON run reports containing:
+
+- project Git revision;
+- MLReproMutate Git revision and package version;
+- validation command and timeout;
+- baseline execution result and duration;
+- operator configuration;
+- mutation target and metadata;
+- mutation outcome and duration;
+- captured stdout and stderr;
+- aggregate outcome counts.
+
+These JSON reports are intended to serve as the raw source of truth for future
+benchmark runs. Derived CSV tables should be generated from these records
+rather than manually maintained.

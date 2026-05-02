@@ -2,6 +2,7 @@ from collections.abc import Callable
 from pathlib import Path
 
 from mlrepromutate.engine.evaluator import MutationEvaluator
+from mlrepromutate.engine.runner import ExecutionResult
 from mlrepromutate.models import (
     MutationCandidate,
     MutationResult,
@@ -18,8 +19,7 @@ CandidateResultCallback = Callable[
     None,
 ]
 
-BaselinePassedCallback = Callable[[], None]
-
+BaselinePassedCallback = Callable[[ExecutionResult], None]
 
 class MutationOrchestrator:
     """Detect and evaluate mutations for a project."""
@@ -43,10 +43,10 @@ class MutationOrchestrator:
         if not candidates:
             return []
 
-        self.evaluator.validate_baseline(project_root)
+        baseline_result = self.evaluator.validate_baseline(project_root)
 
         if on_baseline_passed is not None:
-            on_baseline_passed()
+            on_baseline_passed(baseline_result)
 
         results: list[MutationResult] = []
         total = len(candidates)

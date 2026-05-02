@@ -11,8 +11,13 @@ from mlrepromutate.engine import (
     MutationEvaluator,
     MutationOrchestrator,
 )
+from mlrepromutate.engine.runner import ExecutionResult
 from mlrepromutate.models import MutationCandidate
 from mlrepromutate.operators.dependency import RelaxRequirementsPinOperator
+from mlrepromutate.reporting import (
+    build_run_report,
+    write_run_report,
+)
 
 app = typer.Typer(
     name="mlrepromutate",
@@ -70,6 +75,13 @@ def run(
             ),
         ),
     ] = None,
+    json_out: Annotated[
+        Path | None,
+        typer.Option(
+            "--json-out",
+            help="Write a machine-readable JSON report.",
+        ),
+    ] = None,
 ) -> None:
     """Evaluate dependency reproducibility mutations in a project."""
 
@@ -107,9 +119,17 @@ def run(
     typer.echo(f"Detected {len(candidates)} mutation candidates.")
     typer.echo("Validating baseline...")
 
+    baseline_result: ExecutionResult | None = None
 
-    def report_baseline_passed() -> None:
-        typer.echo("Baseline passed.")
+    def report_baseline_passed(
+        result: ExecutionResult,
+    ) -> None:
+        nonlocal baseline_result
+        baseline_result = result
+
+        typer.echo(
+            f"Baseline passed in {result.duration_seconds:.2f}s."
+        )
 
 
     def report_candidate_start(
@@ -151,6 +171,30 @@ def run(
     except BaselineValidationError as exc:
         typer.echo(f"Baseline error: {exc}", err=True)
         raise typer.Exit(code=2) from exc
+
+    if json_out is not None:
+        if baseline_result is None:
+            raise RuntimeError(
+                "Baseline result is unavailable after a successful run."
+            )
+
+        report = build_run_report(
+            project_root=project,
+            validation_command=command,
+            timeout_seconds=timeout,
+            operator=operator,
+            baseline=baseline_result,
+            results=results,
+            requirements_file=requirements_file,
+        )
+
+        write_run_report(
+            json_out,
+            report,
+        )
+
+        typer.echo()
+        typer.echo(f"JSON report: {json_out}")
 
     if not results:
         typer.echo("No applicable mutations found.")

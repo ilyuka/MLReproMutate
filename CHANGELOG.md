@@ -28,3 +28,5 @@ public API.
 - Added incremental CLI progress reporting for baseline validation and individual mutation evaluation.
 - Added workflow-aware dependency mutation scoping through `--requirements-file`.
 - Mutation progress output now includes the source file and line number.
+- Added machine-readable JSON reports containing validation provenance,
+  mutation metadata, outcomes, execution durations, and Git revisions.

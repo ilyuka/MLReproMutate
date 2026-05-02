@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 from typer.testing import CliRunner
@@ -48,7 +49,7 @@ def test_run_reports_survived_mutation(
 
     assert "Detected 1 mutation candidates." in result.stdout
     assert "Validating baseline..." in result.stdout
-    assert "Baseline passed." in result.stdout
+    assert "Baseline passed in" in result.stdout
     assert "[1/1]" in result.stdout
     assert "SURVIVED" in result.stdout
 
@@ -145,3 +146,46 @@ def test_run_can_scope_dependency_mutations_to_one_file(
     assert "requirements.txt:1" in result.stdout
     assert "numpy" in result.stdout
     assert "torch" not in result.stdout
+
+def test_run_can_write_json_report(
+    tmp_path: Path,
+) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+
+    (project / "requirements.txt").write_text(
+        "numpy==2.1.0\n",
+        encoding="utf-8",
+    )
+
+    (project / "validate.py").write_text(
+        "raise SystemExit(0)\n",
+        encoding="utf-8",
+    )
+
+    report_path = tmp_path / "run.json"
+
+    result = runner.invoke(
+        app,
+        [
+            "run",
+            str(project),
+            "--command",
+            "python validate.py",
+            "--requirements-file",
+            "requirements.txt",
+            "--json-out",
+            str(report_path),
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert report_path.exists()
+
+    report = json.loads(
+        report_path.read_text(encoding="utf-8")
+    )
+
+    assert report["schema_version"] == 1
+    assert report["summary"]["candidates"] == 1
+    assert report["summary"]["outcomes"]["survived"] == 1
