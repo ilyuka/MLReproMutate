@@ -103,3 +103,37 @@ def test_runner_rejects_file_as_project(tmp_path: Path) -> None:
 
     with pytest.raises(NotADirectoryError):
         runner.run(project_file)
+
+def test_with_python_executable_replaces_python_command() -> None:
+    runner = ExperimentRunner(
+        [
+            "/some/environment/bin/python",
+            "validate.py",
+            "--flag",
+        ],
+        timeout_seconds=42,
+    )
+
+    replaced = runner.with_python_executable(
+        Path("/another/environment/bin/python")
+    )
+
+    assert replaced.command == (
+        "/another/environment/bin/python",
+        "validate.py",
+        "--flag",
+    )
+    assert replaced.timeout_seconds == 42
+
+def test_with_python_executable_rejects_non_python_command() -> None:
+    runner = ExperimentRunner(
+        ["pytest", "-q"],
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="requires a Python validation command",
+    ):
+        runner.with_python_executable(
+            Path("/tmp/env/bin/python")
+        )

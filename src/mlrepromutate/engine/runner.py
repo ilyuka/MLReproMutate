@@ -91,3 +91,25 @@ class ExperimentRunner:
             duration_seconds=duration,
             timed_out=False,
         )
+    
+    def with_python_executable(
+        self,
+        python_executable: Path,
+    ) -> "ExperimentRunner":
+        """Return a runner using another Python executable."""
+
+        executable_name = Path(self.command[0]).name
+
+        if not executable_name.startswith("python"):
+            raise ValueError(
+                "Resolved dependency mode currently requires "
+                "a Python validation command."
+            )
+
+        return ExperimentRunner(
+            (
+                str(python_executable),
+                *self.command[1:],
+            ),
+            timeout_seconds=self.timeout_seconds,
+        )

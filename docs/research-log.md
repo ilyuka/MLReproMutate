@@ -359,3 +359,59 @@ MLReproMutate now supports JSON run reports containing:
 These JSON reports are intended to serve as the raw source of truth for future
 benchmark runs. Derived CSV tables should be generated from these records
 rather than manually maintained.
+
+## 2026-05 — Dependency re-resolution design
+
+### Observation
+
+The first machine-readable CAGE run showed that all seven scoped exact-pin
+relaxations survived the configured validation workflow.
+
+However, the current dependency operator modifies only the requirements
+manifest. It does not resolve or install dependencies after mutation.
+
+### Methodological distinction
+
+Manifest mutation and resolved-environment mutation answer different research
+questions.
+
+A relaxed requirement may resolve to the same installed version. Such a case
+must not be interpreted as a survived environmental fault.
+
+### Decision
+
+Resolved dependency evaluation will use a fresh isolated Python environment
+for the baseline and for every mutant.
+
+Environment construction failures will be classified separately from
+validation failures.
+
+If a mutated dependency specification resolves to the same target package
+version as the baseline, the mutation will be classified as `EQUIVALENT`.
+
+Only successfully resolved environments with a changed target dependency will
+be evaluated as `KILLED`, `SURVIVED`, or `TIMEOUT`.
+
+### Implementation
+
+An isolated virtual-environment resolver was introduced as the first
+foundation for resolved dependency experiments.
+
+## 2026-05 — Resolved dependency outcome semantics
+
+Resolved dependency evaluation now distinguishes whether a manifest mutation
+actually changes the installed target distribution.
+
+A successful manifest mutation is not automatically considered a survived
+reproducibility fault.
+
+Classification rules:
+
+- resolution failure or timeout → `INVALID`;
+- unchanged resolved target version → `EQUIVALENT`;
+- changed version + successful validation → `SURVIVED`;
+- changed version + failed validation → `KILLED`;
+- changed version + validation timeout → `TIMEOUT`.
+
+This prevents manifest-only changes from inflating the empirical mutation
+score.

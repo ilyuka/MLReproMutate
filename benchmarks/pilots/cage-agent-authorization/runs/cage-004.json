@@ -1,0 +1,170 @@
+{
+  "framework": {
+    "git_revision": "bea1a15c0e5703f26a72fb9a3dfbe74a94ea1ffa",
+    "name": "MLReproMutate",
+    "version": "0.0.0"
+  },
+  "generated_at_utc": "2026-01-05T12:32:37.451050+00:00",
+  "mutations": [
+    {
+      "candidate_metadata": {
+        "line_number": 8,
+        "package": "numpy",
+        "version": "2.4.2"
+      },
+      "category": "dependency",
+      "description": "Relax exact dependency pin for numpy from ==2.4.2 to >=2.4.2.",
+      "duration_seconds": 6.873175104999973,
+      "execution": {
+        "return_code": 0,
+        "stderr": "",
+        "stdout": "records 3303 | train/val/test 1989/658/656 | feature dim 26\n\n== Table 1: dataset counts by domain / action / category ==\ndomain                 action                   A     B     C     R     U\nfinancial_compliance   approve_transaction    279    19    81   378   263\nfinancial_compliance   reject_transaction       0    25     0   175    55\nsystem_monitoring      suppress_alert         302    52   206  1086   382\n\n== Table 2: clean classifier performance by category ==\nmodel                  cleanAcc falseAllow     A     B     C     R     U\n------------------------------------------------------------------------\ntool_action_only          0.794      0.806 0.983 0.833 0.982 0.948 0.194\ncategorical_only          0.788      1.000 1.000 1.000 1.000 1.000 0.000\nnumeric_only              0.873      0.194 0.687 1.000 1.000 0.939 0.806\ntool_numeric_logistic     0.909      0.129 0.843 0.833 0.982 0.939 0.871\njoint_logistic            0.912      0.122 0.852 0.833 0.982 0.939 0.878\njoint_mlp                 0.991      0.014 0.965 1.000 1.000 1.000 0.986\ngradient_boosting         0.974      0.094 0.965 1.000 1.000 1.000 0.906\noracle_upper_bound        1.000      0.000 1.000 1.000 1.000 1.000 1.000\ncertified_mlp             0.997      0.007 0.991 1.000 1.000 1.000 0.993\n\n== Table 3: empirical mixed attack (eps=0.1, subsample 20/stratum) ==\nmodel              cleanFalseAllow  robustFalseAllow   C:allows true-unsafe\n---------------------------------------------------------------------------\nnumeric_only                 0.250             0.450                  1.000\njoint_mlp                    0.000             1.000                  0.450\ncertified_mlp                0.050             1.000                  0.400\n\n== Table 4: deterministic certificate sanity (model-free) ==\ncase                       cat                 disc  cont  naive  hybridSafe  naiveFALSE\n----------------------------------------------------------------------------------------\nfinance C   (credit 0.45)  C_joint_gap            T     T      T           F           T\nfinance R   (credit 0.20)  R_robust_interior      T     T      T           T           F\nmonitor C+D (mem .60/.635) C_joint_gap            T     T      T           F           T\nmonitor R   (mem .40/.40)  R_robust_interior      T     T      T           T           F\n\n== Table 5: smoothed learned-gate certificate (sigma=0.1, eps=0.1, tau=0.9, n_mc=2000, alpha=0.001, 40/stratum) ==\ncertified allow rate     : 0.135\ncertified FALSE allow    : 0.000   (must be ~0; sound by construction up to alpha)\nvacuity (refused) rate   : 0.865\ncertified allow by category: {'A': 0.0, 'B': 0.0, 'C': 0.0, 'R': 0.6, 'U': 0.0}\n\nExpected (PLAN3 sec.12): C refuses, U refuses, R allows non-vacuously.\nwrote per-record certificates -> /tmp/mlrepromutate-m33w_rw7/cage-agent-authorization/bridge_benchmark/cert/out/certificates.jsonl\n"
+      },
+      "operator": "relax_requirements_pin",
+      "outcome": "survived",
+      "reason": "Existing safeguards completed successfully and did not detect the mutation.",
+      "target": "requirements.txt"
+    },
+    {
+      "candidate_metadata": {
+        "line_number": 9,
+        "package": "scipy",
+        "version": "1.17.1"
+      },
+      "category": "dependency",
+      "description": "Relax exact dependency pin for scipy from ==1.17.1 to >=1.17.1.",
+      "duration_seconds": 6.779537517002609,
+      "execution": {
+        "return_code": 0,
+        "stderr": "",
+        "stdout": "records 3303 | train/val/test 1989/658/656 | feature dim 26\n\n== Table 1: dataset counts by domain / action / category ==\ndomain                 action                   A     B     C     R     U\nfinancial_compliance   approve_transaction    279    19    81   378   263\nfinancial_compliance   reject_transaction       0    25     0   175    55\nsystem_monitoring      suppress_alert         302    52   206  1086   382\n\n== Table 2: clean classifier performance by category ==\nmodel                  cleanAcc falseAllow     A     B     C     R     U\n------------------------------------------------------------------------\ntool_action_only          0.794      0.806 0.983 0.833 0.982 0.948 0.194\ncategorical_only          0.788      1.000 1.000 1.000 1.000 1.000 0.000\nnumeric_only              0.873      0.194 0.687 1.000 1.000 0.939 0.806\ntool_numeric_logistic     0.909      0.129 0.843 0.833 0.982 0.939 0.871\njoint_logistic            0.912      0.122 0.852 0.833 0.982 0.939 0.878\njoint_mlp                 0.991      0.014 0.965 1.000 1.000 1.000 0.986\ngradient_boosting         0.974      0.094 0.965 1.000 1.000 1.000 0.906\noracle_upper_bound        1.000      0.000 1.000 1.000 1.000 1.000 1.000\ncertified_mlp             0.997      0.007 0.991 1.000 1.000 1.000 0.993\n\n== Table 3: empirical mixed attack (eps=0.1, subsample 20/stratum) ==\nmodel              cleanFalseAllow  robustFalseAllow   C:allows true-unsafe\n---------------------------------------------------------------------------\nnumeric_only                 0.250             0.450                  1.000\njoint_mlp                    0.000             1.000                  0.450\ncertified_mlp                0.050             1.000                  0.400\n\n== Table 4: deterministic certificate sanity (model-free) ==\ncase                       cat                 disc  cont  naive  hybridSafe  naiveFALSE\n----------------------------------------------------------------------------------------\nfinance C   (credit 0.45)  C_joint_gap            T     T      T           F           T\nfinance R   (credit 0.20)  R_robust_interior      T     T      T           T           F\nmonitor C+D (mem .60/.635) C_joint_gap            T     T      T           F           T\nmonitor R   (mem .40/.40)  R_robust_interior      T     T      T           T           F\n\n== Table 5: smoothed learned-gate certificate (sigma=0.1, eps=0.1, tau=0.9, n_mc=2000, alpha=0.001, 40/stratum) ==\ncertified allow rate     : 0.140\ncertified FALSE allow    : 0.000   (must be ~0; sound by construction up to alpha)\nvacuity (refused) rate   : 0.860\ncertified allow by category: {'A': 0.0, 'B': 0.0, 'C': 0.0, 'R': 0.625, 'U': 0.0}\n\nExpected (PLAN3 sec.12): C refuses, U refuses, R allows non-vacuously.\nwrote per-record certificates -> /tmp/mlrepromutate-_il1nqy_/cage-agent-authorization/bridge_benchmark/cert/out/certificates.jsonl\n"
+      },
+      "operator": "relax_requirements_pin",
+      "outcome": "survived",
+      "reason": "Existing safeguards completed successfully and did not detect the mutation.",
+      "target": "requirements.txt"
+    },
+    {
+      "candidate_metadata": {
+        "line_number": 10,
+        "package": "scikit-learn",
+        "version": "1.8.0"
+      },
+      "category": "dependency",
+      "description": "Relax exact dependency pin for scikit-learn from ==1.8.0 to >=1.8.0.",
+      "duration_seconds": 7.101160506001179,
+      "execution": {
+        "return_code": 0,
+        "stderr": "",
+        "stdout": "records 3303 | train/val/test 1989/658/656 | feature dim 26\n\n== Table 1: dataset counts by domain / action / category ==\ndomain                 action                   A     B     C     R     U\nfinancial_compliance   approve_transaction    279    19    81   378   263\nfinancial_compliance   reject_transaction       0    25     0   175    55\nsystem_monitoring      suppress_alert         302    52   206  1086   382\n\n== Table 2: clean classifier performance by category ==\nmodel                  cleanAcc falseAllow     A     B     C     R     U\n------------------------------------------------------------------------\ntool_action_only          0.794      0.806 0.983 0.833 0.982 0.948 0.194\ncategorical_only          0.788      1.000 1.000 1.000 1.000 1.000 0.000\nnumeric_only              0.873      0.194 0.687 1.000 1.000 0.939 0.806\ntool_numeric_logistic     0.909      0.129 0.843 0.833 0.982 0.939 0.871\njoint_logistic            0.912      0.122 0.852 0.833 0.982 0.939 0.878\njoint_mlp                 0.991      0.014 0.965 1.000 1.000 1.000 0.986\ngradient_boosting         0.974      0.094 0.965 1.000 1.000 1.000 0.906\noracle_upper_bound        1.000      0.000 1.000 1.000 1.000 1.000 1.000\ncertified_mlp             0.997      0.007 0.991 1.000 1.000 1.000 0.993\n\n== Table 3: empirical mixed attack (eps=0.1, subsample 20/stratum) ==\nmodel              cleanFalseAllow  robustFalseAllow   C:allows true-unsafe\n---------------------------------------------------------------------------\nnumeric_only                 0.250             0.450                  1.000\njoint_mlp                    0.000             1.000                  0.450\ncertified_mlp                0.050             1.000                  0.400\n\n== Table 4: deterministic certificate sanity (model-free) ==\ncase                       cat                 disc  cont  naive  hybridSafe  naiveFALSE\n----------------------------------------------------------------------------------------\nfinance C   (credit 0.45)  C_joint_gap            T     T      T           F           T\nfinance R   (credit 0.20)  R_robust_interior      T     T      T           T           F\nmonitor C+D (mem .60/.635) C_joint_gap            T     T      T           F           T\nmonitor R   (mem .40/.40)  R_robust_interior      T     T      T           T           F\n\n== Table 5: smoothed learned-gate certificate (sigma=0.1, eps=0.1, tau=0.9, n_mc=2000, alpha=0.001, 40/stratum) ==\ncertified allow rate     : 0.129\ncertified FALSE allow    : 0.000   (must be ~0; sound by construction up to alpha)\nvacuity (refused) rate   : 0.871\ncertified allow by category: {'A': 0.0, 'B': 0.0, 'C': 0.0, 'R': 0.575, 'U': 0.0}\n\nExpected (PLAN3 sec.12): C refuses, U refuses, R allows non-vacuously.\nwrote per-record certificates -> /tmp/mlrepromutate-84ev6kmn/cage-agent-authorization/bridge_benchmark/cert/out/certificates.jsonl\n"
+      },
+      "operator": "relax_requirements_pin",
+      "outcome": "survived",
+      "reason": "Existing safeguards completed successfully and did not detect the mutation.",
+      "target": "requirements.txt"
+    },
+    {
+      "candidate_metadata": {
+        "line_number": 11,
+        "package": "pandas",
+        "version": "2.3.2"
+      },
+      "category": "dependency",
+      "description": "Relax exact dependency pin for pandas from ==2.3.2 to >=2.3.2.",
+      "duration_seconds": 6.95914609600004,
+      "execution": {
+        "return_code": 0,
+        "stderr": "",
+        "stdout": "records 3303 | train/val/test 1989/658/656 | feature dim 26\n\n== Table 1: dataset counts by domain / action / category ==\ndomain                 action                   A     B     C     R     U\nfinancial_compliance   approve_transaction    279    19    81   378   263\nfinancial_compliance   reject_transaction       0    25     0   175    55\nsystem_monitoring      suppress_alert         302    52   206  1086   382\n\n== Table 2: clean classifier performance by category ==\nmodel                  cleanAcc falseAllow     A     B     C     R     U\n------------------------------------------------------------------------\ntool_action_only          0.794      0.806 0.983 0.833 0.982 0.948 0.194\ncategorical_only          0.788      1.000 1.000 1.000 1.000 1.000 0.000\nnumeric_only              0.873      0.194 0.687 1.000 1.000 0.939 0.806\ntool_numeric_logistic     0.909      0.129 0.843 0.833 0.982 0.939 0.871\njoint_logistic            0.912      0.122 0.852 0.833 0.982 0.939 0.878\njoint_mlp                 0.991      0.014 0.965 1.000 1.000 1.000 0.986\ngradient_boosting         0.974      0.094 0.965 1.000 1.000 1.000 0.906\noracle_upper_bound        1.000      0.000 1.000 1.000 1.000 1.000 1.000\ncertified_mlp             0.997      0.007 0.991 1.000 1.000 1.000 0.993\n\n== Table 3: empirical mixed attack (eps=0.1, subsample 20/stratum) ==\nmodel              cleanFalseAllow  robustFalseAllow   C:allows true-unsafe\n---------------------------------------------------------------------------\nnumeric_only                 0.250             0.450                  1.000\njoint_mlp                    0.000             1.000                  0.450\ncertified_mlp                0.050             1.000                  0.400\n\n== Table 4: deterministic certificate sanity (model-free) ==\ncase                       cat                 disc  cont  naive  hybridSafe  naiveFALSE\n----------------------------------------------------------------------------------------\nfinance C   (credit 0.45)  C_joint_gap            T     T      T           F           T\nfinance R   (credit 0.20)  R_robust_interior      T     T      T           T           F\nmonitor C+D (mem .60/.635) C_joint_gap            T     T      T           F           T\nmonitor R   (mem .40/.40)  R_robust_interior      T     T      T           T           F\n\n== Table 5: smoothed learned-gate certificate (sigma=0.1, eps=0.1, tau=0.9, n_mc=2000, alpha=0.001, 40/stratum) ==\ncertified allow rate     : 0.135\ncertified FALSE allow    : 0.000   (must be ~0; sound by construction up to alpha)\nvacuity (refused) rate   : 0.865\ncertified allow by category: {'A': 0.0, 'B': 0.0, 'C': 0.0, 'R': 0.6, 'U': 0.0}\n\nExpected (PLAN3 sec.12): C refuses, U refuses, R allows non-vacuously.\nwrote per-record certificates -> /tmp/mlrepromutate-ay9ito2t/cage-agent-authorization/bridge_benchmark/cert/out/certificates.jsonl\n"
+      },
+      "operator": "relax_requirements_pin",
+      "outcome": "survived",
+      "reason": "Existing safeguards completed successfully and did not detect the mutation.",
+      "target": "requirements.txt"
+    },
+    {
+      "candidate_metadata": {
+        "line_number": 12,
+        "package": "matplotlib",
+        "version": "3.10.7"
+      },
+      "category": "dependency",
+      "description": "Relax exact dependency pin for matplotlib from ==3.10.7 to >=3.10.7.",
+      "duration_seconds": 7.840116096002021,
+      "execution": {
+        "return_code": 0,
+        "stderr": "",
+        "stdout": "records 3303 | train/val/test 1989/658/656 | feature dim 26\n\n== Table 1: dataset counts by domain / action / category ==\ndomain                 action                   A     B     C     R     U\nfinancial_compliance   approve_transaction    279    19    81   378   263\nfinancial_compliance   reject_transaction       0    25     0   175    55\nsystem_monitoring      suppress_alert         302    52   206  1086   382\n\n== Table 2: clean classifier performance by category ==\nmodel                  cleanAcc falseAllow     A     B     C     R     U\n------------------------------------------------------------------------\ntool_action_only          0.794      0.806 0.983 0.833 0.982 0.948 0.194\ncategorical_only          0.788      1.000 1.000 1.000 1.000 1.000 0.000\nnumeric_only              0.873      0.194 0.687 1.000 1.000 0.939 0.806\ntool_numeric_logistic     0.909      0.129 0.843 0.833 0.982 0.939 0.871\njoint_logistic            0.912      0.122 0.852 0.833 0.982 0.939 0.878\njoint_mlp                 0.991      0.014 0.965 1.000 1.000 1.000 0.986\ngradient_boosting         0.974      0.094 0.965 1.000 1.000 1.000 0.906\noracle_upper_bound        1.000      0.000 1.000 1.000 1.000 1.000 1.000\ncertified_mlp             0.997      0.007 0.991 1.000 1.000 1.000 0.993\n\n== Table 3: empirical mixed attack (eps=0.1, subsample 20/stratum) ==\nmodel              cleanFalseAllow  robustFalseAllow   C:allows true-unsafe\n---------------------------------------------------------------------------\nnumeric_only                 0.250             0.450                  1.000\njoint_mlp                    0.000             1.000                  0.450\ncertified_mlp                0.050             1.000                  0.400\n\n== Table 4: deterministic certificate sanity (model-free) ==\ncase                       cat                 disc  cont  naive  hybridSafe  naiveFALSE\n----------------------------------------------------------------------------------------\nfinance C   (credit 0.45)  C_joint_gap            T     T      T           F           T\nfinance R   (credit 0.20)  R_robust_interior      T     T      T           T           F\nmonitor C+D (mem .60/.635) C_joint_gap            T     T      T           F           T\nmonitor R   (mem .40/.40)  R_robust_interior      T     T      T           T           F\n\n== Table 5: smoothed learned-gate certificate (sigma=0.1, eps=0.1, tau=0.9, n_mc=2000, alpha=0.001, 40/stratum) ==\ncertified allow rate     : 0.135\ncertified FALSE allow    : 0.000   (must be ~0; sound by construction up to alpha)\nvacuity (refused) rate   : 0.865\ncertified allow by category: {'A': 0.0, 'B': 0.0, 'C': 0.0, 'R': 0.6, 'U': 0.0}\n\nExpected (PLAN3 sec.12): C refuses, U refuses, R allows non-vacuously.\nwrote per-record certificates -> /tmp/mlrepromutate-_na3k_uj/cage-agent-authorization/bridge_benchmark/cert/out/certificates.jsonl\n"
+      },
+      "operator": "relax_requirements_pin",
+      "outcome": "survived",
+      "reason": "Existing safeguards completed successfully and did not detect the mutation.",
+      "target": "requirements.txt"
+    },
+    {
+      "candidate_metadata": {
+        "line_number": 13,
+        "package": "PyYAML",
+        "version": "6.0.2"
+      },
+      "category": "dependency",
+      "description": "Relax exact dependency pin for PyYAML from ==6.0.2 to >=6.0.2.",
+      "duration_seconds": 7.47397950499726,
+      "execution": {
+        "return_code": 0,
+        "stderr": "",
+        "stdout": "records 3303 | train/val/test 1989/658/656 | feature dim 26\n\n== Table 1: dataset counts by domain / action / category ==\ndomain                 action                   A     B     C     R     U\nfinancial_compliance   approve_transaction    279    19    81   378   263\nfinancial_compliance   reject_transaction       0    25     0   175    55\nsystem_monitoring      suppress_alert         302    52   206  1086   382\n\n== Table 2: clean classifier performance by category ==\nmodel                  cleanAcc falseAllow     A     B     C     R     U\n------------------------------------------------------------------------\ntool_action_only          0.794      0.806 0.983 0.833 0.982 0.948 0.194\ncategorical_only          0.788      1.000 1.000 1.000 1.000 1.000 0.000\nnumeric_only              0.873      0.194 0.687 1.000 1.000 0.939 0.806\ntool_numeric_logistic     0.909      0.129 0.843 0.833 0.982 0.939 0.871\njoint_logistic            0.912      0.122 0.852 0.833 0.982 0.939 0.878\njoint_mlp                 0.991      0.014 0.965 1.000 1.000 1.000 0.986\ngradient_boosting         0.974      0.094 0.965 1.000 1.000 1.000 0.906\noracle_upper_bound        1.000      0.000 1.000 1.000 1.000 1.000 1.000\ncertified_mlp             0.997      0.007 0.991 1.000 1.000 1.000 0.993\n\n== Table 3: empirical mixed attack (eps=0.1, subsample 20/stratum) ==\nmodel              cleanFalseAllow  robustFalseAllow   C:allows true-unsafe\n---------------------------------------------------------------------------\nnumeric_only                 0.250             0.450                  1.000\njoint_mlp                    0.000             1.000                  0.450\ncertified_mlp                0.050             1.000                  0.400\n\n== Table 4: deterministic certificate sanity (model-free) ==\ncase                       cat                 disc  cont  naive  hybridSafe  naiveFALSE\n----------------------------------------------------------------------------------------\nfinance C   (credit 0.45)  C_joint_gap            T     T      T           F           T\nfinance R   (credit 0.20)  R_robust_interior      T     T      T           T           F\nmonitor C+D (mem .60/.635) C_joint_gap            T     T      T           F           T\nmonitor R   (mem .40/.40)  R_robust_interior      T     T      T           T           F\n\n== Table 5: smoothed learned-gate certificate (sigma=0.1, eps=0.1, tau=0.9, n_mc=2000, alpha=0.001, 40/stratum) ==\ncertified allow rate     : 0.135\ncertified FALSE allow    : 0.000   (must be ~0; sound by construction up to alpha)\nvacuity (refused) rate   : 0.865\ncertified allow by category: {'A': 0.0, 'B': 0.0, 'C': 0.0, 'R': 0.6, 'U': 0.0}\n\nExpected (PLAN3 sec.12): C refuses, U refuses, R allows non-vacuously.\nwrote per-record certificates -> /tmp/mlrepromutate-laz7utyy/cage-agent-authorization/bridge_benchmark/cert/out/certificates.jsonl\n"
+      },
+      "operator": "relax_requirements_pin",
+      "outcome": "survived",
+      "reason": "Existing safeguards completed successfully and did not detect the mutation.",
+      "target": "requirements.txt"
+    },
+    {
+      "candidate_metadata": {
+        "line_number": 14,
+        "package": "pytest",
+        "version": "8.4.2"
+      },
+      "category": "dependency",
+      "description": "Relax exact dependency pin for pytest from ==8.4.2 to >=8.4.2.",
+      "duration_seconds": 6.929189571001189,
+      "execution": {
+        "return_code": 0,
+        "stderr": "",
+        "stdout": "records 3303 | train/val/test 1989/658/656 | feature dim 26\n\n== Table 1: dataset counts by domain / action / category ==\ndomain                 action                   A     B     C     R     U\nfinancial_compliance   approve_transaction    279    19    81   378   263\nfinancial_compliance   reject_transaction       0    25     0   175    55\nsystem_monitoring      suppress_alert         302    52   206  1086   382\n\n== Table 2: clean classifier performance by category ==\nmodel                  cleanAcc falseAllow     A     B     C     R     U\n------------------------------------------------------------------------\ntool_action_only          0.794      0.806 0.983 0.833 0.982 0.948 0.194\ncategorical_only          0.788      1.000 1.000 1.000 1.000 1.000 0.000\nnumeric_only              0.873      0.194 0.687 1.000 1.000 0.939 0.806\ntool_numeric_logistic     0.909      0.129 0.843 0.833 0.982 0.939 0.871\njoint_logistic            0.912      0.122 0.852 0.833 0.982 0.939 0.878\njoint_mlp                 0.991      0.014 0.965 1.000 1.000 1.000 0.986\ngradient_boosting         0.974      0.094 0.965 1.000 1.000 1.000 0.906\noracle_upper_bound        1.000      0.000 1.000 1.000 1.000 1.000 1.000\ncertified_mlp             0.997      0.007 0.991 1.000 1.000 1.000 0.993\n\n== Table 3: empirical mixed attack (eps=0.1, subsample 20/stratum) ==\nmodel              cleanFalseAllow  robustFalseAllow   C:allows true-unsafe\n---------------------------------------------------------------------------\nnumeric_only                 0.250             0.450                  1.000\njoint_mlp                    0.000             1.000                  0.450\ncertified_mlp                0.050             1.000                  0.400\n\n== Table 4: deterministic certificate sanity (model-free) ==\ncase                       cat                 disc  cont  naive  hybridSafe  naiveFALSE\n----------------------------------------------------------------------------------------\nfinance C   (credit 0.45)  C_joint_gap            T     T      T           F           T\nfinance R   (credit 0.20)  R_robust_interior      T     T      T           T           F\nmonitor C+D (mem .60/.635) C_joint_gap            T     T      T           F           T\nmonitor R   (mem .40/.40)  R_robust_interior      T     T      T           T           F\n\n== Table 5: smoothed learned-gate certificate (sigma=0.1, eps=0.1, tau=0.9, n_mc=2000, alpha=0.001, 40/stratum) ==\ncertified allow rate     : 0.135\ncertified FALSE allow    : 0.000   (must be ~0; sound by construction up to alpha)\nvacuity (refused) rate   : 0.865\ncertified allow by category: {'A': 0.0, 'B': 0.0, 'C': 0.0, 'R': 0.6, 'U': 0.0}\n\nExpected (PLAN3 sec.12): C refuses, U refuses, R allows non-vacuously.\nwrote per-record certificates -> /tmp/mlrepromutate-6npeak7h/cage-agent-authorization/bridge_benchmark/cert/out/certificates.jsonl\n"
+      },
+      "operator": "relax_requirements_pin",
+      "outcome": "survived",
+      "reason": "Existing safeguards completed successfully and did not detect the mutation.",
+      "target": "requirements.txt"
+    }
+  ],
+  "operator": {
+    "category": "dependency",
+    "name": "relax_requirements_pin",
+    "requirements_file": "requirements.txt"
+  },
+  "project": {
+    "git_revision": "978c4e540c8ae7d2aa11efa700c7270d79e71330",
+    "path": "/home/ilya/Desktop/projekts/joss/pilots/cage-agent-authorization"
+  },
+  "schema_version": 1,
+  "summary": {
+    "candidates": 7,
+    "outcomes": {
+      "survived": 7
+    }
+  },
+  "validation": {
+    "baseline": {
+      "duration_seconds": 6.976520623997203,
+      "return_code": 0,
+      "stderr": "",
+      "stdout": "records 3303 | train/val/test 1989/658/656 | feature dim 26\n\n== Table 1: dataset counts by domain / action / category ==\ndomain                 action                   A     B     C     R     U\nfinancial_compliance   approve_transaction    279    19    81   378   263\nfinancial_compliance   reject_transaction       0    25     0   175    55\nsystem_monitoring      suppress_alert         302    52   206  1086   382\n\n== Table 2: clean classifier performance by category ==\nmodel                  cleanAcc falseAllow     A     B     C     R     U\n------------------------------------------------------------------------\ntool_action_only          0.794      0.806 0.983 0.833 0.982 0.948 0.194\ncategorical_only          0.788      1.000 1.000 1.000 1.000 1.000 0.000\nnumeric_only              0.873      0.194 0.687 1.000 1.000 0.939 0.806\ntool_numeric_logistic     0.909      0.129 0.843 0.833 0.982 0.939 0.871\njoint_logistic            0.912      0.122 0.852 0.833 0.982 0.939 0.878\njoint_mlp                 0.991      0.014 0.965 1.000 1.000 1.000 0.986\ngradient_boosting         0.974      0.094 0.965 1.000 1.000 1.000 0.906\noracle_upper_bound        1.000      0.000 1.000 1.000 1.000 1.000 1.000\ncertified_mlp             0.997      0.007 0.991 1.000 1.000 1.000 0.993\n\n== Table 3: empirical mixed attack (eps=0.1, subsample 20/stratum) ==\nmodel              cleanFalseAllow  robustFalseAllow   C:allows true-unsafe\n---------------------------------------------------------------------------\nnumeric_only                 0.250             0.450                  1.000\njoint_mlp                    0.000             1.000                  0.450\ncertified_mlp                0.050             1.000                  0.400\n\n== Table 4: deterministic certificate sanity (model-free) ==\ncase                       cat                 disc  cont  naive  hybridSafe  naiveFALSE\n----------------------------------------------------------------------------------------\nfinance C   (credit 0.45)  C_joint_gap            T     T      T           F           T\nfinance R   (credit 0.20)  R_robust_interior      T     T      T           T           F\nmonitor C+D (mem .60/.635) C_joint_gap            T     T      T           F           T\nmonitor R   (mem .40/.40)  R_robust_interior      T     T      T           T           F\n\n== Table 5: smoothed learned-gate certificate (sigma=0.1, eps=0.1, tau=0.9, n_mc=2000, alpha=0.001, 40/stratum) ==\ncertified allow rate     : 0.140\ncertified FALSE allow    : 0.000   (must be ~0; sound by construction up to alpha)\nvacuity (refused) rate   : 0.860\ncertified allow by category: {'A': 0.0, 'B': 0.0, 'C': 0.0, 'R': 0.625, 'U': 0.0}\n\nExpected (PLAN3 sec.12): C refuses, U refuses, R allows non-vacuously.\nwrote per-record certificates -> /tmp/mlrepromutate-p9opio98/cage-agent-authorization/bridge_benchmark/cert/out/certificates.jsonl\n",
+      "timed_out": false
+    },
+    "command": "/home/ilya/Desktop/projekts/joss/pilots/cage-env/bin/python bridge_benchmark/cert/evaluate_certificates.py",
+    "timeout_seconds": 600.0
+  }
+}

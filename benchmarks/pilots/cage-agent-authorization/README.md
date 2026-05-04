@@ -123,3 +123,28 @@ constraints. It does not imply successful execution with newly resolved
 dependency versions.
 
 MLReproMutate commit: 96b135d110b03674cc56f2426e086cd1c490d003
+
+## Machine-readable external run
+
+Run ID: `cage-004`
+
+Raw report:
+
+`runs/cage-004.json`
+
+Configuration:
+
+- project commit: `978c4e540c8ae7d2aa11efa700c7270d79e71330`
+- requirements scope: `requirements.txt`
+- validation: `bridge_benchmark/cert/evaluate_certificates.py`
+- candidates: 7
+- survived: 7
+- killed: 0
+- baseline duration: 6.98 seconds
+- original repository modified: no
+
+The raw JSON report records the exact MLReproMutate Git revision, mutation
+locations, execution durations, outcomes, and validation provenance.
+
+These results concern detection of manifest relaxation only. Dependency
+versions were not re-resolved for this run.

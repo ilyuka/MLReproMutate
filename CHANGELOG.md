@@ -30,3 +30,7 @@ public API.
 - Mutation progress output now includes the source file and line number.
 - Added machine-readable JSON reports containing validation provenance,
   mutation metadata, outcomes, execution durations, and Git revisions.
+- Added an isolated virtual-environment resolver foundation for future
+  dependency re-resolution experiments.
+- Added resolved dependency evaluation with explicit `INVALID`,
+  `EQUIVALENT`, `SURVIVED`, `KILLED`, and `TIMEOUT` semantics.
