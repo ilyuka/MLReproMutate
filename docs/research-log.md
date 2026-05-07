@@ -415,3 +415,26 @@ Classification rules:
 
 This prevents manifest-only changes from inflating the empirical mutation
 score.
+
+## 2026-05 — First end-to-end resolved dependency mutation
+
+A controlled offline fixture was used to validate resolved dependency
+evaluation without relying on an external package index.
+
+The baseline requirement:
+
+`mlrm-demo-dep==1.0.0`
+
+resolved to version `1.0.0`.
+
+After mutation:
+
+`mlrm-demo-dep>=1.0.0`
+
+the fresh environment resolved version `1.1.0`.
+
+The validation command succeeded in the mutated environment, producing a
+`SURVIVED` outcome.
+
+This confirms that resolved dependency mode can distinguish a textual manifest
+mutation from a real change in the installed software environment.

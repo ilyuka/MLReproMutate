@@ -34,3 +34,5 @@ public API.
   dependency re-resolution experiments.
 - Added resolved dependency evaluation with explicit `INVALID`,
   `EQUIVALENT`, `SURVIVED`, `KILLED`, and `TIMEOUT` semantics.
+- Added a controlled offline resolved-dependency fixture demonstrating a real
+  dependency transition from version 1.0.0 to 1.1.0.
