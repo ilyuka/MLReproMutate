@@ -189,3 +189,54 @@ def test_run_can_write_json_report(
     assert report["schema_version"] == 1
     assert report["summary"]["candidates"] == 1
     assert report["summary"]["outcomes"]["survived"] == 1
+
+def test_resolved_mode_requires_requirements_file(
+    tmp_path: Path,
+) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+
+    result = runner.invoke(
+        app,
+        [
+            "run",
+            str(project),
+            "--command",
+            "python validate.py",
+            "--dependency-mode",
+            "resolved",
+        ],
+    )
+
+    assert result.exit_code != 0
+    assert "requires --requirements-file" in result.output
+
+def test_resolved_mode_requires_python_command(
+    tmp_path: Path,
+) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+
+    (project / "requirements.txt").write_text(
+        "numpy==2.1.0\n",
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(
+        app,
+        [
+            "run",
+            str(project),
+            "--command",
+            "pytest -q",
+            "--requirements-file",
+            "requirements.txt",
+            "--dependency-mode",
+            "resolved",
+        ],
+    )
+
+    assert result.exit_code != 0
+
+    assert "requires a Python" in result.output
+    assert "validation command" in result.output

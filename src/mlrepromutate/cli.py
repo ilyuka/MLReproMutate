@@ -1,4 +1,5 @@
 import shlex
+from enum import StrEnum
 from pathlib import Path
 from typing import Annotated
 
@@ -11,6 +12,8 @@ from mlrepromutate.engine import (
     MutationEvaluator,
     MutationOrchestrator,
 )
+from mlrepromutate.engine.environment import VirtualEnvironmentResolver
+from mlrepromutate.engine.resolved_dependency import ResolvedDependencyEvaluator
 from mlrepromutate.engine.runner import ExecutionResult
 from mlrepromutate.models import MutationCandidate
 from mlrepromutate.operators.dependency import RelaxRequirementsPinOperator
@@ -18,6 +21,11 @@ from mlrepromutate.reporting import (
     build_run_report,
     write_run_report,
 )
+
+
+class DependencyMode(StrEnum):
+    MANIFEST = "manifest"
+    RESOLVED = "resolved"
 
 app = typer.Typer(
     name="mlrepromutate",
@@ -75,6 +83,16 @@ def run(
             ),
         ),
     ] = None,
+    dependency_mode: Annotated[
+        DependencyMode,
+        typer.Option(
+            "--dependency-mode",
+            help=(
+                "Dependency evaluation mode: manifest only or "
+                "fresh resolved environments."
+            ),
+        ),
+    ] = DependencyMode.MANIFEST,
     json_out: Annotated[
         Path | None,
         typer.Option(
@@ -103,8 +121,37 @@ def run(
             str(exc),
             param_hint="--timeout",
         ) from exc
+    
+    if dependency_mode is DependencyMode.RESOLVED:
+        if requirements_file is None:
+            raise typer.BadParameter(
+                "--dependency-mode resolved requires "
+                "--requirements-file."
+            )
 
-    evaluator = MutationEvaluator(runner)
+        executable_name = Path(command_parts[0]).name
+
+        if not executable_name.startswith("python"):
+            raise typer.BadParameter(
+                "--dependency-mode resolved currently requires "
+                "a Python validation command."
+            )
+
+        bootstrap_python = Path(command_parts[0])
+
+        resolver = VirtualEnvironmentResolver(
+            bootstrap_python=bootstrap_python,
+            timeout_seconds=timeout,
+        )
+
+        evaluator = ResolvedDependencyEvaluator(
+            runner=runner,
+            resolver=resolver,
+            requirements_file=requirements_file,
+        )
+    else:
+        evaluator = MutationEvaluator(runner)
+    
     orchestrator = MutationOrchestrator(evaluator)
     operator = RelaxRequirementsPinOperator(
         requirements_file=requirements_file,
@@ -186,6 +233,7 @@ def run(
             baseline=baseline_result,
             results=results,
             requirements_file=requirements_file,
+            dependency_mode=dependency_mode.value,
         )
 
         write_run_report(

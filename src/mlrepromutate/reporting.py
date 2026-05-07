@@ -55,6 +55,7 @@ def build_run_report(
     baseline: ExecutionResult,
     results: list[MutationResult],
     requirements_file: Path | None,
+    dependency_mode: str,
 ) -> dict[str, Any]:
     """Build a machine-readable mutation run report."""
 
@@ -75,6 +76,7 @@ def build_run_report(
                 "outcome": result.outcome.value,
                 "duration_seconds": result.duration_seconds,
                 "reason": result.reason,
+                "result_metadata": result.metadata,
                 "execution": {
                     "return_code": result.metadata.get("return_code"),
                     "stdout": result.metadata.get("stdout"),
@@ -115,6 +117,7 @@ def build_run_report(
         "operator": {
             "name": operator.name,
             "category": operator.category,
+            "dependency_mode": dependency_mode,
             "requirements_file": (
                 str(requirements_file)
                 if requirements_file is not None

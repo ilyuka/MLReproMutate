@@ -64,18 +64,20 @@ def test_build_run_report_contains_provenance(
         baseline=baseline,
         results=[mutation_result],
         requirements_file=Path("requirements.txt"),
+        dependency_mode="manifest",
     )
 
     assert report["schema_version"] == 1
     assert report["summary"]["candidates"] == 1
     assert report["summary"]["outcomes"]["survived"] == 1
+    assert report["operator"]["dependency_mode"] == "manifest"
 
     mutation = report["mutations"][0]
 
     assert mutation["target"] == "requirements.txt"
     assert mutation["candidate_metadata"]["package"] == "numpy"
     assert mutation["outcome"] == "survived"
-
+    assert mutation["result_metadata"]["return_code"] == 0
 
 def test_write_run_report_writes_json(
     tmp_path: Path,
@@ -96,3 +98,4 @@ def test_write_run_report_writes_json(
     )
 
     assert loaded == report
+
