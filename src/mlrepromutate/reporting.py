@@ -56,6 +56,7 @@ def build_run_report(
     results: list[MutationResult],
     requirements_file: Path | None,
     dependency_mode: str,
+    evaluator_metadata: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Build a machine-readable mutation run report."""
 
@@ -103,6 +104,11 @@ def build_run_report(
             "version": get_package_version(),
             "git_revision": get_git_revision(framework_root),
         },
+        "environment": (
+            evaluator_metadata
+            if evaluator_metadata is not None
+            else {}
+        ),
         "validation": {
             "command": validation_command,
             "timeout_seconds": timeout_seconds,

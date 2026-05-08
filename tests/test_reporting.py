@@ -71,6 +71,7 @@ def test_build_run_report_contains_provenance(
     assert report["summary"]["candidates"] == 1
     assert report["summary"]["outcomes"]["survived"] == 1
     assert report["operator"]["dependency_mode"] == "manifest"
+    assert report["environment"] == {}
 
     mutation = report["mutations"][0]
 

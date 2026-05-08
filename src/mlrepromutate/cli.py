@@ -234,6 +234,7 @@ def run(
             results=results,
             requirements_file=requirements_file,
             dependency_mode=dependency_mode.value,
+            evaluator_metadata=evaluator.run_metadata(),
         )
 
         write_run_report(

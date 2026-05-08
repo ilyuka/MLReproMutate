@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Any
 
 from mlrepromutate.engine.runner import ExecutionResult, ExperimentRunner
 from mlrepromutate.engine.sandbox import ProjectSandbox
@@ -95,3 +96,8 @@ class MutationEvaluator:
             operator,
             candidate,
         )
+
+    def run_metadata(self) -> dict[str, Any]:
+        """Return evaluator-specific run provenance."""
+
+        return {}

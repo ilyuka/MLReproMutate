@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Any
 
 from mlrepromutate.engine.environment import (
     VirtualEnvironmentResolver,
@@ -35,6 +36,7 @@ class ResolvedDependencyEvaluator(MutationEvaluator):
         self.resolver = resolver
         self.requirements_file = requirements_file
         self._baseline_versions: dict[str, str] | None = None
+        self._baseline_resolution_metadata: dict[str, Any] | None = None
 
     def validate_baseline(
         self,
@@ -47,6 +49,13 @@ class ResolvedDependencyEvaluator(MutationEvaluator):
                 sandbox,
                 self.requirements_file,
             )
+            self._baseline_resolution_metadata = {
+                "return_code": resolution.return_code,
+                "stdout": resolution.stdout,
+                "stderr": resolution.stderr,
+                "duration_seconds": resolution.duration_seconds,
+                "timed_out": resolution.timed_out,
+            }
 
             if resolution.timed_out:
                 raise BaselineValidationError(
@@ -85,6 +94,18 @@ class ResolvedDependencyEvaluator(MutationEvaluator):
 
         return result
 
+    def run_metadata(self) -> dict[str, Any]:
+        """Return resolved-environment provenance."""
+
+        return {
+            "baseline_resolution": self._baseline_resolution_metadata,
+            "baseline_distributions": (
+                dict(self._baseline_versions)
+                if self._baseline_versions is not None
+                else None
+            ),
+        }
+    
     def evaluate_mutation(
         self,
         project_root: Path,

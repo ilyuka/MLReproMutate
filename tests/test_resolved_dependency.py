@@ -200,6 +200,11 @@ def test_resolved_mutation_is_invalid_when_resolution_fails(
 
     evaluator.validate_baseline(project)
 
+    metadata = evaluator.run_metadata()
+
+    assert metadata["baseline_resolution"]["return_code"] == 0
+    assert metadata["baseline_distributions"]["numpy"] == "2.1.0"
+
     result = evaluator.evaluate_mutation(
         project,
         operator,

@@ -1,7 +1,6 @@
 from pathlib import Path
 from zipfile import ZIP_DEFLATED, ZipFile
 
-
 ROOT = Path(__file__).parent
 WHEELHOUSE = ROOT / "wheelhouse"
 
