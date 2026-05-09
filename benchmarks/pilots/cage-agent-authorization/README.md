@@ -148,3 +148,52 @@ locations, execution durations, outcomes, and validation provenance.
 
 These results concern detection of manifest relaxation only. Dependency
 versions were not re-resolved for this run.
+
+## First resolved-environment external run
+
+Run ID: `cage-005-resolved`
+
+Raw report:
+
+`runs/cage-005-resolved.json`
+
+Configuration:
+
+- project commit: `978c4e540c8ae7d2aa11efa700c7270d79e71330`
+- MLReproMutate commit: `54330d60c34000578f7d6aa47bc8f998a5c352a1`
+- dependency mode: `resolved`
+- requirements scope: `requirements.txt`
+- validation workflow: `bridge_benchmark/cert/evaluate_certificates.py`
+
+Baseline:
+
+- dependency resolution: 17.91 s
+- validation: 7.28 s
+
+Resolved mutations:
+
+| dependency | baseline | mutant | outcome |
+|---|---:|---:|---|
+| numpy | 2.4.2 | 2.5.2 | SURVIVED |
+| scipy | 1.17.1 | 1.18.1 | SURVIVED |
+| scikit-learn | 1.8.0 | 1.9.0 | SURVIVED |
+| pandas | 2.3.2 | 3.0.5 | SURVIVED |
+| matplotlib | 3.10.7 | 3.11.1 | SURVIVED |
+| PyYAML | 6.0.2 | 6.0.3 | SURVIVED |
+| pytest | 8.4.2 | 9.1.1 | SURVIVED |
+
+All seven mutated dependency specifications resolved to installed versions
+different from the baseline environment.
+
+The selected CAGE validation workflow completed successfully in every mutated
+environment.
+
+The upstream repository remained unchanged after the complete run.
+
+### Interpretation
+
+These results demonstrate survival of resolved dependency-version changes for
+the selected validation workflow.
+
+They do not establish compatibility of every CAGE experiment, optional
+backend, dataset, or full test suite with these dependency versions.
