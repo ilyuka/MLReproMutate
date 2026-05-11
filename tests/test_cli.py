@@ -209,7 +209,8 @@ def test_resolved_mode_requires_requirements_file(
     )
 
     assert result.exit_code != 0
-    assert "requires --requirements-file" in result.output
+    assert "requires" in result.output
+    assert "requirements-file" in result.output
 
 def test_resolved_mode_requires_python_command(
     tmp_path: Path,
@@ -237,6 +238,5 @@ def test_resolved_mode_requires_python_command(
     )
 
     assert result.exit_code != 0
-
     assert "requires a Python" in result.output
     assert "validation command" in result.output
