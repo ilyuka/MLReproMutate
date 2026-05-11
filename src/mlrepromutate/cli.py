@@ -174,10 +174,25 @@ def run(
         nonlocal baseline_result
         baseline_result = result
 
-        typer.echo(
-            f"Baseline passed in {result.duration_seconds:.2f}s."
+        evaluator_metadata = evaluator.run_metadata()
+        baseline_resolution = evaluator_metadata.get(
+            "baseline_resolution"
         )
 
+        if isinstance(baseline_resolution, dict):
+            resolution_seconds = baseline_resolution.get(
+                "duration_seconds"
+            )
+
+            if isinstance(resolution_seconds, int | float):
+                typer.echo(
+                    "Baseline environment resolved in "
+                    f"{resolution_seconds:.2f}s."
+                )
+
+        typer.echo(
+            f"Baseline validation passed in {result.duration_seconds:.2f}s."
+        )
 
     def report_candidate_start(
         index: int,
