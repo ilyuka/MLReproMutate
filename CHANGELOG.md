@@ -36,3 +36,7 @@ public API.
   `EQUIVALENT`, `SURVIVED`, `KILLED`, and `TIMEOUT` semantics.
 - Added a controlled offline resolved-dependency fixture demonstrating a real
   dependency transition from version 1.0.0 to 1.1.0.
+- Added AST-based detection and mutation of literal Python random seeds for
+  `random.seed`, NumPy seed calls, and `torch.manual_seed`.
+- Added a controlled random-seed fixture demonstrating both survived and
+  killed reproducibility mutations.

@@ -438,3 +438,51 @@ The validation command succeeded in the mutated environment, producing a
 
 This confirms that resolved dependency mode can distinguish a textual manifest
 mutation from a real change in the installed software environment.
+
+## 2026-05 — Randomness mutation operator
+
+### Motivation
+
+Dependency mutations exercise reproducibility assumptions in the software
+environment, but they represent only one fault class.
+
+The second mutation category targets explicit random-state controls used by
+research workflows.
+
+### Initial scope
+
+The first randomness operator detects literal integer seeds in:
+
+- `random.seed(...)`;
+- `np.random.seed(...)`;
+- `numpy.random.seed(...)`;
+- `torch.manual_seed(...)`.
+
+The controlled mutation increments the literal seed by one.
+
+For example:
+
+`random.seed(42)`
+
+becomes:
+
+`random.seed(43)`.
+
+Variable-based seeds such as `random.seed(args.seed)` are intentionally outside
+the initial scope.
+
+### Implementation decision
+
+Detection uses Python's AST rather than regular expressions.
+
+Mutation candidates record the source file, call type, original and mutated
+seed values, and precise source location.
+
+### Validation
+
+A controlled fixture demonstrates both expected outcomes:
+
+- a validation workflow insensitive to the exact deterministic result allows
+  the seed mutation to survive;
+- a validation workflow checking the deterministic expected result kills the
+  same mutation.
