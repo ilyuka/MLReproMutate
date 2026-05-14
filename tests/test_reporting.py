@@ -63,15 +63,29 @@ def test_build_run_report_contains_provenance(
         operator=operator,
         baseline=baseline,
         results=[mutation_result],
-        requirements_file=Path("requirements.txt"),
-        dependency_mode="manifest",
+        operator_configuration={
+            "requirements_file": "requirements.txt",
+            "dependency_mode": "manifest",
+        },
     )
 
-    assert report["schema_version"] == 1
+    assert report["schema_version"] == 2
     assert report["summary"]["candidates"] == 1
     assert report["summary"]["outcomes"]["survived"] == 1
-    assert report["operator"]["dependency_mode"] == "manifest"
     assert report["environment"] == {}
+
+    operator_report = report["operator"]
+
+    assert operator_report["name"] == "relax_requirements_pin"
+    assert operator_report["category"] == "dependency"
+    assert (
+        operator_report["configuration"]["dependency_mode"]
+        == "manifest"
+    )
+    assert (
+        operator_report["configuration"]["requirements_file"]
+        == "requirements.txt"
+    )
 
     mutation = report["mutations"][0]
 
@@ -80,13 +94,14 @@ def test_build_run_report_contains_provenance(
     assert mutation["outcome"] == "survived"
     assert mutation["result_metadata"]["return_code"] == 0
 
+
 def test_write_run_report_writes_json(
     tmp_path: Path,
 ) -> None:
     output = tmp_path / "reports" / "run.json"
 
     report = {
-        "schema_version": 1,
+        "schema_version": 2,
         "summary": {
             "candidates": 0,
         },
@@ -99,4 +114,3 @@ def test_write_run_report_writes_json(
     )
 
     assert loaded == report
-

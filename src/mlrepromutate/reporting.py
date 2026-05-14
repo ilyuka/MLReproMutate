@@ -54,8 +54,7 @@ def build_run_report(
     operator: MutationOperator,
     baseline: ExecutionResult,
     results: list[MutationResult],
-    requirements_file: Path | None,
-    dependency_mode: str,
+    operator_configuration: dict[str, Any] | None = None,
     evaluator_metadata: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Build a machine-readable mutation run report."""
@@ -93,7 +92,7 @@ def build_run_report(
         outcome_counts[outcome] = outcome_counts.get(outcome, 0) + 1
 
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "generated_at_utc": datetime.now(UTC).isoformat(),
         "project": {
             "path": str(project_root),
@@ -123,11 +122,10 @@ def build_run_report(
         "operator": {
             "name": operator.name,
             "category": operator.category,
-            "dependency_mode": dependency_mode,
-            "requirements_file": (
-                str(requirements_file)
-                if requirements_file is not None
-                else None
+            "configuration": (
+                operator_configuration
+                if operator_configuration is not None
+                else {}
             ),
         },
         "summary": {

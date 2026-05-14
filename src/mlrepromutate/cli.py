@@ -13,19 +13,32 @@ from mlrepromutate.engine import (
     MutationOrchestrator,
 )
 from mlrepromutate.engine.environment import VirtualEnvironmentResolver
-from mlrepromutate.engine.resolved_dependency import ResolvedDependencyEvaluator
+from mlrepromutate.engine.resolved_dependency import (
+    ResolvedDependencyEvaluator,
+)
 from mlrepromutate.engine.runner import ExecutionResult
 from mlrepromutate.models import MutationCandidate
-from mlrepromutate.operators.dependency import RelaxRequirementsPinOperator
+from mlrepromutate.operators.dependency import (
+    RelaxRequirementsPinOperator,
+)
+from mlrepromutate.operators.randomness import (
+    ChangePythonRandomSeedOperator,
+)
 from mlrepromutate.reporting import (
     build_run_report,
     write_run_report,
 )
 
 
+class OperatorName(StrEnum):
+    DEPENDENCY_PIN = "dependency-pin"
+    RANDOM_SEED = "random-seed"
+
+
 class DependencyMode(StrEnum):
     MANIFEST = "manifest"
     RESOLVED = "resolved"
+
 
 app = typer.Typer(
     name="mlrepromutate",
@@ -42,6 +55,7 @@ def main() -> None:
 @app.command()
 def version() -> None:
     """Print the current MLReproMutate version."""
+
     typer.echo(__version__)
 
 
@@ -66,6 +80,13 @@ def run(
             help='Validation command, for example: "python validate.py".',
         ),
     ],
+    operator_name: Annotated[
+        OperatorName,
+        typer.Option(
+            "--operator",
+            help="Mutation operator to evaluate.",
+        ),
+    ] = OperatorName.DEPENDENCY_PIN,
     timeout: Annotated[
         float,
         typer.Option(
@@ -93,6 +114,16 @@ def run(
             ),
         ),
     ] = DependencyMode.MANIFEST,
+    python_file: Annotated[
+        Path | None,
+        typer.Option(
+            "--python-file",
+            help=(
+                "Restrict Python source mutations to one file "
+                "relative to the project root."
+            ),
+        ),
+    ] = None,
     json_out: Annotated[
         Path | None,
         typer.Option(
@@ -101,7 +132,7 @@ def run(
         ),
     ] = None,
 ) -> None:
-    """Evaluate dependency reproducibility mutations in a project."""
+    """Evaluate reproducibility mutations in a project."""
 
     command_parts = shlex.split(command)
 
@@ -121,43 +152,93 @@ def run(
             str(exc),
             param_hint="--timeout",
         ) from exc
-    
-    if dependency_mode is DependencyMode.RESOLVED:
-        if requirements_file is None:
+
+    if operator_name is OperatorName.DEPENDENCY_PIN:
+        if python_file is not None:
             raise typer.BadParameter(
-                "--dependency-mode resolved requires "
-                "--requirements-file."
+                "--python-file is only valid with "
+                "--operator random-seed.",
+                param_hint="--python-file",
             )
 
-        executable_name = Path(command_parts[0]).name
-
-        if not executable_name.startswith("python"):
-            raise typer.BadParameter(
-                "--dependency-mode resolved currently requires "
-                "a Python validation command."
-            )
-
-        bootstrap_python = Path(command_parts[0])
-
-        resolver = VirtualEnvironmentResolver(
-            bootstrap_python=bootstrap_python,
-            timeout_seconds=timeout,
-        )
-
-        evaluator = ResolvedDependencyEvaluator(
-            runner=runner,
-            resolver=resolver,
+        operator = RelaxRequirementsPinOperator(
             requirements_file=requirements_file,
         )
-    else:
-        evaluator = MutationEvaluator(runner)
-    
-    orchestrator = MutationOrchestrator(evaluator)
-    operator = RelaxRequirementsPinOperator(
-        requirements_file=requirements_file,
-    )
 
-    candidates = list(operator.detect(project))
+        operator_configuration = {
+            "requirements_file": (
+                str(requirements_file)
+                if requirements_file is not None
+                else None
+            ),
+            "dependency_mode": dependency_mode.value,
+        }
+
+        if dependency_mode is DependencyMode.RESOLVED:
+            if requirements_file is None:
+                raise typer.BadParameter(
+                    "--dependency-mode resolved requires "
+                    "--requirements-file."
+                )
+
+            executable_name = Path(command_parts[0]).name
+
+            if not executable_name.startswith("python"):
+                raise typer.BadParameter(
+                    "--dependency-mode resolved currently requires "
+                    "a Python validation command."
+                )
+
+            bootstrap_python = Path(command_parts[0])
+
+            resolver = VirtualEnvironmentResolver(
+                bootstrap_python=bootstrap_python,
+                timeout_seconds=timeout,
+            )
+
+            evaluator = ResolvedDependencyEvaluator(
+                runner=runner,
+                resolver=resolver,
+                requirements_file=requirements_file,
+            )
+        else:
+            evaluator = MutationEvaluator(runner)
+
+    else:
+        if requirements_file is not None:
+            raise typer.BadParameter(
+                "--requirements-file is only valid with "
+                "--operator dependency-pin.",
+                param_hint="--requirements-file",
+            )
+
+        if dependency_mode is DependencyMode.RESOLVED:
+            raise typer.BadParameter(
+                "--dependency-mode resolved is only valid with "
+                "--operator dependency-pin.",
+                param_hint="--dependency-mode",
+            )
+
+        operator = ChangePythonRandomSeedOperator(
+            python_file=python_file,
+        )
+
+        operator_configuration = {
+            "python_file": (
+                str(python_file)
+                if python_file is not None
+                else None
+            ),
+        }
+
+        evaluator = MutationEvaluator(runner)
+
+    orchestrator = MutationOrchestrator(evaluator)
+
+    try:
+        candidates = list(operator.detect(project))
+    except (ValueError, FileNotFoundError) as exc:
+        raise typer.BadParameter(str(exc)) from exc
 
     if not candidates:
         typer.echo("No applicable mutations found.")
@@ -191,7 +272,8 @@ def run(
                 )
 
         typer.echo(
-            f"Baseline validation passed in {result.duration_seconds:.2f}s."
+            f"Baseline validation passed in "
+            f"{result.duration_seconds:.2f}s."
         )
 
     def report_candidate_start(
@@ -209,7 +291,6 @@ def run(
         typer.echo()
         typer.echo(f"[{index}/{total}] {location}")
         typer.echo(f"  {candidate.description}")
-
 
     def report_candidate_result(
         index: int,
@@ -247,8 +328,7 @@ def run(
             operator=operator,
             baseline=baseline_result,
             results=results,
-            requirements_file=requirements_file,
-            dependency_mode=dependency_mode.value,
+            operator_configuration=operator_configuration,
             evaluator_metadata=evaluator.run_metadata(),
         )
 
@@ -263,7 +343,6 @@ def run(
     if not results:
         typer.echo("No applicable mutations found.")
         return
-
 
     killed = sum(
         result.outcome.value == "killed"
