@@ -171,3 +171,21 @@ def test_runner_disables_stdin(
     assert result.return_code == 0
     assert captured["stdin"] is subprocess.DEVNULL
 
+def test_runner_does_not_wait_for_interactive_input(
+    tmp_path: Path,
+) -> None:
+    runner = ExperimentRunner(
+        [
+            sys.executable,
+            "-c",
+            "input('Enter value: ')",
+        ],
+        timeout_seconds=2,
+    )
+
+    result = runner.run(tmp_path)
+
+    assert result.timed_out is False
+    assert result.return_code != 0
+    assert "EOFError" in result.stderr
+
