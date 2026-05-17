@@ -1,0 +1,70 @@
+{
+  "environment": {},
+  "framework": {
+    "git_revision": "e4ecf01b1d5c7f5802870dcf7df43b2253fcaeff",
+    "name": "MLReproMutate",
+    "version": "0.0.0"
+  },
+  "generated_at_utc": "2026-05-17T15:04:13.270651+00:00",
+  "mutations": [
+    {
+      "candidate_metadata": {
+        "call": "np.random.seed",
+        "library": "numpy",
+        "line_number": 122,
+        "mutated_seed": 43,
+        "original_seed": 42,
+        "seed_col_offset": 19,
+        "seed_end_col_offset": 21,
+        "seed_end_line_number": 122,
+        "seed_line_number": 122
+      },
+      "category": "randomness",
+      "description": "Change random seed for np.random.seed from 42 to 43.",
+      "duration_seconds": 9.05694511099864,
+      "execution": {
+        "return_code": 0,
+        "stderr": "",
+        "stdout": "Generating results for MUTAG...\nGenerating discrete embeddings for MUTAG.\nEmbeddings for MUTAG computed, saved to output/MUTAG/MUTAG_wl_discrete_embeddings_h2.npy.\n\nComputing the Wasserstein distances...\nIteration 0: done.\nIteration 1: done.\nIteration 2: done.\nWasserstein distances computation done. Saved to file.\n\nKernel matrices computed.\n\nRunning SVMs, crossvalidation: False, gridsearch: False.\nFinal accuracy: 68.421 %\nNo results saved to file as --crossvalidation or --gridsearch were not selected.\n"
+      },
+      "operator": "change_python_random_seed",
+      "outcome": "survived",
+      "reason": "Existing safeguards completed successfully and did not detect the mutation.",
+      "result_metadata": {
+        "return_code": 0,
+        "stderr": "",
+        "stdout": "Generating results for MUTAG...\nGenerating discrete embeddings for MUTAG.\nEmbeddings for MUTAG computed, saved to output/MUTAG/MUTAG_wl_discrete_embeddings_h2.npy.\n\nComputing the Wasserstein distances...\nIteration 0: done.\nIteration 1: done.\nIteration 2: done.\nWasserstein distances computation done. Saved to file.\n\nKernel matrices computed.\n\nRunning SVMs, crossvalidation: False, gridsearch: False.\nFinal accuracy: 68.421 %\nNo results saved to file as --crossvalidation or --gridsearch were not selected.\n"
+      },
+      "target": "experiments/main.py"
+    }
+  ],
+  "operator": {
+    "category": "randomness",
+    "configuration": {
+      "python_file": "experiments/main.py"
+    },
+    "name": "change_python_random_seed"
+  },
+  "project": {
+    "git_revision": "107a8dfe3d97d8996753dbdc695f4577514cacbf",
+    "path": "/home/ilya/Desktop/projekts/joss/pilots/wwl"
+  },
+  "schema_version": 2,
+  "summary": {
+    "candidates": 1,
+    "outcomes": {
+      "survived": 1
+    }
+  },
+  "validation": {
+    "baseline": {
+      "duration_seconds": 8.949590650001483,
+      "return_code": 0,
+      "stderr": "",
+      "stdout": "Generating results for MUTAG...\nGenerating discrete embeddings for MUTAG.\nEmbeddings for MUTAG computed, saved to output/MUTAG/MUTAG_wl_discrete_embeddings_h2.npy.\n\nComputing the Wasserstein distances...\nIteration 0: done.\nIteration 1: done.\nIteration 2: done.\nWasserstein distances computation done. Saved to file.\n\nKernel matrices computed.\n\nRunning SVMs, crossvalidation: False, gridsearch: False.\nFinal accuracy: 68.421 %\nNo results saved to file as --crossvalidation or --gridsearch were not selected.\n",
+      "timed_out": false
+    },
+    "command": "/bin/bash -lc 'cd experiments && /home/ilya/Desktop/projekts/joss/pilots/envs/wwl-107a8d/bin/python main.py --dataset MUTAG'",
+    "timeout_seconds": 300.0
+  }
+}
