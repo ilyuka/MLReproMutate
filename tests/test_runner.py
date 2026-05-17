@@ -1,3 +1,4 @@
+import subprocess
 import sys
 from pathlib import Path
 
@@ -137,3 +138,36 @@ def test_with_python_executable_rejects_non_python_command() -> None:
         runner.with_python_executable(
             Path("/tmp/env/bin/python")
         )
+
+def test_runner_disables_stdin(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    captured: dict[str, object] = {}
+
+    def fake_run(
+        command: tuple[str, ...],
+        **kwargs: object,
+    ) -> subprocess.CompletedProcess[str]:
+        captured["stdin"] = kwargs.get("stdin")
+        return subprocess.CompletedProcess(
+            command,
+            returncode=0,
+            stdout="",
+            stderr="",
+        )
+
+    monkeypatch.setattr(
+        "mlrepromutate.engine.runner.subprocess.run",
+        fake_run,
+    )
+
+    runner = ExperimentRunner(
+        [sys.executable, "-c", "pass"],
+    )
+
+    result = runner.run(tmp_path)
+
+    assert result.return_code == 0
+    assert captured["stdin"] is subprocess.DEVNULL
+

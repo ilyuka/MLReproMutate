@@ -55,6 +55,7 @@ class ExperimentRunner:
             completed = subprocess.run(
                 self.command,
                 cwd=project_root,
+                stdin=subprocess.DEVNULL,
                 capture_output=True,
                 text=True,
                 timeout=self.timeout_seconds,
