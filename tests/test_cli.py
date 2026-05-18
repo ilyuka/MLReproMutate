@@ -365,3 +365,40 @@ def test_random_seed_rejects_dependency_options(
     assert result.exit_code != 0
     assert "dependency-mode" in result.output
     assert "dependency-pin" in result.output
+
+
+def test_run_can_use_data_split_operator(
+    tmp_path: Path,
+) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+
+    (project / "experiment.py").write_text(
+        "from sklearn.model_selection import train_test_split\n"
+        "train_test_split(X, y, stratify=y)\n",
+        encoding="utf-8",
+    )
+
+    (project / "validate.py").write_text(
+        "raise SystemExit(0)\n",
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(
+        app,
+        [
+            "run",
+            str(project),
+            "--operator",
+            "data-split",
+            "--python-file",
+            "experiment.py",
+            "--command",
+            "python validate.py",
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert "Detected 1 mutation candidates." in result.stdout
+    assert "experiment.py:2" in result.stdout
+    assert "SURVIVED" in result.stdout
