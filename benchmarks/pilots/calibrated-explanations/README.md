@@ -104,6 +104,36 @@ This mutation changes the partition between the proper training data and the
 calibration data used by the workflow, while the validation command still
 completed successfully.
 
+## Semantic verification
+
+A separate verification reproduced the two splitting operations with and
+without stratification while keeping the same data, test sizes, and random
+state.
+
+For the outer train/test split:
+
+    test membership identical: False
+    symmetric difference: 192
+    baseline test class counts: [42, 72]
+    mutant test class counts: [47, 67]
+
+Both test sets contained 114 samples. Only 18 samples were shared between the
+baseline and mutant test sets.
+
+For the proper/calibration split:
+
+    calibration membership identical: False
+    symmetric difference: 168
+    baseline calibration class counts: [43, 71]
+    mutant calibration class counts: [36, 78]
+
+Both calibration sets contained 114 samples. Only 30 samples were shared
+between the baseline and mutant calibration sets.
+
+Therefore, neither surviving mutation was equivalent at the level of data
+partitioning. Removing stratification materially changed both membership and
+class distribution of the affected split.
+
 ## Interpretation
 
 Both controlled data-splitting mutations survived the selected workflow.
