@@ -1,0 +1,104 @@
+{
+  "environment": {},
+  "framework": {
+    "git_revision": "9bf0a7a586e02b4eed378c7825a21e20d4261315",
+    "name": "MLReproMutate",
+    "version": "0.0.0"
+  },
+  "generated_at_utc": "2026-05-20T15:32:03.402520+00:00",
+  "mutations": [
+    {
+      "candidate_metadata": {
+        "call": "train_test_split",
+        "canonical_call": "sklearn.model_selection.train_test_split",
+        "library": "scikit-learn",
+        "line_number": 20,
+        "mutated_stratify": "None",
+        "original_stratify": "dataset.target",
+        "original_stratify_ast": "Attribute(value=Name(id='dataset', ctx=Load()), attr='target', ctx=Load())",
+        "stratify_col_offset": 17,
+        "stratify_end_col_offset": 31,
+        "stratify_end_line_number": 24,
+        "stratify_line_number": 24
+      },
+      "category": "data_splitting",
+      "description": "Disable train/test split stratification for train_test_split.",
+      "duration_seconds": 1.267328534002445,
+      "execution": {
+        "return_code": 0,
+        "stderr": "",
+        "stdout": "{\"scenario\": \"minimal_quickstart\", \"factual_table\": \"Prediction [ Low ,  High]\\n0.111 [0.000, 0.125]\\nValue : Feature                                  Weight [ Low  ,  High ]\\n0.21  : worst concave points > 0.15              -0.289 [-0.389, -0.139]\\n0.08  : mean concave points > 0.05               -0.267 [-0.389, -0.056]\\n0.14  : mean concavity > 0.07                    -0.175 [-0.289,  0.111]\\n0.51  : worst concavity > 0.22                   -0.175 [-0.289,  0.111]\\n29.66 : worst texture > 26.19                    -0.075 [-0.122,  0.111]\\n0.11  : worst fractal dimension > 0.09           -0.048 [-0.078,  0.111]\\n0.03  : concavity error > 0.02                   -0.032 [-0.056,  0.111]\\n556.7 : mean area <= 728.95                      -0.032 [-0.056,  0.111]\\n0.07  : mean fractal dimension > 0.06            -0.032 [-0.056,  0.111]\\n88.64 : mean perimeter <= 100.39                 -0.032 [-0.056,  0.111]\\n13.4  : mean radius <= 15.29                     -0.032 [-0.056,  0.111]\\n0.11  : mean smoothness > 0.09                   -0.032 [-0.056,  0.111]\\n0.21  : mean symmetry > 0.18                     -0.032 [-0.056,  0.111]\\n3.09  : perimeter error <= 3.46                  -0.032 [-0.056,  0.111]\\n0.01  : smoothness error <= 0.01                 -0.032 [-0.056,  0.111]\\n0.93  : texture error > 0.65                     -0.032 [-0.056,  0.111]\\n0.16  : worst smoothness > 0.14                  -0.032 [-0.056,  0.111]\\n20.52 : mean texture > 19.97                     -0.021 [-0.042,  0.111]\\n0.39  : worst compactness > 0.35                 -0.021 [-0.042,  0.111]\\n33.67 : area error > 31.17                       -0.011 [-0.028,  0.111]\\n0.15  : mean compactness > 0.10                  -0.011 [-0.028,  0.111]\\n\", \"probability\": 0.1111111111111111, \"probability_interval\": {\"low\": 0.0, \"high\": 0.125}}\n"
+      },
+      "operator": "remove_train_test_split_stratification",
+      "outcome": "survived",
+      "reason": "Existing safeguards completed successfully and did not detect the mutation.",
+      "result_metadata": {
+        "return_code": 0,
+        "stderr": "",
+        "stdout": "{\"scenario\": \"minimal_quickstart\", \"factual_table\": \"Prediction [ Low ,  High]\\n0.111 [0.000, 0.125]\\nValue : Feature                                  Weight [ Low  ,  High ]\\n0.21  : worst concave points > 0.15              -0.289 [-0.389, -0.139]\\n0.08  : mean concave points > 0.05               -0.267 [-0.389, -0.056]\\n0.14  : mean concavity > 0.07                    -0.175 [-0.289,  0.111]\\n0.51  : worst concavity > 0.22                   -0.175 [-0.289,  0.111]\\n29.66 : worst texture > 26.19                    -0.075 [-0.122,  0.111]\\n0.11  : worst fractal dimension > 0.09           -0.048 [-0.078,  0.111]\\n0.03  : concavity error > 0.02                   -0.032 [-0.056,  0.111]\\n556.7 : mean area <= 728.95                      -0.032 [-0.056,  0.111]\\n0.07  : mean fractal dimension > 0.06            -0.032 [-0.056,  0.111]\\n88.64 : mean perimeter <= 100.39                 -0.032 [-0.056,  0.111]\\n13.4  : mean radius <= 15.29                     -0.032 [-0.056,  0.111]\\n0.11  : mean smoothness > 0.09                   -0.032 [-0.056,  0.111]\\n0.21  : mean symmetry > 0.18                     -0.032 [-0.056,  0.111]\\n3.09  : perimeter error <= 3.46                  -0.032 [-0.056,  0.111]\\n0.01  : smoothness error <= 0.01                 -0.032 [-0.056,  0.111]\\n0.93  : texture error > 0.65                     -0.032 [-0.056,  0.111]\\n0.16  : worst smoothness > 0.14                  -0.032 [-0.056,  0.111]\\n20.52 : mean texture > 19.97                     -0.021 [-0.042,  0.111]\\n0.39  : worst compactness > 0.35                 -0.021 [-0.042,  0.111]\\n33.67 : area error > 31.17                       -0.011 [-0.028,  0.111]\\n0.15  : mean compactness > 0.10                  -0.011 [-0.028,  0.111]\\n\", \"probability\": 0.1111111111111111, \"probability_interval\": {\"low\": 0.0, \"high\": 0.125}}\n"
+      },
+      "target": "examples/use_cases/minimal_quickstart.py"
+    },
+    {
+      "candidate_metadata": {
+        "call": "train_test_split",
+        "canonical_call": "sklearn.model_selection.train_test_split",
+        "library": "scikit-learn",
+        "line_number": 27,
+        "mutated_stratify": "None",
+        "original_stratify": "y_train",
+        "original_stratify_ast": "Name(id='y_train', ctx=Load())",
+        "stratify_col_offset": 17,
+        "stratify_end_col_offset": 24,
+        "stratify_end_line_number": 31,
+        "stratify_line_number": 31
+      },
+      "category": "data_splitting",
+      "description": "Disable train/test split stratification for train_test_split.",
+      "duration_seconds": 1.280104466000921,
+      "execution": {
+        "return_code": 0,
+        "stderr": "",
+        "stdout": "{\"scenario\": \"minimal_quickstart\", \"factual_table\": \"Prediction [ Low ,  High]\\n0.125 [0.000, 0.143]\\nValue : Feature                                  Weight [ Low  ,  High ]\\n0.15  : worst concave points > 0.15              -0.284 [-0.567,  0.125]\\n0.07  : mean concave points > 0.05               -0.075 [-0.125,  0.125]\\n106.0 : worst perimeter <= 115.45                 0.054 [ 0.048,  0.125]\\n0.14  : mean concavity > 0.08                    -0.042 [-0.075,  0.125]\\n24.49 : mean texture > 18.53                     -0.037 [-0.069,  0.125]\\n16.01 : worst radius <= 17.56                     0.034 [ 0.025,  0.125]\\n39.05 : area error <= 48.30                       0.025 [ 0.014,  0.125]\\n0.48  : radius error > 0.47                       0.025 [ 0.014,  0.125]\\n32.94 : worst texture > 23.49                    -0.020 [-0.045,  0.125]\\n0.12  : mean smoothness > 0.08                   -0.018 [-0.042,  0.125]\\n0.34  : worst concavity > 0.22                   -0.018 [-0.042,  0.125]\\n0.12  : worst fractal dimension > 0.10           -0.018 [-0.042,  0.125]\\n0.18  : worst smoothness > 0.15                  -0.018 [-0.042,  0.125]\\n0.04  : compactness error > 0.02                  0.018 [ 0.005,  0.125]\\n0.02  : concave points error > 0.01               0.014 [ 0.000,  0.125]\\n0.01  : fractal dimension error > 0.00            0.014 [ 0.000,  0.125]\\n92.33 : mean perimeter <= 102.85                  0.014 [ 0.000,  0.125]\\n0.02  : symmetry error > 0.01                     0.014 [ 0.000,  0.125]\\n788.0 : worst area <= 880.95                      0.014 [ 0.000,  0.125]\\n0.37  : worst symmetry > 0.36                    -0.012 [-0.034,  0.125]\\n\", \"probability\": 0.125, \"probability_interval\": {\"low\": 0.0, \"high\": 0.14285714285714285}}\n"
+      },
+      "operator": "remove_train_test_split_stratification",
+      "outcome": "survived",
+      "reason": "Existing safeguards completed successfully and did not detect the mutation.",
+      "result_metadata": {
+        "return_code": 0,
+        "stderr": "",
+        "stdout": "{\"scenario\": \"minimal_quickstart\", \"factual_table\": \"Prediction [ Low ,  High]\\n0.125 [0.000, 0.143]\\nValue : Feature                                  Weight [ Low  ,  High ]\\n0.15  : worst concave points > 0.15              -0.284 [-0.567,  0.125]\\n0.07  : mean concave points > 0.05               -0.075 [-0.125,  0.125]\\n106.0 : worst perimeter <= 115.45                 0.054 [ 0.048,  0.125]\\n0.14  : mean concavity > 0.08                    -0.042 [-0.075,  0.125]\\n24.49 : mean texture > 18.53                     -0.037 [-0.069,  0.125]\\n16.01 : worst radius <= 17.56                     0.034 [ 0.025,  0.125]\\n39.05 : area error <= 48.30                       0.025 [ 0.014,  0.125]\\n0.48  : radius error > 0.47                       0.025 [ 0.014,  0.125]\\n32.94 : worst texture > 23.49                    -0.020 [-0.045,  0.125]\\n0.12  : mean smoothness > 0.08                   -0.018 [-0.042,  0.125]\\n0.34  : worst concavity > 0.22                   -0.018 [-0.042,  0.125]\\n0.12  : worst fractal dimension > 0.10           -0.018 [-0.042,  0.125]\\n0.18  : worst smoothness > 0.15                  -0.018 [-0.042,  0.125]\\n0.04  : compactness error > 0.02                  0.018 [ 0.005,  0.125]\\n0.02  : concave points error > 0.01               0.014 [ 0.000,  0.125]\\n0.01  : fractal dimension error > 0.00            0.014 [ 0.000,  0.125]\\n92.33 : mean perimeter <= 102.85                  0.014 [ 0.000,  0.125]\\n0.02  : symmetry error > 0.01                     0.014 [ 0.000,  0.125]\\n788.0 : worst area <= 880.95                      0.014 [ 0.000,  0.125]\\n0.37  : worst symmetry > 0.36                    -0.012 [-0.034,  0.125]\\n\", \"probability\": 0.125, \"probability_interval\": {\"low\": 0.0, \"high\": 0.14285714285714285}}\n"
+      },
+      "target": "examples/use_cases/minimal_quickstart.py"
+    }
+  ],
+  "operator": {
+    "category": "data_splitting",
+    "configuration": {
+      "python_file": "examples/use_cases/minimal_quickstart.py"
+    },
+    "name": "remove_train_test_split_stratification"
+  },
+  "project": {
+    "git_revision": "bdb68093d9238bd8c1fb9c07f22f226fa8b70b8b",
+    "path": "/home/ilya/Desktop/projekts/joss/pilots/calibrated-explanations"
+  },
+  "schema_version": 2,
+  "summary": {
+    "candidates": 2,
+    "outcomes": {
+      "survived": 2
+    }
+  },
+  "validation": {
+    "baseline": {
+      "duration_seconds": 1.2788842379995913,
+      "return_code": 0,
+      "stderr": "",
+      "stdout": "{\"scenario\": \"minimal_quickstart\", \"factual_table\": \"Prediction [ Low ,  High]\\n0.077 [0.000, 0.083]\\nValue : Feature                                  Weight [ Low  ,  High ]\\n0.07  : mean concave points > 0.06               -0.418 [-0.576, -0.256]\\n0.15  : worst concave points > 0.15              -0.308 [-0.548,  0.077]\\n0.14  : mean concavity > 0.07                    -0.090 [-0.123,  0.077]\\n0.34  : worst concavity > 0.22                   -0.090 [-0.123,  0.077]\\n0.18  : worst smoothness > 0.15                  -0.090 [-0.123,  0.077]\\n32.94 : worst texture > 24.45                    -0.082 [-0.112,  0.077]\\n0.4   : worst compactness > 0.25                 -0.074 [-0.101,  0.077]\\n0.12  : worst fractal dimension > 0.09           -0.066 [-0.090,  0.077]\\n0.17  : mean compactness > 0.12                  -0.054 [-0.074,  0.077]\\n0.37  : worst symmetry > 0.31                    -0.054 [-0.074,  0.077]\\n24.49 : mean texture > 18.89                     -0.053 [-0.073,  0.077]\\n13.82 : mean radius <= 15.11                     -0.048 [-0.066,  0.077]\\n0.12  : mean smoothness > 0.08                   -0.048 [-0.066,  0.077]\\n92.33 : mean perimeter <= 102.85                 -0.034 [-0.048,  0.077]\\n0.01  : smoothness error > 0.01                  -0.027 [-0.040,  0.077]\\n2.97  : perimeter error > 2.57                   -0.012 [-0.022,  0.077]\\n1.53  : texture error > 1.33                     -0.011 [-0.020,  0.077]\\n0.48  : radius error > 0.39                      -0.008 [-0.016,  0.077]\\n39.05 : area error <= 49.58                       0.005 [ 0.000,  0.077]\\n0.02  : concave points error > 0.01               0.005 [ 0.000,  0.077]\\n788.0 : worst area <= 880.75                      0.005 [ 0.000,  0.077]\\n106.0 : worst perimeter <= 114.40                 0.005 [ 0.000,  0.077]\\n16.01 : worst radius <= 17.03                     0.005 [ 0.000,  0.077]\\n\", \"probability\": 0.07692307692307693, \"probability_interval\": {\"low\": 0.0, \"high\": 0.08333333333333333}}\n",
+      "timed_out": false
+    },
+    "command": "/home/ilya/Desktop/projekts/joss/pilots/envs/calibrated-explanations-bdb680/bin/python examples/use_cases/minimal_quickstart.py",
+    "timeout_seconds": 60.0
+  }
+}
