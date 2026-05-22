@@ -24,6 +24,9 @@ from mlrepromutate.operators.data_split import (
 from mlrepromutate.operators.dependency import (
     RelaxRequirementsPinOperator,
 )
+from mlrepromutate.operators.evaluation_protocol import (
+    ChangeCrossValidationFoldCountOperator,
+)
 from mlrepromutate.operators.randomness import (
     ChangePythonRandomSeedOperator,
 )
@@ -37,6 +40,7 @@ class OperatorName(StrEnum):
     DEPENDENCY_PIN = "dependency-pin"
     RANDOM_SEED = "random-seed"
     DATA_SPLIT = "data-split"
+    CV_FOLD_COUNT = "cv-fold-count"
 
 
 class DependencyMode(StrEnum):
@@ -161,7 +165,7 @@ def run(
         if python_file is not None:
             raise typer.BadParameter(
                 "--python-file is only valid with --operator "
-                "random-seed or data-split.",
+                "random-seed, data-split, or cv-fold-count.",
                 param_hint="--python-file",
             )
 
@@ -237,7 +241,7 @@ def run(
 
         evaluator = MutationEvaluator(runner)
 
-    else:
+    elif operator_name is OperatorName.DATA_SPLIT:
         if requirements_file is not None:
             raise typer.BadParameter(
                 "--requirements-file is only valid with "
@@ -253,6 +257,35 @@ def run(
             )
 
         operator = RemoveTrainTestSplitStratificationOperator(
+            python_file=python_file,
+        )
+
+        operator_configuration = {
+            "python_file": (
+                str(python_file)
+                if python_file is not None
+                else None
+            ),
+        }
+
+        evaluator = MutationEvaluator(runner)
+
+    else:
+        if requirements_file is not None:
+            raise typer.BadParameter(
+                "--requirements-file is only valid with "
+                "--operator dependency-pin.",
+                param_hint="--requirements-file",
+            )
+
+        if dependency_mode is DependencyMode.RESOLVED:
+            raise typer.BadParameter(
+                "--dependency-mode resolved is only valid with "
+                "--operator dependency-pin.",
+                param_hint="--dependency-mode",
+            )
+
+        operator = ChangeCrossValidationFoldCountOperator(
             python_file=python_file,
         )
 
