@@ -440,3 +440,43 @@ def test_run_can_use_cv_fold_count_operator(
     assert "experiment.py:2" in result.stdout
     assert "SURVIVED" in result.stdout
 
+
+
+def test_run_can_select_one_mutation_candidate(
+    tmp_path: Path,
+) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+
+    (project / "experiment.py").write_text(
+        "from sklearn.model_selection import StratifiedKFold\n"
+        "first = StratifiedKFold(n_splits=5)\n"
+        "second = StratifiedKFold(n_splits=10)\n",
+        encoding="utf-8",
+    )
+
+    (project / "validate.py").write_text(
+        "raise SystemExit(0)\n",
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(
+        app,
+        [
+            "run",
+            str(project),
+            "--operator",
+            "cv-fold-count",
+            "--python-file",
+            "experiment.py",
+            "--candidate-index",
+            "1",
+            "--command",
+            "python validate.py",
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert "Detected 2 mutation candidates." in result.stdout
+    assert "Selected mutation candidate 1 of 2." in result.stdout
+    assert "Summary: 1 mutations" in result.stdout

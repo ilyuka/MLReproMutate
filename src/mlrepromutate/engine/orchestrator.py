@@ -1,4 +1,4 @@
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from pathlib import Path
 
 from mlrepromutate.engine.evaluator import MutationEvaluator
@@ -21,6 +21,7 @@ CandidateResultCallback = Callable[
 
 BaselinePassedCallback = Callable[[ExecutionResult], None]
 
+
 class MutationOrchestrator:
     """Detect and evaluate mutations for a project."""
 
@@ -32,15 +33,19 @@ class MutationOrchestrator:
         project_root: Path,
         operator: MutationOperator,
         *,
+        candidates: Sequence[MutationCandidate] | None = None,
         on_baseline_passed: BaselinePassedCallback | None = None,
         on_candidate_start: CandidateStartCallback | None = None,
         on_candidate_result: CandidateResultCallback | None = None,
     ) -> list[MutationResult]:
-        """Detect and evaluate all candidates produced by an operator."""
+        """Detect and evaluate selected mutation candidates."""
 
-        candidates = list(operator.detect(project_root))
+        if candidates is None:
+            selected_candidates = list(operator.detect(project_root))
+        else:
+            selected_candidates = list(candidates)
 
-        if not candidates:
+        if not selected_candidates:
             return []
 
         baseline_result = self.evaluator.validate_baseline(project_root)
@@ -49,11 +54,18 @@ class MutationOrchestrator:
             on_baseline_passed(baseline_result)
 
         results: list[MutationResult] = []
-        total = len(candidates)
+        total = len(selected_candidates)
 
-        for index, candidate in enumerate(candidates, start=1):
+        for index, candidate in enumerate(
+            selected_candidates,
+            start=1,
+        ):
             if on_candidate_start is not None:
-                on_candidate_start(index, total, candidate)
+                on_candidate_start(
+                    index,
+                    total,
+                    candidate,
+                )
 
             result = self.evaluator.evaluate_mutation(
                 project_root,
@@ -63,6 +75,10 @@ class MutationOrchestrator:
             results.append(result)
 
             if on_candidate_result is not None:
-                on_candidate_result(index, total, result)
+                on_candidate_result(
+                    index,
+                    total,
+                    result,
+                )
 
         return results

@@ -132,6 +132,16 @@ def run(
             ),
         ),
     ] = None,
+    candidate_index: Annotated[
+        int | None,
+        typer.Option(
+            "--candidate-index",
+            help=(
+                "Evaluate only one detected mutation candidate "
+                "using its 1-based index."
+            ),
+        ),
+    ] = None,
     json_out: Annotated[
         Path | None,
         typer.Option(
@@ -299,6 +309,9 @@ def run(
 
         evaluator = MutationEvaluator(runner)
 
+    if candidate_index is not None:
+        operator_configuration["candidate_index"] = candidate_index
+
     orchestrator = MutationOrchestrator(evaluator)
 
     try:
@@ -310,7 +323,26 @@ def run(
         typer.echo("No applicable mutations found.")
         return
 
-    typer.echo(f"Detected {len(candidates)} mutation candidates.")
+    detected_count = len(candidates)
+    typer.echo(
+        f"Detected {detected_count} mutation candidates."
+    )
+
+    if candidate_index is not None:
+        if candidate_index < 1 or candidate_index > detected_count:
+            raise typer.BadParameter(
+                "Candidate index must be between 1 and "
+                f"{detected_count}.",
+                param_hint="--candidate-index",
+            )
+
+        candidates = [candidates[candidate_index - 1]]
+
+        typer.echo(
+            f"Selected mutation candidate "
+            f"{candidate_index} of {detected_count}."
+        )
+
     typer.echo("Validating baseline...")
 
     baseline_result: ExecutionResult | None = None
@@ -373,6 +405,7 @@ def run(
         results = orchestrator.run(
             project,
             operator,
+            candidates=candidates,
             on_baseline_passed=report_baseline_passed,
             on_candidate_start=report_candidate_start,
             on_candidate_result=report_candidate_result,
