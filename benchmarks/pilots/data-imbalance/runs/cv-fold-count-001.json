@@ -1,0 +1,72 @@
+{
+  "environment": {},
+  "framework": {
+    "git_revision": "b606250c39237a9de959fc1bc6d8e6d979192c13",
+    "name": "MLReproMutate",
+    "version": "0.0.0"
+  },
+  "generated_at_utc": "2026-05-22T15:55:21.934734+00:00",
+  "mutations": [
+    {
+      "candidate_metadata": {
+        "call": "StratifiedKFold",
+        "library": "scikit-learn",
+        "line_number": 133,
+        "mutated_n_splits": 6,
+        "n_splits_col_offset": 56,
+        "n_splits_end_col_offset": 57,
+        "n_splits_end_line_number": 133,
+        "n_splits_line_number": 133,
+        "original_n_splits": 5,
+        "splitter": "StratifiedKFold"
+      },
+      "category": "evaluation_protocol",
+      "description": "Change StratifiedKFold cross-validation folds from 5 to 6.",
+      "duration_seconds": 1.1110401100013405,
+      "execution": {
+        "return_code": 0,
+        "stderr": "\nfitting classifiers:   0%|          | 0/1 [00:00<?, ?it/s]\nfitting classifiers:   0%|          | 0/1 [00:00<?, ?it/s, size=1, balance=0.5, classifier=LogisticRegression]\nfitting classifiers: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  2.12it/s, size=1, balance=0.5, classifier=LogisticRegression]\nfitting classifiers: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  2.12it/s, size=1, balance=0.5, classifier=LogisticRegression]\n",
+        "stdout": "{\"accuracy\": 0.8166666666666668, \"balanced_accuracy\": 0.8166666666666668, \"f1\": 0.8175204425204425, \"fold_count\": 6, \"roc_auc\": 0.8983333333333334}\n"
+      },
+      "operator": "change_cross_validation_fold_count",
+      "outcome": "survived",
+      "reason": "Existing safeguards completed successfully and did not detect the mutation.",
+      "result_metadata": {
+        "return_code": 0,
+        "stderr": "\nfitting classifiers:   0%|          | 0/1 [00:00<?, ?it/s]\nfitting classifiers:   0%|          | 0/1 [00:00<?, ?it/s, size=1, balance=0.5, classifier=LogisticRegression]\nfitting classifiers: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  2.12it/s, size=1, balance=0.5, classifier=LogisticRegression]\nfitting classifiers: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  2.12it/s, size=1, balance=0.5, classifier=LogisticRegression]\n",
+        "stdout": "{\"accuracy\": 0.8166666666666668, \"balanced_accuracy\": 0.8166666666666668, \"f1\": 0.8175204425204425, \"fold_count\": 6, \"roc_auc\": 0.8983333333333334}\n"
+      },
+      "target": "imbalance/pipeline.py"
+    }
+  ],
+  "operator": {
+    "category": "evaluation_protocol",
+    "configuration": {
+      "candidate_index": 1,
+      "python_file": "imbalance/pipeline.py"
+    },
+    "name": "change_cross_validation_fold_count"
+  },
+  "project": {
+    "git_revision": "607f784dff11fba9cbf852966dc7631f97d7914f",
+    "path": "/home/ilya/Desktop/projekts/joss/pilots/data-imbalance"
+  },
+  "schema_version": 2,
+  "summary": {
+    "candidates": 1,
+    "outcomes": {
+      "survived": 1
+    }
+  },
+  "validation": {
+    "baseline": {
+      "duration_seconds": 1.0628447779999988,
+      "return_code": 0,
+      "stderr": "\nfitting classifiers:   0%|          | 0/1 [00:00<?, ?it/s]\nfitting classifiers:   0%|          | 0/1 [00:00<?, ?it/s, size=1, balance=0.5, classifier=LogisticRegression]\nfitting classifiers: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  2.20it/s, size=1, balance=0.5, classifier=LogisticRegression]\nfitting classifiers: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  2.20it/s, size=1, balance=0.5, classifier=LogisticRegression]\n",
+      "stdout": "{\"accuracy\": 0.825, \"balanced_accuracy\": 0.825, \"f1\": 0.8266029622551361, \"fold_count\": 5, \"roc_auc\": 0.9069444444444444}\n",
+      "timed_out": false
+    },
+    "command": "/usr/bin/env PYTHONPATH=. /home/ilya/Desktop/projekts/joss/pilots/envs/data-imbalance-607f784/bin/python /home/ilya/Desktop/projekts/joss/ml-repro-mutate/benchmarks/pilots/data-imbalance/validate_cv_protocol.py",
+    "timeout_seconds": 60.0
+  }
+}
