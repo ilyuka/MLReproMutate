@@ -1,9 +1,18 @@
 import json
+import re
 from pathlib import Path
 
 from typer.testing import CliRunner
 
 from mlrepromutate.cli import app
+
+ANSI_ESCAPE = re.compile(
+    r"\x1b\[[0-?]*[ -/]*[@-~]"
+)
+
+
+def strip_ansi(text: str) -> str:
+    return ANSI_ESCAPE.sub("", text)
 
 runner = CliRunner()
 
@@ -209,8 +218,10 @@ def test_resolved_mode_requires_requirements_file(
     )
 
     assert result.exit_code != 0
-    assert "requires" in result.output
-    assert "requirements-file" in result.output
+    output = strip_ansi(result.output)
+
+    assert "requires" in output
+    assert "requirements-file" in output
 
 def test_resolved_mode_requires_python_command(
     tmp_path: Path,
@@ -363,7 +374,10 @@ def test_random_seed_rejects_dependency_options(
     )
 
     assert result.exit_code != 0
-    assert "dependency-mode" in result.output
+
+    output = strip_ansi(result.output)
+
+    assert "dependency-mode" in output
     assert "dependency-pin" in result.output
 
 
