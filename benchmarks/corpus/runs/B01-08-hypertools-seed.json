@@ -1,0 +1,71 @@
+{
+  "environment": {},
+  "framework": {
+    "git_revision": "79a35b61ed5fd3078bd8a3a4b5cdc1b258a2edef",
+    "name": "MLReproMutate",
+    "version": "0.0.0"
+  },
+  "generated_at_utc": "2026-08-24T05:45:48.225865+00:00",
+  "mutations": [
+    {
+      "candidate_metadata": {
+        "call": "np.random.seed",
+        "library": "numpy",
+        "line_number": 20,
+        "mutated_seed": 124,
+        "original_seed": 123,
+        "seed_col_offset": 15,
+        "seed_end_col_offset": 18,
+        "seed_end_line_number": 20,
+        "seed_line_number": 20
+      },
+      "category": "randomness",
+      "description": "Change random seed for np.random.seed from 123 to 124.",
+      "duration_seconds": 1.7466464120000182,
+      "execution": {
+        "return_code": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "operator": "change_python_random_seed",
+      "outcome": "survived",
+      "reason": "Existing safeguards completed successfully and did not detect the mutation.",
+      "result_metadata": {
+        "return_code": 0,
+        "stderr": "",
+        "stdout": ""
+      },
+      "target": "examples/plot_clusters2.py"
+    }
+  ],
+  "operator": {
+    "category": "randomness",
+    "configuration": {
+      "candidate_index": 1,
+      "python_file": "examples/plot_clusters2.py"
+    },
+    "name": "change_python_random_seed"
+  },
+  "project": {
+    "git_revision": "647ce929fb0fcc39dfbe17d73282ee54dbe4aaf6",
+    "path": "/home/ilya/Desktop/projekts/joss/corpus/repos/hypertools"
+  },
+  "schema_version": 2,
+  "summary": {
+    "candidates": 1,
+    "outcomes": {
+      "survived": 1
+    }
+  },
+  "validation": {
+    "baseline": {
+      "duration_seconds": 1.7962168980000115,
+      "return_code": 0,
+      "stderr": "",
+      "stdout": "",
+      "timed_out": false
+    },
+    "command": "env MPLBACKEND=Agg /home/ilya/Desktop/projekts/joss/corpus/envs/hypertools-647ce92/bin/python examples/plot_clusters2.py",
+    "timeout_seconds": 300.0
+  }
+}

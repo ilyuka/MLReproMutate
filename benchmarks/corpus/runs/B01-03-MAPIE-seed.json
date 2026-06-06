@@ -1,0 +1,71 @@
+{
+  "environment": {},
+  "framework": {
+    "git_revision": "139ace84a0d74af9fb81124c722d9515f86e45b2",
+    "name": "MLReproMutate",
+    "version": "0.0.0"
+  },
+  "generated_at_utc": "2026-06-04T18:05:48.156325+00:00",
+  "mutations": [
+    {
+      "candidate_metadata": {
+        "call": "np.random.seed",
+        "library": "numpy",
+        "line_number": 23,
+        "mutated_seed": 43,
+        "original_seed": 42,
+        "seed_col_offset": 15,
+        "seed_end_col_offset": 17,
+        "seed_end_line_number": 23,
+        "seed_line_number": 23
+      },
+      "category": "randomness",
+      "description": "Change random seed for np.random.seed from 42 to 43.",
+      "duration_seconds": 1.0848089909995906,
+      "execution": {
+        "return_code": 0,
+        "stderr": "/tmp/mlrepromutate-hk3bawt5/MAPIE/examples/classification/1-quickstart/plot_quickstart_classification.py:122: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown\n  plt.show()\n",
+        "stdout": "For a confidence level of 0.95, the target coverage is 0.950, and the effective coverage is 0.980.\n"
+      },
+      "operator": "change_python_random_seed",
+      "outcome": "survived",
+      "reason": "Existing safeguards completed successfully and did not detect the mutation.",
+      "result_metadata": {
+        "return_code": 0,
+        "stderr": "/tmp/mlrepromutate-hk3bawt5/MAPIE/examples/classification/1-quickstart/plot_quickstart_classification.py:122: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown\n  plt.show()\n",
+        "stdout": "For a confidence level of 0.95, the target coverage is 0.950, and the effective coverage is 0.980.\n"
+      },
+      "target": "examples/classification/1-quickstart/plot_quickstart_classification.py"
+    }
+  ],
+  "operator": {
+    "category": "randomness",
+    "configuration": {
+      "candidate_index": 1,
+      "python_file": "examples/classification/1-quickstart/plot_quickstart_classification.py"
+    },
+    "name": "change_python_random_seed"
+  },
+  "project": {
+    "git_revision": "4105fc5ce81359b6ea276c8bb09a8cabdfae7b30",
+    "path": "/home/ilya/Desktop/projekts/joss/corpus/repos/MAPIE"
+  },
+  "schema_version": 2,
+  "summary": {
+    "candidates": 1,
+    "outcomes": {
+      "survived": 1
+    }
+  },
+  "validation": {
+    "baseline": {
+      "duration_seconds": 1.126487255000029,
+      "return_code": 0,
+      "stderr": "/tmp/mlrepromutate-98w_axht/MAPIE/examples/classification/1-quickstart/plot_quickstart_classification.py:122: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown\n  plt.show()\n",
+      "stdout": "For a confidence level of 0.95, the target coverage is 0.950, and the effective coverage is 0.980.\n",
+      "timed_out": false
+    },
+    "command": "env MPLBACKEND=Agg /home/ilya/Desktop/projekts/joss/corpus/envs/mapie-4105fc5/bin/python examples/classification/1-quickstart/plot_quickstart_classification.py",
+    "timeout_seconds": 60.0
+  }
+}

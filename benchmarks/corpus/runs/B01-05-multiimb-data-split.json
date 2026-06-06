@@ -1,0 +1,73 @@
+{
+  "environment": {},
+  "framework": {
+    "git_revision": "9f7af18cdb7f95b43c91bcfe098547dea5c0e06b",
+    "name": "MLReproMutate",
+    "version": "0.0.0"
+  },
+  "generated_at_utc": "2026-08-23T18:56:48.731710+00:00",
+  "mutations": [
+    {
+      "candidate_metadata": {
+        "call": "train_test_split",
+        "canonical_call": "sklearn.model_selection.train_test_split",
+        "library": "scikit-learn",
+        "line_number": 117,
+        "mutated_stratify": "None",
+        "original_stratify": "y",
+        "original_stratify_ast": "Name(id='y', ctx=Load())",
+        "stratify_col_offset": 108,
+        "stratify_end_col_offset": 109,
+        "stratify_end_line_number": 117,
+        "stratify_line_number": 117
+      },
+      "category": "data_splitting",
+      "description": "Disable train/test split stratification for train_test_split.",
+      "duration_seconds": 46.59626697800013,
+      "execution": {
+        "return_code": 0,
+        "stderr": "",
+        "stdout": "============================= test session starts ==============================\nplatform linux -- Python 3.8.20, pytest-5.4.1, py-1.8.1, pluggy-0.13.1\nrootdir: /tmp/mlrepromutate-vdtprhzw/multi-imbalance\nplugins: cov-2.8.1\ncollected 179 items\n\nmulti_imbalance/datasets/tests/test_data_loader.py .                     [  0%]\nmulti_imbalance/ensemble/tests/test_ecoc.py ............................ [ 16%]\n................................                                         [ 34%]\nmulti_imbalance/ensemble/tests/test_mrbbagging.py ..........             [ 39%]\nmulti_imbalance/ensemble/tests/test_ovo.py ............................. [ 55%]\n.............................                                            [ 72%]\nmulti_imbalance/ensemble/tests/test_soupbagging.py ....                  [ 74%]\nmulti_imbalance/resampling/tests/test_globalcs.py ......                 [ 77%]\nmulti_imbalance/resampling/tests/test_mdo.py .......                     [ 81%]\nmulti_imbalance/resampling/tests/test_soup.py ..................         [ 91%]\nmulti_imbalance/resampling/tests/test_spider.py .......                  [ 95%]\nmulti_imbalance/resampling/tests/test_static_smote.py .                  [ 96%]\nmulti_imbalance/utils/tests/test_data.py .......                         [100%]\n\n=============================== warnings summary ===============================\nmulti_imbalance/ensemble/tests/test_ecoc.py: 47 tests with warnings\n  /home/ilya/Desktop/projekts/joss/corpus/envs/multiimb-e2535f5-py38/lib/python3.8/site-packages/numpy/core/fromnumeric.py:3334: RuntimeWarning: Mean of empty slice.\n    return _methods._mean(a, axis=axis, dtype=dtype,\n\nmulti_imbalance/ensemble/tests/test_ecoc.py: 29 tests with warnings\n  /home/ilya/Desktop/projekts/joss/corpus/envs/multiimb-e2535f5-py38/lib/python3.8/site-packages/numpy/core/_methods.py:161: RuntimeWarning: invalid value encountered in long_scalars\n    ret = ret.dtype.type(ret / rcount)\n\nmulti_imbalance/ensemble/tests/test_ecoc.py: 58 tests with warnings\n  /tmp/mlrepromutate-vdtprhzw/multi-imbalance/multi_imbalance/resampling/soup.py:113: RuntimeWarning: overflow encountered in long_scalars\n    samples_to_remove_quantity = max(0, int(class_quantity - self.goal_quantity))\n\nmulti_imbalance/ensemble/tests/test_ecoc.py: 18 tests with warnings\n  /home/ilya/Desktop/projekts/joss/corpus/envs/multiimb-e2535f5-py38/lib/python3.8/site-packages/numpy/core/_methods.py:161: RuntimeWarning: invalid value encountered in double_scalars\n    ret = ret.dtype.type(ret / rcount)\n\n-- Docs: https://docs.pytest.org/en/latest/warnings.html\n====================== 179 passed, 152 warnings in 46.39s ======================\n"
+      },
+      "operator": "remove_train_test_split_stratification",
+      "outcome": "survived",
+      "reason": "Existing safeguards completed successfully and did not detect the mutation.",
+      "result_metadata": {
+        "return_code": 0,
+        "stderr": "",
+        "stdout": "============================= test session starts ==============================\nplatform linux -- Python 3.8.20, pytest-5.4.1, py-1.8.1, pluggy-0.13.1\nrootdir: /tmp/mlrepromutate-vdtprhzw/multi-imbalance\nplugins: cov-2.8.1\ncollected 179 items\n\nmulti_imbalance/datasets/tests/test_data_loader.py .                     [  0%]\nmulti_imbalance/ensemble/tests/test_ecoc.py ............................ [ 16%]\n................................                                         [ 34%]\nmulti_imbalance/ensemble/tests/test_mrbbagging.py ..........             [ 39%]\nmulti_imbalance/ensemble/tests/test_ovo.py ............................. [ 55%]\n.............................                                            [ 72%]\nmulti_imbalance/ensemble/tests/test_soupbagging.py ....                  [ 74%]\nmulti_imbalance/resampling/tests/test_globalcs.py ......                 [ 77%]\nmulti_imbalance/resampling/tests/test_mdo.py .......                     [ 81%]\nmulti_imbalance/resampling/tests/test_soup.py ..................         [ 91%]\nmulti_imbalance/resampling/tests/test_spider.py .......                  [ 95%]\nmulti_imbalance/resampling/tests/test_static_smote.py .                  [ 96%]\nmulti_imbalance/utils/tests/test_data.py .......                         [100%]\n\n=============================== warnings summary ===============================\nmulti_imbalance/ensemble/tests/test_ecoc.py: 47 tests with warnings\n  /home/ilya/Desktop/projekts/joss/corpus/envs/multiimb-e2535f5-py38/lib/python3.8/site-packages/numpy/core/fromnumeric.py:3334: RuntimeWarning: Mean of empty slice.\n    return _methods._mean(a, axis=axis, dtype=dtype,\n\nmulti_imbalance/ensemble/tests/test_ecoc.py: 29 tests with warnings\n  /home/ilya/Desktop/projekts/joss/corpus/envs/multiimb-e2535f5-py38/lib/python3.8/site-packages/numpy/core/_methods.py:161: RuntimeWarning: invalid value encountered in long_scalars\n    ret = ret.dtype.type(ret / rcount)\n\nmulti_imbalance/ensemble/tests/test_ecoc.py: 58 tests with warnings\n  /tmp/mlrepromutate-vdtprhzw/multi-imbalance/multi_imbalance/resampling/soup.py:113: RuntimeWarning: overflow encountered in long_scalars\n    samples_to_remove_quantity = max(0, int(class_quantity - self.goal_quantity))\n\nmulti_imbalance/ensemble/tests/test_ecoc.py: 18 tests with warnings\n  /home/ilya/Desktop/projekts/joss/corpus/envs/multiimb-e2535f5-py38/lib/python3.8/site-packages/numpy/core/_methods.py:161: RuntimeWarning: invalid value encountered in double_scalars\n    ret = ret.dtype.type(ret / rcount)\n\n-- Docs: https://docs.pytest.org/en/latest/warnings.html\n====================== 179 passed, 152 warnings in 46.39s ======================\n"
+      },
+      "target": "multi_imbalance/ensemble/ecoc.py"
+    }
+  ],
+  "operator": {
+    "category": "data_splitting",
+    "configuration": {
+      "candidate_index": 1,
+      "python_file": "multi_imbalance/ensemble/ecoc.py"
+    },
+    "name": "remove_train_test_split_stratification"
+  },
+  "project": {
+    "git_revision": "e2535f5f7f8e1f4d51f8ffe53a775e92056162a8",
+    "path": "/home/ilya/Desktop/projekts/joss/corpus/repos/multi-imbalance"
+  },
+  "schema_version": 2,
+  "summary": {
+    "candidates": 1,
+    "outcomes": {
+      "survived": 1
+    }
+  },
+  "validation": {
+    "baseline": {
+      "duration_seconds": 47.395630768000046,
+      "return_code": 0,
+      "stderr": "",
+      "stdout": "============================= test session starts ==============================\nplatform linux -- Python 3.8.20, pytest-5.4.1, py-1.8.1, pluggy-0.13.1\nrootdir: /tmp/mlrepromutate-c5q464_f/multi-imbalance\nplugins: cov-2.8.1\ncollected 179 items\n\nmulti_imbalance/datasets/tests/test_data_loader.py .                     [  0%]\nmulti_imbalance/ensemble/tests/test_ecoc.py ............................ [ 16%]\n................................                                         [ 34%]\nmulti_imbalance/ensemble/tests/test_mrbbagging.py ..........             [ 39%]\nmulti_imbalance/ensemble/tests/test_ovo.py ............................. [ 55%]\n.............................                                            [ 72%]\nmulti_imbalance/ensemble/tests/test_soupbagging.py ....                  [ 74%]\nmulti_imbalance/resampling/tests/test_globalcs.py ......                 [ 77%]\nmulti_imbalance/resampling/tests/test_mdo.py .......                     [ 81%]\nmulti_imbalance/resampling/tests/test_soup.py ..................         [ 91%]\nmulti_imbalance/resampling/tests/test_spider.py .......                  [ 95%]\nmulti_imbalance/resampling/tests/test_static_smote.py .                  [ 96%]\nmulti_imbalance/utils/tests/test_data.py .......                         [100%]\n\n=============================== warnings summary ===============================\nmulti_imbalance/ensemble/tests/test_ecoc.py: 41 tests with warnings\n  /home/ilya/Desktop/projekts/joss/corpus/envs/multiimb-e2535f5-py38/lib/python3.8/site-packages/numpy/core/fromnumeric.py:3334: RuntimeWarning: Mean of empty slice.\n    return _methods._mean(a, axis=axis, dtype=dtype,\n\nmulti_imbalance/ensemble/tests/test_ecoc.py: 23 tests with warnings\n  /home/ilya/Desktop/projekts/joss/corpus/envs/multiimb-e2535f5-py38/lib/python3.8/site-packages/numpy/core/_methods.py:161: RuntimeWarning: invalid value encountered in long_scalars\n    ret = ret.dtype.type(ret / rcount)\n\nmulti_imbalance/ensemble/tests/test_ecoc.py: 46 tests with warnings\n  /tmp/mlrepromutate-c5q464_f/multi-imbalance/multi_imbalance/resampling/soup.py:113: RuntimeWarning: overflow encountered in long_scalars\n    samples_to_remove_quantity = max(0, int(class_quantity - self.goal_quantity))\n\nmulti_imbalance/ensemble/tests/test_ecoc.py: 18 tests with warnings\n  /home/ilya/Desktop/projekts/joss/corpus/envs/multiimb-e2535f5-py38/lib/python3.8/site-packages/numpy/core/_methods.py:161: RuntimeWarning: invalid value encountered in double_scalars\n    ret = ret.dtype.type(ret / rcount)\n\n-- Docs: https://docs.pytest.org/en/latest/warnings.html\n====================== 179 passed, 128 warnings in 47.20s ======================\n",
+      "timed_out": false
+    },
+    "command": "/home/ilya/Desktop/projekts/joss/corpus/envs/multiimb-e2535f5-py38/bin/python -m pytest",
+    "timeout_seconds": 300.0
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "environment": {},
+  "framework": {
+    "git_revision": "427852b944d529dfba0d25456ad101583f227289",
+    "name": "MLReproMutate",
+    "version": "0.0.0"
+  },
+  "generated_at_utc": "2026-08-24T05:52:42.794189+00:00",
+  "mutations": [
+    {
+      "candidate_metadata": {
+        "call": "np.random.seed",
+        "library": "numpy",
+        "line_number": 6,
+        "mutated_seed": 43,
+        "original_seed": 42,
+        "seed_col_offset": 15,
+        "seed_end_col_offset": 17,
+        "seed_end_line_number": 6,
+        "seed_line_number": 6
+      },
+      "category": "randomness",
+      "description": "Change random seed for np.random.seed from 42 to 43.",
+      "duration_seconds": 1.0240273479998905,
+      "execution": {
+        "return_code": 0,
+        "stderr": "/tmp/mlrepromutate-a5cff8oz/autorank/examples/example.py:19: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown\n  plt.show()\n",
+        "stdout": "RankResult(rankdf=\n       meanrank    median       mad  ...   magnitude effect_size_above  \\\npop_0      5.04  0.210273  0.210273  ...  negligible               0.0   \npop_1      4.94  0.279402  0.181335  ...       small         -0.237484   \npop_2      4.03  0.478335  0.157872  ...       large         -0.789244   \npop_3      2.52  0.824922  0.175078  ...       large         -1.402359   \npop_5      2.32  0.841712  0.158288  ...       large         -0.067855   \npop_4      2.15  0.892724  0.107276  ...       large         -0.254471   \n\n      magnitude_above  \npop_0      negligible  \npop_1           small  \npop_2          medium  \npop_3           large  \npop_5      negligible  \npop_4           small  \n\n[6 rows x 9 columns]\npvalue=4.012341280950854e-26\ncd=1.0662484349869374\nomnibus=friedman\nposthoc=nemenyi\nall_normal=False\npvals_shapiro=[np.float64(0.00026456171207029614), np.float64(0.008140951690382231), np.float64(0.19336101704937325), np.float64(2.8188095952318514e-05), np.float64(2.519756287272892e-05), np.float64(2.7641865188124763e-06)]\nhomoscedastic=True\npval_homogeneity=0.2430443899097706\nhomogeneity_test=levene\nalpha=0.05\nalpha_normality=0.008333333333333333\nnum_samples=50\nposterior_matrix=\nNone\ndecision_matrix=\nNone\nrope=None\nrope_mode=None\neffect_size=akinshin_gamma\nforce_mode=None)\nThe statistical analysis was conducted for 6 populations with 50 paired samples.\nThe family-wise significance level of the tests is alpha=0.050.\nWe rejected the null hypothesis that the population is normal for the populations pop_0 (p=0.000), pop_1 (p=0.008), pop_3 (p=0.000), pop_5 (p=0.000), and pop_4 (p=0.000). Therefore, we assume that not all populations are normal.\nBecause we have more than two populations and the populations and some of them are not normal, we use the non-parametric Friedman test as omnibus test to determine if there are any significant differences between the median values of the populations. We use the post-hoc Nemenyi test to infer which differences are significant. We report the median (MD), the median absolute deviation (MAD) and the mean rank (MR) among all populations over the samples. Differences between populations are significant, if the difference of the mean rank is greater than the critical distance CD=1.066 of the Nemenyi test.\nWe reject the null hypothesis (p=0.000) of the Friedman test that there is no difference in the central tendency of the populations pop_0 (MD=0.210+-0.239, MAD=0.210, MR=5.040), pop_1 (MD=0.279+-0.192, MAD=0.181, MR=4.940), pop_2 (MD=0.478+-0.181, MAD=0.158, MR=4.030), pop_3 (MD=0.825+-0.176, MAD=0.175, MR=2.520), pop_5 (MD=0.842+-0.199, MAD=0.158, MR=2.320), and pop_4 (MD=0.893+-0.136, MAD=0.107, MR=2.150). Therefore, we assume that there is a statistically significant difference between the median values of the populations.\nBased on the post-hoc Nemenyi test, we assume that there are no significant differences within the following groups: pop_0, pop_1, and pop_2; pop_3, pop_5, and pop_4. All other differences are significant.\n\\begin{table}[h]\n\\centering\n\\begin{tabular}{lrrllll}\n\\toprule\n & MR & MED & MAD & CI & $\\gamma$ & Magnitude \\\\\n\\midrule\npop_0 & 5.040 & 0.210 & 0.210 & [0.026, 0.503] & 0.000 & negligible \\\\\npop_1 & 4.940 & 0.279 & 0.181 & [0.092, 0.476] & -0.237 & small \\\\\npop_2 & 4.030 & 0.478 & 0.158 & [0.316, 0.679] & -0.972 & large \\\\\npop_3 & 2.520 & 0.825 & 0.175 & [0.647, 1.000] & -2.143 & large \\\\\npop_5 & 2.320 & 0.842 & 0.158 & [0.602, 1.000] & -2.288 & large \\\\\npop_4 & 2.150 & 0.893 & 0.107 & [0.728, 1.000] & -2.758 & large \\\\\n\\bottomrule\n\\end{tabular}\n\\caption{Summary of populations}\n\\label{tbl:stat_results}\n\\end{table}\n"
+      },
+      "operator": "change_python_random_seed",
+      "outcome": "survived",
+      "reason": "Existing safeguards completed successfully and did not detect the mutation.",
+      "result_metadata": {
+        "return_code": 0,
+        "stderr": "/tmp/mlrepromutate-a5cff8oz/autorank/examples/example.py:19: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown\n  plt.show()\n",
+        "stdout": "RankResult(rankdf=\n       meanrank    median       mad  ...   magnitude effect_size_above  \\\npop_0      5.04  0.210273  0.210273  ...  negligible               0.0   \npop_1      4.94  0.279402  0.181335  ...       small         -0.237484   \npop_2      4.03  0.478335  0.157872  ...       large         -0.789244   \npop_3      2.52  0.824922  0.175078  ...       large         -1.402359   \npop_5      2.32  0.841712  0.158288  ...       large         -0.067855   \npop_4      2.15  0.892724  0.107276  ...       large         -0.254471   \n\n      magnitude_above  \npop_0      negligible  \npop_1           small  \npop_2          medium  \npop_3           large  \npop_5      negligible  \npop_4           small  \n\n[6 rows x 9 columns]\npvalue=4.012341280950854e-26\ncd=1.0662484349869374\nomnibus=friedman\nposthoc=nemenyi\nall_normal=False\npvals_shapiro=[np.float64(0.00026456171207029614), np.float64(0.008140951690382231), np.float64(0.19336101704937325), np.float64(2.8188095952318514e-05), np.float64(2.519756287272892e-05), np.float64(2.7641865188124763e-06)]\nhomoscedastic=True\npval_homogeneity=0.2430443899097706\nhomogeneity_test=levene\nalpha=0.05\nalpha_normality=0.008333333333333333\nnum_samples=50\nposterior_matrix=\nNone\ndecision_matrix=\nNone\nrope=None\nrope_mode=None\neffect_size=akinshin_gamma\nforce_mode=None)\nThe statistical analysis was conducted for 6 populations with 50 paired samples.\nThe family-wise significance level of the tests is alpha=0.050.\nWe rejected the null hypothesis that the population is normal for the populations pop_0 (p=0.000), pop_1 (p=0.008), pop_3 (p=0.000), pop_5 (p=0.000), and pop_4 (p=0.000). Therefore, we assume that not all populations are normal.\nBecause we have more than two populations and the populations and some of them are not normal, we use the non-parametric Friedman test as omnibus test to determine if there are any significant differences between the median values of the populations. We use the post-hoc Nemenyi test to infer which differences are significant. We report the median (MD), the median absolute deviation (MAD) and the mean rank (MR) among all populations over the samples. Differences between populations are significant, if the difference of the mean rank is greater than the critical distance CD=1.066 of the Nemenyi test.\nWe reject the null hypothesis (p=0.000) of the Friedman test that there is no difference in the central tendency of the populations pop_0 (MD=0.210+-0.239, MAD=0.210, MR=5.040), pop_1 (MD=0.279+-0.192, MAD=0.181, MR=4.940), pop_2 (MD=0.478+-0.181, MAD=0.158, MR=4.030), pop_3 (MD=0.825+-0.176, MAD=0.175, MR=2.520), pop_5 (MD=0.842+-0.199, MAD=0.158, MR=2.320), and pop_4 (MD=0.893+-0.136, MAD=0.107, MR=2.150). Therefore, we assume that there is a statistically significant difference between the median values of the populations.\nBased on the post-hoc Nemenyi test, we assume that there are no significant differences within the following groups: pop_0, pop_1, and pop_2; pop_3, pop_5, and pop_4. All other differences are significant.\n\\begin{table}[h]\n\\centering\n\\begin{tabular}{lrrllll}\n\\toprule\n & MR & MED & MAD & CI & $\\gamma$ & Magnitude \\\\\n\\midrule\npop_0 & 5.040 & 0.210 & 0.210 & [0.026, 0.503] & 0.000 & negligible \\\\\npop_1 & 4.940 & 0.279 & 0.181 & [0.092, 0.476] & -0.237 & small \\\\\npop_2 & 4.030 & 0.478 & 0.158 & [0.316, 0.679] & -0.972 & large \\\\\npop_3 & 2.520 & 0.825 & 0.175 & [0.647, 1.000] & -2.143 & large \\\\\npop_5 & 2.320 & 0.842 & 0.158 & [0.602, 1.000] & -2.288 & large \\\\\npop_4 & 2.150 & 0.893 & 0.107 & [0.728, 1.000] & -2.758 & large \\\\\n\\bottomrule\n\\end{tabular}\n\\caption{Summary of populations}\n\\label{tbl:stat_results}\n\\end{table}\n"
+      },
+      "target": "examples/example.py"
+    }
+  ],
+  "operator": {
+    "category": "randomness",
+    "configuration": {
+      "candidate_index": 1,
+      "python_file": "examples/example.py"
+    },
+    "name": "change_python_random_seed"
+  },
+  "project": {
+    "git_revision": "10b65d3764e5ba9e464d3ee7866bf51ac513c8e8",
+    "path": "/home/ilya/Desktop/projekts/joss/corpus/repos/autorank"
+  },
+  "schema_version": 2,
+  "summary": {
+    "candidates": 1,
+    "outcomes": {
+      "survived": 1
+    }
+  },
+  "validation": {
+    "baseline": {
+      "duration_seconds": 1.0388474729998052,
+      "return_code": 0,
+      "stderr": "/tmp/mlrepromutate-_lm95a25/autorank/examples/example.py:19: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown\n  plt.show()\n",
+      "stdout": "RankResult(rankdf=\n       meanrank    median       mad  ...   magnitude effect_size_above  \\\npop_0      5.40  0.129756  0.129756  ...  negligible               0.0   \npop_1      4.71  0.313824  0.166828  ...       large         -0.830746   \npop_2      3.95  0.505057  0.225006  ...       large         -0.651227   \npop_3      2.47  0.858091  0.141909  ...       large         -1.265889   \npop_4      2.29  0.910437  0.089563  ...       large         -0.297549   \npop_5      2.18  0.912005  0.087995  ...       large         -0.011915   \n\n      magnitude_above  \npop_0      negligible  \npop_1           large  \npop_2          medium  \npop_3           large  \npop_4           small  \npop_5      negligible  \n\n[6 rows x 9 columns]\npvalue=2.3412212612346733e-28\ncd=1.0662484349869374\nomnibus=friedman\nposthoc=nemenyi\nall_normal=False\npvals_shapiro=[np.float64(1.6466104612021975e-05), np.float64(0.06051504449339993), np.float64(0.13884814824960318), np.float64(0.00010031072286680596), np.float64(2.066475146536526e-06), np.float64(1.5319447962186687e-06)]\nhomoscedastic=True\npval_homogeneity=0.2663177301695557\nhomogeneity_test=levene\nalpha=0.05\nalpha_normality=0.008333333333333333\nnum_samples=50\nposterior_matrix=\nNone\ndecision_matrix=\nNone\nrope=None\nrope_mode=None\neffect_size=akinshin_gamma\nforce_mode=None)\nThe statistical analysis was conducted for 6 populations with 50 paired samples.\nThe family-wise significance level of the tests is alpha=0.050.\nWe rejected the null hypothesis that the population is normal for the populations pop_0 (p=0.000), pop_3 (p=0.000), pop_4 (p=0.000), and pop_5 (p=0.000). Therefore, we assume that not all populations are normal.\nBecause we have more than two populations and the populations and some of them are not normal, we use the non-parametric Friedman test as omnibus test to determine if there are any significant differences between the median values of the populations. We use the post-hoc Nemenyi test to infer which differences are significant. We report the median (MD), the median absolute deviation (MAD) and the mean rank (MR) among all populations over the samples. Differences between populations are significant, if the difference of the mean rank is greater than the critical distance CD=1.066 of the Nemenyi test.\nWe reject the null hypothesis (p=0.000) of the Friedman test that there is no difference in the central tendency of the populations pop_0 (MD=0.130+-0.175, MAD=0.130, MR=5.400), pop_1 (MD=0.314+-0.199, MAD=0.167, MR=4.710), pop_2 (MD=0.505+-0.249, MAD=0.225, MR=3.950), pop_3 (MD=0.858+-0.213, MAD=0.142, MR=2.470), pop_4 (MD=0.910+-0.173, MAD=0.090, MR=2.290), and pop_5 (MD=0.912+-0.154, MAD=0.088, MR=2.180). Therefore, we assume that there is a statistically significant difference between the median values of the populations.\nBased on the post-hoc Nemenyi test, we assume that there are no significant differences within the following groups: pop_0 and pop_1; pop_1 and pop_2; pop_3, pop_4, and pop_5. All other differences are significant.\n\\begin{table}[h]\n\\centering\n\\begin{tabular}{lrrllll}\n\\toprule\n & MR & MED & MAD & CI & $\\gamma$ & Magnitude \\\\\n\\midrule\npop_0 & 5.400 & 0.130 & 0.130 & [0.000, 0.349] & 0.000 & negligible \\\\\npop_1 & 4.710 & 0.314 & 0.167 & [0.149, 0.547] & -0.831 & large \\\\\npop_2 & 3.950 & 0.505 & 0.225 & [0.227, 0.726] & -1.378 & large \\\\\npop_3 & 2.470 & 0.858 & 0.142 & [0.574, 1.000] & -3.613 & large \\\\\npop_4 & 2.290 & 0.910 & 0.090 & [0.654, 1.000] & -4.723 & large \\\\\npop_5 & 2.180 & 0.912 & 0.088 & [0.692, 1.000] & -4.759 & large \\\\\n\\bottomrule\n\\end{tabular}\n\\caption{Summary of populations}\n\\label{tbl:stat_results}\n\\end{table}\n",
+      "timed_out": false
+    },
+    "command": "env MPLBACKEND=Agg /home/ilya/Desktop/projekts/joss/corpus/envs/autorank-10b65d3/bin/python examples/example.py",
+    "timeout_seconds": 300.0
+  }
+}

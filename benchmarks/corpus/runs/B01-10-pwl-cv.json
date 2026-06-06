@@ -1,0 +1,72 @@
+{
+  "environment": {},
+  "framework": {
+    "git_revision": "63ca18727146aeb83d01798df4ff7ba4204d36a6",
+    "name": "MLReproMutate",
+    "version": "0.0.0"
+  },
+  "generated_at_utc": "2026-08-24T06:04:03.729339+00:00",
+  "mutations": [
+    {
+      "candidate_metadata": {
+        "call": "StratifiedKFold",
+        "library": "scikit-learn",
+        "line_number": 104,
+        "mutated_n_splits": 11,
+        "n_splits_col_offset": 34,
+        "n_splits_end_col_offset": 36,
+        "n_splits_end_line_number": 104,
+        "n_splits_line_number": 104,
+        "original_n_splits": 10,
+        "splitter": "StratifiedKFold"
+      },
+      "category": "evaluation_protocol",
+      "description": "Change StratifiedKFold cross-validation folds from 10 to 11.",
+      "duration_seconds": 3.641428385999916,
+      "execution": {
+        "return_code": 0,
+        "stderr": "INFO:P-WL:Read 188 graphs and 188 labels\nINFO:P-WL:Using cycle persistence\nINFO:P-WL:Finished persistent Weisfeiler-Lehman transformation\nINFO:P-WL:Obtained (188 x 14) feature matrix\nINFO:P-WL:  - Mean 10-fold accuracy: 89.84 [running mean over all\n            folds: 89.84]\nINFO:P-WL:  - Mean 10-fold accuracy: 90.40 [running mean over all\n            folds: 90.12]\nINFO:P-WL:  - Mean 10-fold accuracy: 90.40 [running mean over all\n            folds: 90.22]\nINFO:P-WL:  - Mean 10-fold accuracy: 92.01 [running mean over all\n            folds: 90.66]\nINFO:P-WL:  - Mean 10-fold accuracy: 89.36 [running mean over all\n            folds: 90.40]\nINFO:P-WL:  - Mean 10-fold accuracy: 91.44 [running mean over all\n            folds: 90.58]\nINFO:P-WL:  - Mean 10-fold accuracy: 89.90 [running mean over all\n            folds: 90.48]\nINFO:P-WL:  - Mean 10-fold accuracy: 90.97 [running mean over all\n            folds: 90.54]\nINFO:P-WL:  - Mean 10-fold accuracy: 93.08 [running mean over all\n            folds: 90.82]\nINFO:P-WL:  - Mean 10-fold accuracy: 90.40 [running mean over all\n            folds: 90.78]\nINFO:P-WL:Accuracy: 90.78 +- 1.07\n",
+        "stdout": ""
+      },
+      "operator": "change_cross_validation_fold_count",
+      "outcome": "survived",
+      "reason": "Existing safeguards completed successfully and did not detect the mutation.",
+      "result_metadata": {
+        "return_code": 0,
+        "stderr": "INFO:P-WL:Read 188 graphs and 188 labels\nINFO:P-WL:Using cycle persistence\nINFO:P-WL:Finished persistent Weisfeiler-Lehman transformation\nINFO:P-WL:Obtained (188 x 14) feature matrix\nINFO:P-WL:  - Mean 10-fold accuracy: 89.84 [running mean over all\n            folds: 89.84]\nINFO:P-WL:  - Mean 10-fold accuracy: 90.40 [running mean over all\n            folds: 90.12]\nINFO:P-WL:  - Mean 10-fold accuracy: 90.40 [running mean over all\n            folds: 90.22]\nINFO:P-WL:  - Mean 10-fold accuracy: 92.01 [running mean over all\n            folds: 90.66]\nINFO:P-WL:  - Mean 10-fold accuracy: 89.36 [running mean over all\n            folds: 90.40]\nINFO:P-WL:  - Mean 10-fold accuracy: 91.44 [running mean over all\n            folds: 90.58]\nINFO:P-WL:  - Mean 10-fold accuracy: 89.90 [running mean over all\n            folds: 90.48]\nINFO:P-WL:  - Mean 10-fold accuracy: 90.97 [running mean over all\n            folds: 90.54]\nINFO:P-WL:  - Mean 10-fold accuracy: 93.08 [running mean over all\n            folds: 90.82]\nINFO:P-WL:  - Mean 10-fold accuracy: 90.40 [running mean over all\n            folds: 90.78]\nINFO:P-WL:Accuracy: 90.78 +- 1.07\n",
+        "stdout": ""
+      },
+      "target": "src/main.py"
+    }
+  ],
+  "operator": {
+    "category": "evaluation_protocol",
+    "configuration": {
+      "candidate_index": 1,
+      "python_file": "src/main.py"
+    },
+    "name": "change_cross_validation_fold_count"
+  },
+  "project": {
+    "git_revision": "bb516c332bbbd113fb0a241539fd9b66267d65cf",
+    "path": "/home/ilya/Desktop/projekts/joss/corpus/repos/P-WL"
+  },
+  "schema_version": 2,
+  "summary": {
+    "candidates": 1,
+    "outcomes": {
+      "survived": 1
+    }
+  },
+  "validation": {
+    "baseline": {
+      "duration_seconds": 3.6125886640002136,
+      "return_code": 0,
+      "stderr": "INFO:P-WL:Read 188 graphs and 188 labels\nINFO:P-WL:Using cycle persistence\nINFO:P-WL:Finished persistent Weisfeiler-Lehman transformation\nINFO:P-WL:Obtained (188 x 14) feature matrix\nINFO:P-WL:  - Mean 10-fold accuracy: 90.94 [running mean over all\n            folds: 90.94]\nINFO:P-WL:  - Mean 10-fold accuracy: 91.40 [running mean over all\n            folds: 91.17]\nINFO:P-WL:  - Mean 10-fold accuracy: 89.94 [running mean over all\n            folds: 90.76]\nINFO:P-WL:  - Mean 10-fold accuracy: 91.99 [running mean over all\n            folds: 91.07]\nINFO:P-WL:  - Mean 10-fold accuracy: 87.72 [running mean over all\n            folds: 90.40]\nINFO:P-WL:  - Mean 10-fold accuracy: 90.44 [running mean over all\n            folds: 90.40]\nINFO:P-WL:  - Mean 10-fold accuracy: 90.96 [running mean over all\n            folds: 90.48]\nINFO:P-WL:  - Mean 10-fold accuracy: 90.94 [running mean over all\n            folds: 90.54]\nINFO:P-WL:  - Mean 10-fold accuracy: 91.58 [running mean over all\n            folds: 90.66]\nINFO:P-WL:  - Mean 10-fold accuracy: 91.52 [running mean over all\n            folds: 90.74]\nINFO:P-WL:Accuracy: 90.74 +- 1.15\n",
+      "stdout": "",
+      "timed_out": false
+    },
+    "command": "bash -lc 'cd src && exec /home/ilya/Desktop/projekts/joss/corpus/envs/pwl-bb516c3-py38/bin/python main.py -c -n 0 -p 1 ../data/MUTAG/*.gml -l ../data/MUTAG/Labels.txt'",
+    "timeout_seconds": 300.0
+  }
+}
