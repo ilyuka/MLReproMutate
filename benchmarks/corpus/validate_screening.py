@@ -19,6 +19,20 @@ WORKFLOW_KINDS = {
     "ci",
 }
 
+ORACLE_KINDS = {
+    "assertion",
+    "metric-threshold",
+    "reference-comparison",
+    "completion-only",
+}
+
+SEMANTIC_VERIFICATION_STATUSES = {
+    "confirmed-non-equivalent",
+    "confirmed-equivalent",
+    "unverified",
+    "not-run",
+}
+
 SCREENING_STATUSES = {
     "eligible",
     "setup-failed",
@@ -86,10 +100,18 @@ def validate_record(
             f"missing fields: {sorted(missing)}"
         )
 
-    if record["schema_version"] != 1:
+    schema_version = record["schema_version"]
+
+    if schema_version not in {1, 2}:
         raise ValueError(
-            "schema_version must be 1"
+            "schema_version must be 1 or 2"
         )
+
+    if schema_version == 2:
+        if record.get("protocol_version") != "2.0":
+            raise ValueError(
+                "schema version 2 requires protocol_version='2.0'"
+            )
 
     repository = record["repository"]
 
@@ -155,6 +177,14 @@ def validate_record(
         ):
             raise TypeError(
                 f"workflow.{key} must be a string"
+            )
+
+    if schema_version == 2:
+        oracle_kind = workflow.get("oracle_kind")
+
+        if oracle_kind not in ORACLE_KINDS:
+            raise ValueError(
+                f"unknown workflow oracle kind: {oracle_kind!r}"
             )
 
     screening = require_mapping(
@@ -297,6 +327,56 @@ def validate_record(
                 "non-evaluated mutation must "
                 "have outcome=null"
             )
+
+    if schema_version == 2:
+        semantic = mutation.get("semantic_verification")
+
+        if not isinstance(semantic, dict):
+            raise TypeError(
+                "schema version 2 requires "
+                "mutation.semantic_verification object"
+            )
+
+        semantic_status = semantic.get("status")
+
+        if semantic_status not in SEMANTIC_VERIFICATION_STATUSES:
+            raise ValueError(
+                f"unknown semantic verification status: "
+                f"{semantic_status!r}"
+            )
+
+        for key in ("method", "evidence"):
+            value = semantic.get(key)
+
+            if value is not None and not isinstance(value, str):
+                raise TypeError(
+                    f"mutation.semantic_verification.{key} "
+                    "must be string or null"
+                )
+
+        if mutation_status == "not-evaluated":
+            if semantic_status != "not-run":
+                raise ValueError(
+                    "non-evaluated mutation requires "
+                    "semantic verification status 'not-run'"
+                )
+
+        elif outcome == "survived":
+            if semantic_status not in {
+                "confirmed-non-equivalent",
+                "unverified",
+            }:
+                raise ValueError(
+                    "survived mutation requires semantic verification "
+                    "status 'confirmed-non-equivalent' or 'unverified'"
+                )
+
+        elif outcome == "equivalent":
+            if semantic_status != "confirmed-equivalent":
+                raise ValueError(
+                    "equivalent mutation requires semantic verification "
+                    "status 'confirmed-equivalent'"
+                )
 
 
 def validate_file(path: Path) -> int:

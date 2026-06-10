@@ -5,14 +5,21 @@ used for the MLReproMutate empirical study.
 
 The protocol is fixed before systematic corpus collection begins.
 
-## Research question
+## Research questions
 
-For realistic reproducibility-relevant mutations introduced into machine
-learning research software, do the repository's existing validation safeguards
-detect the change?
+RQ1: When realistic reproducibility-relevant mutations are introduced into
+machine-learning research software, how often are they detected by existing
+repository validation workflows?
 
-A safeguard may be an upstream test, CI validation command, documented example,
-or documented experiment workflow.
+RQ2: How does mutation detection differ by validation-workflow type and by the
+strength of the workflow's validation oracle?
+
+A validation workflow may be an upstream test, reproducible CI command,
+documented validation command, documented experiment, or documented example.
+
+The term `validation workflow` is intentionally broader than `safeguard`.
+A workflow that only completes successfully, without assertions, thresholds, or
+reference comparisons, is not assumed to be a strong reproducibility safeguard.
 
 ## Mutation classes
 
@@ -72,12 +79,30 @@ A repository is eligible when all of the following hold:
 Prefer validation workflows in the following order:
 
 1. existing upstream tests directly exercising the target;
-2. documented repository validation or experiment command;
-3. documented example or quickstart exercising the target;
-4. repository CI command that can be reproduced locally.
+2. repository CI commands that can be reproduced locally and exercise the target;
+3. documented repository validation commands;
+4. documented experiments exercising the target;
+5. documented examples or quickstarts exercising the target.
+
+The selected workflow must exercise the mutation target under the baseline path.
+
+## Validation-oracle classification
+
+Each schema-version-2 corpus record classifies the selected workflow's oracle as
+exactly one of:
+
+- `assertion`: explicit assertions or test expectations determine success;
+- `metric-threshold`: an explicit numerical acceptance threshold determines
+  success;
+- `reference-comparison`: output is compared against an expected/reference
+  artifact or value;
+- `completion-only`: success means only that the workflow completed with exit
+  status zero.
+
+This classification is recorded before observing the mutation outcome.
 
 A workflow created specifically by MLReproMutate is not accepted as corpus
-evidence about the strength of an upstream repository safeguard.
+evidence about the strength of an upstream repository validation workflow.
 
 Such a workflow may still be used for operator-development or semantic pilots,
 but those runs are recorded separately from the empirical corpus.
@@ -132,8 +157,18 @@ candidates.
 Candidates known not to execute under the selected workflow are not interpreted
 as survived mutations.
 
-Whenever practical, all candidates exercised by the selected workflow are
-evaluated independently.
+Exactly one primary candidate is evaluated for each repository/operator
+screening case.
+
+When multiple applicable candidates exist, the primary candidate is the first
+candidate in the operator's deterministic detection order that is known, from
+the baseline code path, to be executed by the selected workflow.
+
+Candidate selection is completed before observing any mutation outcome.
+
+Additional candidates may be evaluated separately as exploratory evidence, but
+they are not included in the primary repository/operator detection-rate
+denominator.
 
 ## Mutation isolation
 
@@ -177,7 +212,19 @@ the repository detecting the mutation.
 
 ## Non-equivalence verification
 
-A surviving mutation should receive semantic verification whenever feasible.
+A surviving primary mutation must receive semantic verification whenever the
+relevant behavior can be observed without creating a new upstream validation
+oracle.
+
+Schema-version-2 records distinguish:
+
+- `confirmed-non-equivalent`: verification demonstrates that the relevant
+  mutated behavior changed;
+- `unverified`: the workflow survived, but non-equivalence could not be
+  established with the available post-hoc evidence.
+
+An unverified survivor remains a reported `SURVIVED` outcome, but is excluded
+from the primary confirmed mutation-detection denominator.
 
 Examples:
 
@@ -188,6 +235,47 @@ Examples:
 
 Observable metric changes may provide additional evidence but are not required
 when the mutated research policy itself is demonstrably different.
+
+## Primary analysis denominators
+
+Screening feasibility and mutation detection are reported separately.
+
+Screening feasibility:
+
+    eligible evaluated cases / all screened repository-operator cases
+
+Primary confirmed mutation-detection rate:
+
+    KILLED /
+    (KILLED + confirmed-non-equivalent SURVIVED)
+
+`setup-failed`, `no-applicable-mutation`, `workflow-unavailable`,
+`out-of-scope`, `INVALID`, `TIMEOUT`, `ERROR`, and unverified survivors are
+reported separately and do not enter the primary confirmed detection-rate
+denominator.
+
+Results are also stratified by mutation operator, workflow kind, and
+validation-oracle kind.
+
+## Calibration transition
+
+Batch B01 is the protocol-calibration batch.
+
+Its pre-revision state is preserved by the annotated Git tag
+`corpus-b01-calibration`.
+
+B01 records remain schema version 1 and are not rewritten to make them appear
+prospectively collected under protocol version 2.
+
+All new primary corpus observations collected after this protocol revision use
+schema version 2 and protocol version `2.0`.
+
+The four primary mutation classes, the baseline-first rule, the fixed-SHA rule,
+the one-compatibility-correction rule, and the default 300-second timeout remain
+unchanged after calibration.
+
+No new primary mutation class is introduced during the main corpus because of
+observed kill/survival outcomes.
 
 ## Resource budget
 

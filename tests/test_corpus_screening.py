@@ -89,3 +89,68 @@ def test_non_evaluated_record_has_no_outcome() -> None:
     }
 
     validate_record(record)
+
+
+def valid_v2_record() -> dict:
+    record = valid_record()
+    record["schema_version"] = 2
+    record["protocol_version"] = "2.0"
+    record["workflow"]["oracle_kind"] = "completion-only"
+    record["mutation"]["semantic_verification"] = {
+        "status": "confirmed-non-equivalent",
+        "method": "Compared generated data.",
+        "evidence": "Generated values changed.",
+    }
+    return record
+
+
+def test_valid_v2_screening_record() -> None:
+    validate_record(valid_v2_record())
+
+
+def test_v2_requires_known_oracle_kind() -> None:
+    record = valid_v2_record()
+    record["workflow"]["oracle_kind"] = "unknown"
+
+    try:
+        validate_record(record)
+    except ValueError as exc:
+        assert "oracle kind" in str(exc)
+    else:
+        raise AssertionError(
+            "Expected invalid oracle kind"
+        )
+
+
+def test_v2_survivor_requires_semantic_verification() -> None:
+    record = valid_v2_record()
+    record["mutation"]["semantic_verification"]["status"] = "not-run"
+
+    try:
+        validate_record(record)
+    except ValueError as exc:
+        assert "survived mutation" in str(exc)
+    else:
+        raise AssertionError(
+            "Expected invalid survivor verification status"
+        )
+
+
+def test_v2_non_evaluated_requires_not_run_verification() -> None:
+    record = valid_v2_record()
+    record["screening"]["status"] = "setup-failed"
+    record["baseline"]["status"] = "failed"
+    record["mutation"] = {
+        "status": "not-evaluated",
+        "candidate_index": None,
+        "outcome": None,
+        "report_path": None,
+        "semantic_verification": {
+            "status": "not-run",
+            "method": None,
+            "evidence": None,
+        },
+    }
+
+    validate_record(record)
+
