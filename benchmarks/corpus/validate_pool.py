@@ -85,6 +85,27 @@ def validate_record(
             f"got {operator!r}"
         )
 
+    if operator == "dependency-pin":
+        candidate_index = row.get("candidate_index")
+
+        if (
+            isinstance(candidate_index, bool)
+            or not isinstance(candidate_index, int)
+            or candidate_index < 1
+        ):
+            fail(
+                "dependency-pin requires positive integer "
+                "candidate_index"
+            )
+
+        evidence = row["candidate_evidence"]
+
+        if "==" not in evidence or ">=" not in evidence:
+            fail(
+                "dependency-pin candidate_evidence must "
+                "describe == -> >= mutation"
+            )
+
     if row["workflow_kind"] not in WORKFLOW_KINDS:
         fail(
             f"unknown workflow_kind: "
