@@ -106,6 +106,39 @@ def validate_record(
                 "describe == -> >= mutation"
             )
 
+        if operator == "data-split":
+            candidate_index = row.get("candidate_index")
+
+            if (
+                isinstance(candidate_index, bool)
+                or not isinstance(candidate_index, int)
+                or candidate_index < 1
+            ):
+                fail(
+                    "data-split requires positive integer "
+                    "candidate_index"
+                )
+
+            evidence = row["candidate_evidence"]
+
+            if "train_test_split" not in evidence:
+                fail(
+                    "data-split candidate_evidence must contain "
+                    "train_test_split"
+                )
+
+            if "stratify=" not in evidence:
+                fail(
+                    "data-split candidate_evidence must contain "
+                    "stratify"
+                )
+
+            if "stratify=None" not in evidence:
+                fail(
+                    "data-split candidate_evidence must describe "
+                    "mutation to stratify=None"
+                )
+                
     if row["workflow_kind"] not in WORKFLOW_KINDS:
         fail(
             f"unknown workflow_kind: "

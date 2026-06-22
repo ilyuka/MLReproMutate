@@ -384,3 +384,51 @@ Status:
 
 FROZEN.
 
+
+---
+
+## D021 — Operator stratum size under finite eligibility
+
+Decision:
+
+The originally planned 10 primary cases per operator is treated as an upper
+target, not as a requirement to continue searching after a predeclared
+screening stopping rule has been reached.
+
+For each operator:
+
+    primary_n = min(10, eligible_n)
+
+where eligible_n is the number of cases remaining after:
+
+- the predeclared static screening procedure;
+- frozen eligibility criteria;
+- prior-calibration/development contamination exclusions;
+- deterministic cross-pool duplicate resolution.
+
+No additional repositories are searched merely because an operator-specific
+eligibility frame contains fewer than 10 cases.
+
+Reason:
+
+The data-split frame produced fewer than 10 clean eligible repositories after
+the predeclared 100-repository stopping rule. Extending search specifically
+because the observed eligible count was low would make sampling effort depend
+on an intermediate corpus result.
+
+This rule is being declared before construction of the cv-fold-count frame and
+therefore before its eligible count is known.
+
+Current implications:
+
+    random-seed:     min(10, 44) = 10 before cross-pool deduplication
+    dependency-pin:  min(10, 10) = 10 before cross-pool deduplication
+    data-split:      min(10,  6) =  6 before cross-pool deduplication
+    cv-fold-count:   min(10,  N) = unknown until its frozen frame is complete
+
+The final B02 sample size is therefore data-dependent within these
+prospectively fixed stratum caps and may be smaller than 40.
+
+Status:
+
+FROZEN BEFORE CV-FOLD-COUNT SCREENING.

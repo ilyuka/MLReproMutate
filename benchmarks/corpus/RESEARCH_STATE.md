@@ -802,9 +802,42 @@ Need the same static-only, outcome-blind pool-construction process.
 
 STATUS:
 
-    NOT YET CONSTRUCTED / NOT FROZEN
+    SEARCH CLOSED
 
-Need the same static-only, outcome-blind pool-construction process.
+Static screening:
+
+    exactly 100 distinct repositories screened
+
+Initial provisional eligibility:
+
+    8 repositories
+
+Post-screen prior-development contamination audit:
+
+    2 excluded
+
+Reasons:
+
+    israelCamperoJurado/GAMA_generalized_island_model_AutoML
+        development-lineage-overlap with prior development repository
+
+    Moffran/calibrated_explanations
+        prior-development-execution
+
+Final clean eligibility frame:
+
+    6 repositories
+
+No replacement search was performed after the predeclared 100-repository
+stopping rule.
+
+Expected path:
+
+    benchmarks/corpus/pools/data-split.jsonl
+
+Under decision D021, current primary stratum cap is:
+
+    min(10, 6) = 6
 
 ---
 
