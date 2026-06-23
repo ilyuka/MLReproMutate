@@ -106,7 +106,7 @@ def validate_record(
                 "describe == -> >= mutation"
             )
 
-        if operator == "data-split":
+    if operator == "data-split":
             candidate_index = row.get("candidate_index")
 
             if (
@@ -138,7 +138,68 @@ def validate_record(
                     "data-split candidate_evidence must describe "
                     "mutation to stratify=None"
                 )
-                
+
+    if operator == "cv-fold-count":
+            candidate_index = row.get("candidate_index")
+
+            if (
+                isinstance(candidate_index, bool)
+                or not isinstance(candidate_index, int)
+                or candidate_index < 1
+            ):
+                fail(
+                    "cv-fold-count requires positive integer "
+                    "candidate_index"
+                )
+
+            allowed_splitters = {
+                "KFold",
+                "StratifiedKFold",
+                "RepeatedKFold",
+                "RepeatedStratifiedKFold",
+            }
+
+            splitter = row.get("splitter_type")
+
+            if splitter not in allowed_splitters:
+                fail(
+                    f"unsupported splitter_type: {splitter!r}"
+                )
+
+            original = row.get("original_n_splits")
+            mutated = row.get("mutated_n_splits")
+
+            if (
+                isinstance(original, bool)
+                or not isinstance(original, int)
+                or original < 2
+            ):
+                fail(
+                    "original_n_splits must be integer >= 2"
+                )
+
+            if (
+                isinstance(mutated, bool)
+                or not isinstance(mutated, int)
+            ):
+                fail(
+                    "mutated_n_splits must be an integer"
+                )
+
+            if mutated != original + 1:
+                fail(
+                    "cv-fold-count requires mutated_n_splits "
+                    "== original_n_splits + 1"
+                )
+
+            evidence = row["candidate_evidence"]
+
+            if "n_splits=" not in evidence:
+                fail(
+                    "cv-fold-count candidate_evidence must "
+                    "contain explicit n_splits="
+                )
+
     if row["workflow_kind"] not in WORKFLOW_KINDS:
         fail(
             f"unknown workflow_kind: "

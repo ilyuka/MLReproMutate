@@ -432,3 +432,86 @@ prospectively fixed stratum caps and may be smaller than 40.
 Status:
 
 FROZEN BEFORE CV-FOLD-COUNT SCREENING.
+
+---
+
+## D022 — Cross-pool duplicate audit
+
+After freezing the four operator-specific raw eligibility frames, all repository
+identifiers were compared across operators before primary sampling.
+
+Raw frames:
+
+    random-seed:     44
+    dependency-pin:  10
+    data-split:       6
+    cv-fold-count:    3
+
+Total repository-operator cases:
+
+    63
+
+Unique repositories:
+
+    63
+
+Cross-pool duplicate repositories:
+
+    0
+
+Therefore no cross-pool duplicate-resolution procedure is required for B02.
+No repository was removed or reassigned on the basis of operator overlap.
+
+---
+
+## D023 — B02 primary selection algorithm and random seed
+
+Primary stratum size follows D021:
+
+    primary_n = min(10, eligible_n)
+
+Therefore:
+
+    random-seed:     10 of 44
+    dependency-pin:  10 of 10
+    data-split:       6 of 6
+    cv-fold-count:    3 of 3
+
+Total planned B02 primary corpus:
+
+    29 repository-operator cases
+
+Strata with eligible_n <= 10 are complete enumerations (censuses), not random
+subsamples.
+
+Only the random-seed stratum requires random sampling.
+
+Sampling seed phrase:
+
+    MLReproMutate-B02-primary-sampling-v1
+
+For any operator requiring random sampling, derive its integer seed as:
+
+    SHA256("<seed phrase>|<operator>")
+
+Take the first 16 hexadecimal characters of that digest and interpret them as
+an unsigned base-16 integer.
+
+Candidates are read in ascending frozen pool_index order.
+
+Use Python random.Random(derived_seed).sample(candidates, primary_n).
+
+After selection, selected records are sorted by their original pool_index for
+reporting only. Sorting does not affect selection.
+
+Final B02 case order is:
+
+    1. random-seed
+    2. dependency-pin
+    3. data-split
+    4. cv-fold-count
+
+Within each operator, selected records are ordered by original pool_index.
+
+This decision is frozen before performing the random draw and before executing
+any B02 repository.

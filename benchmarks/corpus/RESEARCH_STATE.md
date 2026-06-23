@@ -1001,3 +1001,38 @@ For corpus repositories:
         ->
     commit
 
+
+---
+
+## B02 RAW ELIGIBILITY FRAMES COMPLETE
+
+All four operator-specific searches are closed.
+
+    random-seed:     44 eligible
+    dependency-pin:  10 eligible
+    data-split:       6 eligible
+    cv-fold-count:    3 eligible
+
+Raw cases:
+
+    63
+
+Unique repositories:
+
+    63
+
+Cross-pool duplicates:
+
+    0
+
+Under D021 and D023, planned primary B02 size is:
+
+    10 + 10 + 6 + 3 = 29
+
+Only random-seed requires random subsampling.
+No B02 baseline or mutant execution has occurred yet.
+
+Current next step:
+
+    freeze raw frames + sampling algorithm,
+    then execute deterministic B02 primary selection.
