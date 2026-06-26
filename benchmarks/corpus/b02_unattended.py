@@ -79,8 +79,16 @@ def validate_empirical_identity(
     report_name = next(path for path in allowed if path.endswith(".json"))
     report = json.loads((root / report_name).read_text(encoding="utf-8"))
     fields = ("case_id", "repository", "revision", "operator")
+
+    frozen_identity = report.get("frozen_case")
+    if isinstance(frozen_identity, dict):
+        report_identity = dict(frozen_identity)
+        report_identity["case_id"] = report.get("case_id")
+    else:
+        report_identity = report
+
     for field in fields:
-        if report.get(field) != case.get(field):
+        if report_identity.get(field) != case.get(field):
             raise ValueError(f"run report {field} does not match frozen case")
 
     if "benchmarks/corpus/screening.jsonl" not in allowed:
