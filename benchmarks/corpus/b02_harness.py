@@ -1,8 +1,12 @@
-"""Select the next unprocessed case from the frozen B02 sampling frame."""
+"""Select B02 cases and run explicitly chosen commands with compact output."""
 
 import argparse
 import json
+import os
 import re
+import subprocess
+import sys
+import time
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
@@ -11,9 +15,12 @@ CORPUS_ROOT = Path(__file__).resolve().parent
 DEFAULT_FRAME = CORPUS_ROOT / "sampling_frame.jsonl"
 DEFAULT_LEDGER = CORPUS_ROOT / "screening.jsonl"
 DEFAULT_RUNS = CORPUS_ROOT / "runs"
+DEFAULT_TAIL_LINES = 40
+MAX_TAIL_BYTES = 16 * 1024
 
 CASE_ID_RE = re.compile(r"^B02-(\d{2})$")
 REPORT_CASE_ID_RE = re.compile(r"^(B02-\d{2})(?:-|\.json)")
+STAGE_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
 IDENTITY_FIELDS = ("repository", "revision", "operator")
 
 
@@ -146,26 +153,184 @@ def next_unprocessed_case(
     return None
 
 
+def b02_work_root(environ: dict[str, str] | None = None) -> Path:
+    """Return the configured persistent work root, without creating it."""
+
+    environment = os.environ if environ is None else environ
+    configured = environment.get("MLREPRO_B02_WORK_ROOT")
+    if configured:
+        return Path(configured).expanduser().resolve()
+    return (Path.home() / ".cache" / "mlrepromutate" / "b02").resolve()
+
+
+def case_work_dir(case_id: str, work_root: Path | None = None) -> Path:
+    """Return the deterministic work directory for a syntactically valid case."""
+
+    if CASE_ID_RE.fullmatch(case_id) is None:
+        raise ValueError(f"malformed B02 case_id: {case_id!r}")
+    root = b02_work_root() if work_root is None else work_root.expanduser().resolve()
+    return root / case_id
+
+
+def _tail(path: Path, line_limit: int = DEFAULT_TAIL_LINES) -> tuple[list[str], bool]:
+    size = path.stat().st_size
+    with path.open("rb") as stream:
+        if size > MAX_TAIL_BYTES:
+            stream.seek(-MAX_TAIL_BYTES, os.SEEK_END)
+        data = stream.read(MAX_TAIL_BYTES)
+
+    lines = data.decode("utf-8", errors="replace").splitlines()
+    truncated = size > len(data) or len(lines) > line_limit
+    return lines[-line_limit:], truncated
+
+
+def run_local_command(
+    case_id: str,
+    stage: str,
+    command: list[str],
+    cwd: Path,
+    timeout_seconds: float,
+    work_root: Path | None = None,
+    tail_lines: int = DEFAULT_TAIL_LINES,
+) -> dict[str, Any]:
+    """Run argv locally, writing full logs and a compact JSON summary to disk."""
+
+    if not command or not all(isinstance(argument, str) for argument in command):
+        raise ValueError("command must be a non-empty argv list of strings")
+    if timeout_seconds <= 0:
+        raise ValueError("timeout must be greater than zero")
+    if tail_lines <= 0:
+        raise ValueError("tail_lines must be greater than zero")
+    if STAGE_RE.fullmatch(stage) is None:
+        raise ValueError(f"invalid stage name: {stage!r}")
+
+    resolved_cwd = cwd.expanduser().resolve()
+    if not resolved_cwd.exists():
+        raise FileNotFoundError(f"working directory does not exist: {resolved_cwd}")
+    if not resolved_cwd.is_dir():
+        raise NotADirectoryError(f"working directory is not a directory: {resolved_cwd}")
+
+    stage_dir = case_work_dir(case_id, work_root) / "stages" / stage
+    stage_dir.mkdir(parents=True, exist_ok=True)
+    stdout_path = stage_dir / "stdout.log"
+    stderr_path = stage_dir / "stderr.log"
+    summary_path = stage_dir / "summary.json"
+
+    started = time.monotonic()
+    timed_out = False
+    return_code: int | None = None
+    with stdout_path.open("wb") as stdout, stderr_path.open("wb") as stderr:
+        try:
+            completed = subprocess.run(
+                command,
+                cwd=resolved_cwd,
+                stdin=subprocess.DEVNULL,
+                stdout=stdout,
+                stderr=stderr,
+                timeout=timeout_seconds,
+                check=False,
+                shell=False,
+            )
+            return_code = completed.returncode
+        except subprocess.TimeoutExpired:
+            timed_out = True
+
+    duration_seconds = time.monotonic() - started
+    stdout_tail, stdout_truncated = _tail(stdout_path, tail_lines)
+    stderr_tail, stderr_truncated = _tail(stderr_path, tail_lines)
+    summary: dict[str, Any] = {
+        "case_id": case_id,
+        "stage": stage,
+        "command": list(command),
+        "cwd": str(resolved_cwd),
+        "timeout_seconds": timeout_seconds,
+        "duration_seconds": duration_seconds,
+        "return_code": return_code,
+        "timed_out": timed_out,
+        "stdout_log": str(stdout_path),
+        "stderr_log": str(stderr_path),
+        "stdout_tail": stdout_tail,
+        "stderr_tail": stderr_tail,
+        "stdout_tail_truncated": stdout_truncated,
+        "stderr_tail_truncated": stderr_truncated,
+    }
+    summary_path.write_text(
+        json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return summary
+
+
+def _require_frame_case(frame: Iterable[dict[str, Any]], case_id: str) -> None:
+    if not any(record["case_id"] == case_id for record in frame):
+        raise ValueError(f"case_id is not in the frozen sampling frame: {case_id}")
+
+
+def status_for_case(case_id: str, work_root: Path | None = None) -> dict[str, Any]:
+    """Return compact persisted execution summaries for one case."""
+
+    case_dir = case_work_dir(case_id, work_root)
+    summaries = [
+        json.loads(path.read_text(encoding="utf-8"))
+        for path in sorted((case_dir / "stages").glob("*/summary.json"))
+    ]
+    return {"case_id": case_id, "work_dir": str(case_dir), "stages": summaries}
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Identify the next unprocessed frozen B02 case without executing it."
+        description="Inspect frozen B02 cases and run explicit local argv commands."
     )
-    parser.add_argument("--sampling-frame", type=Path, default=DEFAULT_FRAME)
-    parser.add_argument("--screening-ledger", type=Path, default=DEFAULT_LEDGER)
-    parser.add_argument("--runs-dir", type=Path, default=DEFAULT_RUNS)
+    subparsers = parser.add_subparsers(dest="action", required=True)
+
+    next_parser = subparsers.add_parser("next")
+    next_parser.add_argument("--sampling-frame", type=Path, default=DEFAULT_FRAME)
+    next_parser.add_argument("--screening-ledger", type=Path, default=DEFAULT_LEDGER)
+    next_parser.add_argument("--runs-dir", type=Path, default=DEFAULT_RUNS)
+
+    status_parser = subparsers.add_parser("status")
+    status_parser.add_argument("case_id")
+    status_parser.add_argument("--sampling-frame", type=Path, default=DEFAULT_FRAME)
+    status_parser.add_argument("--work-root", type=Path)
+
+    run_parser = subparsers.add_parser("run-local")
+    run_parser.add_argument("case_id")
+    run_parser.add_argument("--stage", required=True)
+    run_parser.add_argument("--cwd", required=True, type=Path)
+    run_parser.add_argument("--timeout", required=True, type=float)
+    run_parser.add_argument("--tail-lines", type=int, default=DEFAULT_TAIL_LINES)
+    run_parser.add_argument("--sampling-frame", type=Path, default=DEFAULT_FRAME)
+    run_parser.add_argument("--work-root", type=Path)
+    run_parser.add_argument("command", nargs=argparse.REMAINDER)
     return parser
 
 
-def main() -> None:
-    args = build_parser().parse_args()
+def main(argv: list[str] | None = None) -> None:
+    arguments = sys.argv[1:] if argv is None else argv
+    args = build_parser().parse_args(arguments or ["next"])
     frame = load_sampling_frame(args.sampling_frame)
-    processed = processed_case_ids(frame, args.screening_ledger, args.runs_dir)
-    next_case = next_unprocessed_case(frame, processed)
 
-    if next_case is None:
-        print("No unprocessed B02 cases.")
-    else:
+    if args.action == "next":
+        processed = processed_case_ids(frame, args.screening_ledger, args.runs_dir)
+        next_case = next_unprocessed_case(frame, processed)
         print(json.dumps(next_case, ensure_ascii=False, sort_keys=True))
+        return
+
+    _require_frame_case(frame, args.case_id)
+    if args.action == "status":
+        result = status_for_case(args.case_id, args.work_root)
+    else:
+        command = args.command[1:] if args.command[:1] == ["--"] else args.command
+        result = run_local_command(
+            args.case_id,
+            args.stage,
+            command,
+            args.cwd,
+            args.timeout,
+            args.work_root,
+            args.tail_lines,
+        )
+    print(json.dumps(result, ensure_ascii=False, sort_keys=True))
 
 
 if __name__ == "__main__":
