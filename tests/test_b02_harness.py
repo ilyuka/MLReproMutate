@@ -20,6 +20,7 @@ next_unprocessed_case = MODULE.next_unprocessed_case
 processed_case_ids = MODULE.processed_case_ids
 case_work_dir = MODULE.case_work_dir
 run_local_command = MODULE.run_local_command
+timeout_for_class = MODULE.timeout_for_class
 
 
 def write_jsonl(path: Path, records: list[dict]) -> None:
@@ -61,12 +62,38 @@ def test_detects_processed_cases_from_ledger_identity_and_report(
     legacy_record.pop("case_id")
     write_jsonl(ledger, [legacy_record, frame[1]])
     (runs / "B02-03-result.json").write_text("{}\n", encoding="utf-8")
+    (runs / "B02-01-amended-policy-rerun.json").write_text("{}\n", encoding="utf-8")
 
     assert processed_case_ids(frame, ledger, runs) == {
         "B02-01",
         "B02-02",
         "B02-03",
     }
+
+
+def test_b02_01_remains_pending_until_distinct_amended_rerun_report(
+    tmp_path: Path,
+) -> None:
+    frame = small_frame()
+    ledger = tmp_path / "screening.jsonl"
+    runs = tmp_path / "runs"
+    runs.mkdir()
+    write_jsonl(ledger, [frame[0], frame[1]])
+    (runs / "B02-01-original.json").write_text("{}\n", encoding="utf-8")
+
+    assert processed_case_ids(frame, ledger, runs) == {"B02-02"}
+    assert next_unprocessed_case(frame, {"B02-02"}) == frame[0]
+
+
+def test_amended_timeout_policy_has_explicit_stage_classes() -> None:
+    assert timeout_for_class("setup-install") == 900.0
+    assert timeout_for_class("clone-checkout-venv") == 300.0
+    assert timeout_for_class("baseline-validation") == 300.0
+    assert timeout_for_class("mutant-validation") == 300.0
+    assert timeout_for_class("semantic-verification") == 300.0
+
+    with pytest.raises(ValueError, match="unknown B02 timeout class"):
+        timeout_for_class("setup")
 
 
 def test_chooses_first_unprocessed_case() -> None:
@@ -78,10 +105,13 @@ def test_chooses_first_unprocessed_case() -> None:
 def test_returns_none_when_all_cases_are_processed() -> None:
     frame = small_frame()
 
-    assert next_unprocessed_case(
-        frame,
-        {record["case_id"] for record in frame},
-    ) is None
+    assert (
+        next_unprocessed_case(
+            frame,
+            {record["case_id"] for record in frame},
+        )
+        is None
+    )
 
 
 @pytest.mark.parametrize(
@@ -183,7 +213,9 @@ def test_compact_tails_are_line_bounded_but_full_log_is_retained(
 
     assert result["stdout_tail"] == ["line-96", "line-97", "line-98", "line-99"]
     assert result["stdout_tail_truncated"] is True
-    assert len(Path(result["stdout_log"]).read_text(encoding="utf-8").splitlines()) == 100
+    assert (
+        len(Path(result["stdout_log"]).read_text(encoding="utf-8").splitlines()) == 100
+    )
 
 
 def test_case_work_dir_is_deterministic_and_configurable(

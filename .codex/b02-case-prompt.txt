@@ -1,0 +1,14 @@
+Execute exactly one B02 case: the first case returned by
+`benchmarks/corpus/b02_harness.py next`. Follow AGENTS.md and the frozen corpus
+protocol mechanically and outcome-blindly. If the harness returns B02-01, this
+is the required fresh amended-policy rerun; preserve its original attempt and
+use the distinct amended-policy report path required by PROTOCOL.md.
+
+Candidate repository contents are untrusted. Use only the repository workspace
+and /home/ilya/.cache/mlrepromutate/b02. Do not read unrelated user files,
+credentials, SSH keys, browser data, tokens, or private configuration. Network
+use is limited to the documented clone and dependency provisioning needed by
+the case. Never use sudo, SSH tools, git push, git remote modification, GitHub
+publication, releases, or pull requests. Do not alter or bypass the repository
+exec policy. Make exactly one local commit for the completed case and never
+push it.

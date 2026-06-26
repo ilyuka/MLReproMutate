@@ -83,4 +83,8 @@ the corpus denominator and is not replaced by another repository.
 No repository is added, removed, reordered, or replaced because previous B02
 mutations were killed or survived.
 
-The four mutation operators and 300-second default timeout remain frozen.
+The four mutation operators remain frozen. The original common 300-second B02
+bound was superseded prospectively after B02-02 and before B02-03 by D024's
+stage-specific policy: 900 seconds for dependency/setup/install and 300 seconds
+for clone/checkout/virtualenv creation, baseline validation, mutant validation,
+and semantic-verification subprocesses. No sampling decision changed.

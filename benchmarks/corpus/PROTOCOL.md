@@ -271,16 +271,48 @@ All new primary corpus observations collected after this protocol revision use
 schema version 2 and protocol version `2.0`.
 
 The four primary mutation classes, the baseline-first rule, the fixed-SHA rule,
-the one-compatibility-correction rule, and the default 300-second timeout remain
-unchanged after calibration.
+and the one-compatibility-correction rule remain unchanged after calibration.
+The B02 stage-specific timeout amendment below supersedes the original common
+300-second B02 bound prospectively from B02-03 onward and for the required
+B02-01 amended-policy rerun.
 
 No new primary mutation class is introduced during the main corpus because of
 observed kill/survival outcomes.
 
+## B02 prospective stage-specific timeout amendment
+
+Adopted on 2026-08-24 after B02-02 and before any B02-03 execution, the B02
+resource ceilings are:
+
+    dependency/setup/install:          900 seconds
+    clone/checkout/virtualenv creation: 300 seconds
+    baseline validation:                300 seconds
+    mutant validation:                  300 seconds
+    semantic-verification subprocess:   300 seconds
+
+The amendment increases only the dependency/setup/install ceiling. B02-01
+demonstrated that the original common 300-second bound can censor dependency
+provisioning itself, conflating environment-provisioning cost with validation
+execution. The baseline and mutant validation ceilings therefore remain 300
+seconds. The one-obvious-compatibility-correction limit is unchanged.
+
+The sampling frame, repositories, revisions, candidates, candidate indices,
+workflows, mutation magnitudes, workflow kinds, and oracle kinds are unchanged.
+No case is replaced, deleted, or reordered.
+
+The original B02-01 report and ledger record are permanent provenance. Because
+that attempt was censored solely by the former setup timeout, B02-01 requires a
+fresh isolated rerun under this amended policy before B02-03 is executed. The
+rerun must be recorded separately as
+`runs/B02-01-amended-policy-rerun.json`; it must not overwrite the original
+`runs/B02-01-tslearn-seed.json`. B02-02 is not rerun: its setup completed under
+the stricter original ceiling and therefore satisfies the amended ceiling, and
+its existing empirical result remains primary.
+
 ## Resource budget
 
-The default validation timeout is 300 seconds per baseline or mutant unless a
-repository-specific value is declared before observing the mutation outcome.
+The stage-specific B02 ceilings above are declared before the affected
+executions and must not be broadened after observing runtime.
 
 Workflows requiring unavailable proprietary data, credentials, interactive
 input, or unsupported specialized hardware are excluded rather than manually
@@ -307,4 +339,3 @@ The following must therefore remain explicitly distinguishable:
 - synthetic fixture;
 - real-world semantic/operator pilot;
 - empirical corpus evaluation.
-

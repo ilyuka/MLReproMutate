@@ -18,6 +18,24 @@ DEFAULT_RUNS = CORPUS_ROOT / "runs"
 DEFAULT_TAIL_LINES = 40
 MAX_TAIL_BYTES = 16 * 1024
 
+# Prospective B02 execution amendment adopted before B02-03. Keep these classes
+# separate even where they currently share a value so later reports identify the
+# resource being bounded rather than relying on one ambiguous common timeout.
+TIMEOUT_SECONDS_BY_CLASS = {
+    "setup-install": 900.0,
+    "clone-checkout-venv": 300.0,
+    "baseline-validation": 300.0,
+    "mutant-validation": 300.0,
+    "semantic-verification": 300.0,
+}
+
+# B02-01 was censored solely by the superseded setup ceiling. Its original
+# report remains immutable; this distinct report name is the completion marker
+# for the required fresh amended-policy rerun.
+REQUIRED_AMENDED_RERUN_REPORTS = {
+    "B02-01": "B02-01-amended-policy-rerun.json",
+}
+
 CASE_ID_RE = re.compile(r"^B02-(\d{2})$")
 REPORT_CASE_ID_RE = re.compile(r"^(B02-\d{2})(?:-|\.json)")
 STAGE_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
@@ -119,7 +137,9 @@ def processed_case_ids(
                     continue
 
             if case_id in ledger_ids:
-                raise ValueError(f"screening ledger contains duplicate B02 case: {case_id}")
+                raise ValueError(
+                    f"screening ledger contains duplicate B02 case: {case_id}"
+                )
 
             ledger_ids.add(case_id)
             processed.add(case_id)
@@ -137,7 +157,23 @@ def processed_case_ids(
                 )
             processed.add(case_id)
 
+    for case_id, report_name in REQUIRED_AMENDED_RERUN_REPORTS.items():
+        if case_id in frame_ids and not (runs_path / report_name).is_file():
+            processed.discard(case_id)
+
     return processed
+
+
+def timeout_for_class(timeout_class: str) -> float:
+    """Return the prospectively fixed timeout for an explicit stage class."""
+
+    try:
+        return TIMEOUT_SECONDS_BY_CLASS[timeout_class]
+    except KeyError as exc:
+        known = ", ".join(TIMEOUT_SECONDS_BY_CLASS)
+        raise ValueError(
+            f"unknown B02 timeout class {timeout_class!r}; expected one of: {known}"
+        ) from exc
 
 
 def next_unprocessed_case(
@@ -208,7 +244,9 @@ def run_local_command(
     if not resolved_cwd.exists():
         raise FileNotFoundError(f"working directory does not exist: {resolved_cwd}")
     if not resolved_cwd.is_dir():
-        raise NotADirectoryError(f"working directory is not a directory: {resolved_cwd}")
+        raise NotADirectoryError(
+            f"working directory is not a directory: {resolved_cwd}"
+        )
 
     stage_dir = case_work_dir(case_id, work_root) / "stages" / stage
     stage_dir.mkdir(parents=True, exist_ok=True)
@@ -296,8 +334,12 @@ def build_parser() -> argparse.ArgumentParser:
     run_parser = subparsers.add_parser("run-local")
     run_parser.add_argument("case_id")
     run_parser.add_argument("--stage", required=True)
+    run_parser.add_argument(
+        "--timeout-class",
+        required=True,
+        choices=tuple(TIMEOUT_SECONDS_BY_CLASS),
+    )
     run_parser.add_argument("--cwd", required=True, type=Path)
-    run_parser.add_argument("--timeout", required=True, type=float)
     run_parser.add_argument("--tail-lines", type=int, default=DEFAULT_TAIL_LINES)
     run_parser.add_argument("--sampling-frame", type=Path, default=DEFAULT_FRAME)
     run_parser.add_argument("--work-root", type=Path)
@@ -326,7 +368,7 @@ def main(argv: list[str] | None = None) -> None:
             args.stage,
             command,
             args.cwd,
-            args.timeout,
+            timeout_for_class(args.timeout_class),
             args.work_root,
             args.tail_lines,
         )

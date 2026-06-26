@@ -54,7 +54,7 @@ FROZEN.
 
 ---
 
-## D004 — 300-second default timeout
+## D004 — Original 300-second default timeout
 
 Decision:
 
@@ -65,7 +65,7 @@ Do not extend timeout after seeing runtime.
 
 Status:
 
-FROZEN.
+FROZEN HISTORICAL POLICY, SUPERSEDED FOR B02 BY D024 AFTER B02-02.
 
 ---
 
@@ -515,3 +515,44 @@ Within each operator, selected records are ordered by original pool_index.
 
 This decision is frozen before performing the random draw and before executing
 any B02 repository.
+
+---
+
+## D024 — Prospective B02 stage-specific timeout amendment
+
+Decision date:
+
+    2026-08-24, after B02-02 and before any B02-03 execution
+
+Decision:
+
+    dependency/setup/install:          900 seconds
+    clone/checkout/virtualenv creation: 300 seconds
+    baseline validation:                300 seconds
+    mutant validation:                  300 seconds
+    semantic-verification subprocess:   300 seconds
+
+The compatibility retry remains limited to at most one obvious environment
+correction. The frozen sampling frame, repositories, SHAs, candidates,
+candidate indices, workflows, mutation magnitudes, workflow kinds, and oracle
+kinds remain unchanged.
+
+Reason:
+
+B02-01 demonstrated that the original common 300-second bound can censor
+dependency provisioning itself, conflating environment-provisioning cost with
+validation execution. This amendment increases only the setup/install ceiling;
+the validation ceiling remains 300 seconds.
+
+Provenance treatment:
+
+- preserve the original B02-01 attempt and records without rewriting them;
+- perform a fresh, separately recorded B02-01 amended-policy rerun because the
+  original attempt was censored solely by setup timeout;
+- do not execute B02-03 before that required rerun;
+- do not rerun B02-02, because it completed setup within the stricter original
+  ceiling and its existing empirical result remains primary.
+
+Status:
+
+FROZEN PROSPECTIVELY BEFORE B02-03.

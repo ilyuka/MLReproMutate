@@ -1,6 +1,6 @@
 # MLReproMutate Research State
 
-Last updated: 2026-06-24
+Last updated: 2026-08-24
 
 This file is the canonical handoff snapshot for continuing the empirical
 research work in a new ChatGPT session.
@@ -163,16 +163,17 @@ reverse-engineering dependencies until the repository works.
 
 Do not modify upstream research logic to force setup success.
 
-### Timeout
+### B02 stage-specific timeouts (amended prospectively before B02-03)
 
-Default timeout:
+    dependency/setup/install:          900 seconds
+    clone/checkout/virtualenv creation: 300 seconds
+    baseline validation:                300 seconds
+    mutant validation:                  300 seconds
+    semantic-verification subprocess:   300 seconds
 
-    300 seconds
-
-Do not increase the timeout after observing that a baseline or mutation needs
-more time.
-
-A repository-specific timeout is allowed only if declared before execution.
+Only setup/install increased from the original common 300-second bound. Do not
+increase any ceiling after observing runtime. The one compatibility correction
+rule is unchanged.
 
 ### Fresh mutation isolation
 
@@ -1036,3 +1037,34 @@ Current next step:
 
     freeze raw frames + sampling algorithm,
     then execute deterministic B02 primary selection.
+
+---
+
+## B02 execution amendment after B02-02, before B02-03
+
+Adopted 2026-08-24. The exact prospective policy is:
+
+    dependency/setup/install:          900 seconds
+    clone/checkout/virtualenv creation: 300 seconds
+    baseline validation:                300 seconds
+    mutant validation:                  300 seconds
+    semantic-verification subprocess:   300 seconds
+
+The original common 300-second ceiling censored B02-01 during documented
+dependency provisioning. Its original ledger entry and
+`runs/B02-01-tslearn-seed.json` remain immutable provenance. Before B02-03,
+execute B02-01 fresh under the amended policy and write the distinct completion
+report `runs/B02-01-amended-policy-rerun.json`.
+
+B02-02 is complete and must not be rerun. Its setup met the stricter original
+bound, so its confirmed-non-equivalent SURVIVED result remains primary.
+
+No sampling-frame field or frozen execution choice changed. The compatibility
+retry remains at most one obvious correction. See D024 and the protocol's B02
+stage-specific timeout amendment.
+
+Current next execution step:
+
+    B02-01 fresh amended-policy rerun
+
+Do not execute B02-03 first.

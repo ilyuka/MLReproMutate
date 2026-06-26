@@ -1,0 +1,21 @@
+# Defense-in-depth denials for unattended B02 execution. The filesystem and
+# network boundary is supplied separately by Codex's workspace-write sandbox.
+prefix_rule(pattern=["git", "push"], decision="forbidden")
+prefix_rule(pattern=["git", "remote"], decision="forbidden")
+prefix_rule(pattern=["git", "config"], decision="forbidden")
+prefix_rule(pattern=["gh", "pr"], decision="forbidden")
+prefix_rule(pattern=["gh", "release"], decision="forbidden")
+prefix_rule(pattern=["sudo"], decision="forbidden")
+prefix_rule(pattern=["su"], decision="forbidden")
+prefix_rule(pattern=["ssh"], decision="forbidden")
+prefix_rule(pattern=["scp"], decision="forbidden")
+prefix_rule(pattern=["sftp"], decision="forbidden")
+
+# Local provenance commits are explicitly permitted. This does not permit any
+# remote operation, all of which remain forbidden above.
+prefix_rule(pattern=["git", "status"], decision="allow")
+prefix_rule(pattern=["git", "diff"], decision="allow")
+prefix_rule(pattern=["git", "add"], decision="allow")
+prefix_rule(pattern=["git", "commit"], decision="allow")
+prefix_rule(pattern=["git", "log"], decision="allow")
+prefix_rule(pattern=["git", "show"], decision="allow")
