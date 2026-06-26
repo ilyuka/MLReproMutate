@@ -1,0 +1,77 @@
+{
+  "case_id": "B02-03",
+  "execution_policy": {
+    "amendment": "D024",
+    "baseline_validation_timeout_seconds": 300.0,
+    "clone_checkout_venv_timeout_seconds": 300.0,
+    "mutant_validation_timeout_seconds": 300.0,
+    "semantic_verification_timeout_seconds": 300.0,
+    "setup_install_timeout_seconds": 900.0
+  },
+  "frozen_case": {
+    "candidate_evidence": "torch.manual_seed(0) -> torch.manual_seed(1)",
+    "candidate_index": 1,
+    "operator": "random-seed",
+    "oracle_kind": "completion-only",
+    "repository": "braindecode/braindecode",
+    "revision": "eb3ddee6b72b07ff7457f9273cff179400b925c5",
+    "target": "examples/model_building/plot_channel_interpolation.py",
+    "workflow_command": "python examples/model_building/plot_channel_interpolation.py",
+    "workflow_kind": "documented-example",
+    "workflow_reference": "Braindecode example gallery"
+  },
+  "generated_at_utc": "2026-08-24T13:21:07+00:00",
+  "revision_verification": {
+    "actual_head": "eb3ddee6b72b07ff7457f9273cff179400b925c5",
+    "matches_frozen_revision": true
+  },
+  "schema_version": 2,
+  "screening": {
+    "baseline": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-03/venv/bin/python examples/model_building/plot_channel_interpolation.py",
+      "duration_seconds": null,
+      "return_code": null,
+      "status": "not-run",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "compatibility_retry_used": false,
+    "documented_setup": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-03/venv/bin/pip install -e .[moabb,hub]",
+      "cwd": "/home/ilya/.cache/mlrepromutate/b02/B02-03/repo",
+      "duration_seconds": 900.0008960800005,
+      "reference": "docs/install/install_source.rst optional MOABB and Hub source-install extras",
+      "return_code": null,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-03/stages/setup-install/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-03/stages/setup-install/stdout.log",
+      "timed_out": true,
+      "timeout_seconds": 900.0
+    },
+    "reason": "The upstream-documented editable source setup with the MOABB and Hub extras exceeded the frozen amended-policy 900-second setup timeout while installing resolved dependencies. Baseline and mutation validation were not run under the baseline-first rule.",
+    "status": "setup-failed"
+  },
+  "static_verification": {
+    "downstream_execution": "The example loads data and a pretrained model after the selected Torch seed call, then creates random tensors consumed by model forward passes.",
+    "frozen_seed_call_present": true,
+    "selected_source": "torch.manual_seed(0)"
+  },
+  "mutation": {
+    "applied": false,
+    "candidate_index": null,
+    "mutant_validation": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-03/venv/bin/python examples/model_building/plot_channel_interpolation.py",
+      "duration_seconds": null,
+      "return_code": null,
+      "status": "not-run",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "outcome": null,
+    "semantic_verification": {
+      "evidence": null,
+      "method": null,
+      "status": "not-run"
+    },
+    "status": "not-evaluated"
+  }
+}
