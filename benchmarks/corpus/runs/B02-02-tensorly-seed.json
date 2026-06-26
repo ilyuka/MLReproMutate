@@ -1,0 +1,71 @@
+{
+  "environment": {},
+  "framework": {
+    "git_revision": "bda3ae9d26e5669f95e5c469e6ce615b1add80fe",
+    "name": "MLReproMutate",
+    "version": "0.0.0"
+  },
+  "generated_at_utc": "2026-08-24T11:07:00.973680+00:00",
+  "mutations": [
+    {
+      "candidate_metadata": {
+        "call": "np.random.seed",
+        "library": "numpy",
+        "line_number": 37,
+        "mutated_seed": 1,
+        "original_seed": 0,
+        "seed_col_offset": 15,
+        "seed_end_col_offset": 16,
+        "seed_end_line_number": 37,
+        "seed_line_number": 37
+      },
+      "category": "randomness",
+      "description": "Change random seed for np.random.seed from 0 to 1.",
+      "duration_seconds": 6.9290387090004515,
+      "execution": {
+        "return_code": 0,
+        "stderr": "/home/ilya/.config/matplotlib is not a writable directory\nMatplotlib created a temporary cache directory at /tmp/matplotlib-w24legwa because there was an issue with the default path ({configdir}); it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.\n/tmp/mlrepromutate-ij8e722t/source/examples/decomposition/plot_parafac2.py:244: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown\n  plt.show()\n",
+        "stdout": "Training model 0...\nNumber of iterations: 112\nFinal error: 0.09185685682284507\n-------------------------------\nTraining model 1...\nNumber of iterations: 218\nFinal error: 0.09185696510983972\n-------------------------------\nTraining model 2...\nNumber of iterations: 54\nFinal error: 0.09233283673252789\n-------------------------------\nTraining model 3...\nNumber of iterations: 99\nFinal error: 0.0918569343799603\n-------------------------------\nTraining model 4...\nNumber of iterations: 45\nFinal error: 0.09185745056531902\n-------------------------------\nTraining model 5...\nNumber of iterations: 129\nFinal error: 0.09185702655097173\n-------------------------------\nTraining model 6...\nNumber of iterations: 100\nFinal error: 0.09185691551421013\n-------------------------------\nTraining model 7...\nNumber of iterations: 51\nFinal error: 0.0918579046540267\n-------------------------------\nTraining model 8...\nNumber of iterations: 60\nFinal error: 0.09185789750541354\n-------------------------------\nTraining model 9...\nNumber of iterations: 117\nFinal error: 0.09185712986191719\n-------------------------------\nBest model error: 0.09185685682284507\n91% of the data is explained by the model, which is expected with noise rate: 0.1\nAverage tucker congruence coefficient: 0.9921816999786679\n"
+      },
+      "operator": "change_python_random_seed",
+      "outcome": "survived",
+      "reason": "Existing safeguards completed successfully and did not detect the mutation.",
+      "result_metadata": {
+        "return_code": 0,
+        "stderr": "/home/ilya/.config/matplotlib is not a writable directory\nMatplotlib created a temporary cache directory at /tmp/matplotlib-w24legwa because there was an issue with the default path ({configdir}); it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.\n/tmp/mlrepromutate-ij8e722t/source/examples/decomposition/plot_parafac2.py:244: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown\n  plt.show()\n",
+        "stdout": "Training model 0...\nNumber of iterations: 112\nFinal error: 0.09185685682284507\n-------------------------------\nTraining model 1...\nNumber of iterations: 218\nFinal error: 0.09185696510983972\n-------------------------------\nTraining model 2...\nNumber of iterations: 54\nFinal error: 0.09233283673252789\n-------------------------------\nTraining model 3...\nNumber of iterations: 99\nFinal error: 0.0918569343799603\n-------------------------------\nTraining model 4...\nNumber of iterations: 45\nFinal error: 0.09185745056531902\n-------------------------------\nTraining model 5...\nNumber of iterations: 129\nFinal error: 0.09185702655097173\n-------------------------------\nTraining model 6...\nNumber of iterations: 100\nFinal error: 0.09185691551421013\n-------------------------------\nTraining model 7...\nNumber of iterations: 51\nFinal error: 0.0918579046540267\n-------------------------------\nTraining model 8...\nNumber of iterations: 60\nFinal error: 0.09185789750541354\n-------------------------------\nTraining model 9...\nNumber of iterations: 117\nFinal error: 0.09185712986191719\n-------------------------------\nBest model error: 0.09185685682284507\n91% of the data is explained by the model, which is expected with noise rate: 0.1\nAverage tucker congruence coefficient: 0.9921816999786679\n"
+      },
+      "target": "examples/decomposition/plot_parafac2.py"
+    }
+  ],
+  "operator": {
+    "category": "randomness",
+    "configuration": {
+      "candidate_index": 1,
+      "python_file": "examples/decomposition/plot_parafac2.py"
+    },
+    "name": "change_python_random_seed"
+  },
+  "project": {
+    "git_revision": "acc439e9f9662c2b10ccdb53e5e88a0a40090525",
+    "path": "/home/ilya/.cache/mlrepromutate/b02/B02-02/source"
+  },
+  "schema_version": 2,
+  "summary": {
+    "candidates": 1,
+    "outcomes": {
+      "survived": 1
+    }
+  },
+  "validation": {
+    "baseline": {
+      "duration_seconds": 5.350650291999045,
+      "return_code": 0,
+      "stderr": "/home/ilya/.config/matplotlib is not a writable directory\nMatplotlib created a temporary cache directory at /tmp/matplotlib-j0d4xmns because there was an issue with the default path ({configdir}); it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.\n/tmp/mlrepromutate-ee550ygi/source/examples/decomposition/plot_parafac2.py:244: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown\n  plt.show()\n",
+      "stdout": "Training model 0...\nNumber of iterations: 80\nFinal error: 0.09204695261873093\n-------------------------------\nTraining model 1...\nNumber of iterations: 81\nFinal error: 0.09204698427747984\n-------------------------------\nTraining model 2...\nNumber of iterations: 70\nFinal error: 0.09269724856849308\n-------------------------------\nTraining model 3...\nNumber of iterations: 44\nFinal error: 0.09204719323465954\n-------------------------------\nTraining model 4...\nNumber of iterations: 46\nFinal error: 0.09204725131428748\n-------------------------------\nTraining model 5...\nNumber of iterations: 129\nFinal error: 0.09290580705038747\n-------------------------------\nTraining model 6...\nNumber of iterations: 47\nFinal error: 0.09204716605012422\n-------------------------------\nTraining model 7...\nNumber of iterations: 47\nFinal error: 0.09204714361493559\n-------------------------------\nTraining model 8...\nNumber of iterations: 47\nFinal error: 0.092047534296471\n-------------------------------\nTraining model 9...\nNumber of iterations: 98\nFinal error: 0.09204700880317773\n-------------------------------\nBest model error: 0.09204695261873093\n91% of the data is explained by the model, which is expected with noise rate: 0.1\nAverage tucker congruence coefficient: 0.9945618721597559\n",
+      "timed_out": false
+    },
+    "command": "env MPLBACKEND=Agg /home/ilya/.cache/mlrepromutate/b02/B02-02/venv/bin/python examples/decomposition/plot_parafac2.py",
+    "timeout_seconds": 300.0
+  }
+}
