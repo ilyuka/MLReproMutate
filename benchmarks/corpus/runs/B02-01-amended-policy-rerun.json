@@ -1,0 +1,93 @@
+{
+  "case_id": "B02-01",
+  "execution_policy": {
+    "amendment": "D024",
+    "baseline_validation_timeout_seconds": 300.0,
+    "clone_checkout_venv_timeout_seconds": 300.0,
+    "mutant_validation_timeout_seconds": 300.0,
+    "semantic_verification_timeout_seconds": 300.0,
+    "setup_install_timeout_seconds": 900.0
+  },
+  "frozen_case": {
+    "candidate_evidence": "np.random.seed(42) -> np.random.seed(43)",
+    "candidate_index": 1,
+    "operator": "random-seed",
+    "oracle_kind": "completion-only",
+    "repository": "tslearn-team/tslearn",
+    "revision": "46586963d332c908ca4a4dc9457e231bb275e703",
+    "target": "docs/examples/metrics/plot_frechet.py",
+    "workflow_command": "python docs/examples/metrics/plot_frechet.py",
+    "workflow_kind": "documented-example",
+    "workflow_reference": "tslearn documentation example gallery"
+  },
+  "generated_at_utc": "2026-08-24T12:57:42.864676+00:00",
+  "original_attempt": {
+    "ledger_record_immutable": true,
+    "report_path": "runs/B02-01-tslearn-seed.json",
+    "report_preserved": true
+  },
+  "revision_verification": {
+    "actual_head": "46586963d332c908ca4a4dc9457e231bb275e703",
+    "matches_frozen_revision": true
+  },
+  "schema_version": 2,
+  "screening": {
+    "baseline": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-01/venv/bin/python docs/examples/metrics/plot_frechet.py",
+      "duration_seconds": 13.893624426000315,
+      "environment": {
+        "MPLBACKEND": "Agg"
+      },
+      "return_code": 0,
+      "status": "passed",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "compatibility_retry_used": false,
+    "documented_setup": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-01/venv/bin/python -m pip install -e .[docs,all_features]",
+      "cwd": "/home/ilya/.cache/mlrepromutate/b02/B02-01/source",
+      "duration_seconds": 543.2109008329971,
+      "reference": "CONTRIBUTING.rst local documentation setup",
+      "return_code": 0,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-01/stages/setup-install-amended/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-01/stages/setup-install-amended/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "reason": null,
+    "status": "eligible"
+  },
+  "static_verification": {
+    "downstream_execution": "The example generates s1 and s2 with np.random.rand after the selected seed call, then passes them to dtw_path and frechet_path.",
+    "mutant_diff": "np.random.seed(42) -> np.random.seed(43)",
+    "only_frozen_source_change_present": true,
+    "selected_source": "np.random.seed(42)"
+  },
+  "mutation": {
+    "applied": true,
+    "candidate_index": 1,
+    "mutant_validation": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-01/venv/bin/python docs/examples/metrics/plot_frechet.py",
+      "duration_seconds": 9.53289796000172,
+      "environment": {
+        "MPLBACKEND": "Agg"
+      },
+      "return_code": 0,
+      "status": "passed",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "outcome": "survived",
+    "semantic_verification": {
+      "duration_seconds": 0.1168446949995996,
+      "evidence": "Both generated series differed: s1_equal=False and s2_equal=False. Combined-array SHA-256 values were 3b6565df3d03b29986eb849d37b2b3c9f2ad117e3e126482d807724fb8f93ae0 for seed 42 and 5afa0192e3d68b89cf5d34824ed5eb9e2b97812abbe2695ff7c78e2ae0d4dbf3 for seed 43.",
+      "method": "Reproduced the example's two seeded NumPy random-series constructions for seeds 42 and 43 inside the candidate sandbox and compared exact array equality and hashes.",
+      "return_code": 0,
+      "status": "confirmed-non-equivalent",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "status": "evaluated"
+  }
+}
