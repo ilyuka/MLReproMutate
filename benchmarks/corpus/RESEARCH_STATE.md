@@ -1067,4 +1067,8 @@ Current next execution step:
 
     B02-01 fresh amended-policy rerun
 
-Do not execute B02-03 first.
+The first unattended rerun attempt exposed an isolation infrastructure defect:
+the host resolver symlink target was absent inside bubblewrap. It produced no
+valid empirical observation and does not satisfy the required rerun. Repair and
+validate the infrastructure, then execute B02-01 fresh; do not execute B02-03
+first.

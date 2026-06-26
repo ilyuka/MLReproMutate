@@ -41,15 +41,16 @@ def test_unattended_policy_forbids_remote_and_privileged_commands(
     assert policy_decision(*command) == "forbidden"
 
 
-def test_unattended_policy_allows_local_commit() -> None:
-    assert policy_decision("git", "commit", "-m", "local") == "allow"
+def test_unattended_policy_forbids_codex_staging_and_commit() -> None:
+    assert policy_decision("git", "add", "file") == "forbidden"
+    assert policy_decision("git", "commit", "-m", "local") == "forbidden"
 
 
 def test_unattended_guidance_keeps_sandbox_and_automatic_review() -> None:
     text = GUIDANCE.read_text(encoding="utf-8")
+    assert "python benchmarks/corpus/b02_unattended.py" in text
     assert "--approve-for-me" in text
     assert "--sandbox workspace-write" in text
-    assert "--add-dir /home/ilya/.cache/mlrepromutate/b02" in text
     assert "--dangerously-bypass-approvals-and-sandbox" in text
     assert "Never use" in text
     assert "b02_isolation.py" in text
@@ -61,7 +62,7 @@ def test_unattended_guidance_keeps_sandbox_and_automatic_review() -> None:
     assert "exactly one B02 case" in prompt
     assert "Do not read unrelated user files" in prompt
     assert "Never use sudo" in prompt
-    assert "never\npush it" in prompt
+    assert "Do not run git add or git commit" in prompt
     assert "All candidate-controlled execution MUST go through" in prompt
     assert "b02_isolation.py" in prompt
     assert "run-isolated" in prompt

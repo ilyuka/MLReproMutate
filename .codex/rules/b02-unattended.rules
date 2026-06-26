@@ -11,11 +11,10 @@ prefix_rule(pattern=["ssh"], decision="forbidden")
 prefix_rule(pattern=["scp"], decision="forbidden")
 prefix_rule(pattern=["sftp"], decision="forbidden")
 
-# Local provenance commits are explicitly permitted. This does not permit any
-# remote operation, all of which remain forbidden above.
+# The trusted outer driver, not sandboxed Codex, brokers provenance commits.
 prefix_rule(pattern=["git", "status"], decision="allow")
 prefix_rule(pattern=["git", "diff"], decision="allow")
-prefix_rule(pattern=["git", "add"], decision="allow")
-prefix_rule(pattern=["git", "commit"], decision="allow")
+prefix_rule(pattern=["git", "add"], decision="forbidden")
+prefix_rule(pattern=["git", "commit"], decision="forbidden")
 prefix_rule(pattern=["git", "log"], decision="allow")
 prefix_rule(pattern=["git", "show"], decision="allow")

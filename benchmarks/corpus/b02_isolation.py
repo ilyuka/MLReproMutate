@@ -18,6 +18,7 @@ DEFAULT_ENVIRONMENT = {
 }
 RESERVED_ENVIRONMENT = frozenset({"HOME", "TMPDIR"})
 ENVIRONMENT_NAME_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+RESOLV_CONF = Path("/etc/resolv.conf")
 
 
 def _resolved_directory(path: Path, label: str) -> Path:
@@ -48,6 +49,35 @@ def parse_environment(values: Sequence[str]) -> dict[str, str]:
             raise ValueError(f"environment variable {name} is fixed by the sandbox")
         additions[name] = setting
     return additions
+
+
+def resolver_mount_argv(
+    resolv_conf: Path = RESOLV_CONF,
+    run_root: Path = Path("/run"),
+) -> list[str]:
+    """Expose only the resolver file needed by an absolute /etc symlink target."""
+
+    if not resolv_conf.is_symlink():
+        return []
+
+    target = resolv_conf.resolve(strict=True)
+    try:
+        target.relative_to(run_root)
+    except ValueError:
+        return []
+    if not target.is_file():
+        raise FileNotFoundError(f"resolver target is not a file: {target}")
+
+    argv: list[str] = []
+    parent = target.parent
+    missing_parents: list[Path] = []
+    while parent != run_root:
+        missing_parents.append(parent)
+        parent = parent.parent
+    for path in reversed(missing_parents):
+        argv.extend(("--dir", str(path)))
+    argv.extend(("--ro-bind", str(target), str(target)))
+    return argv
 
 
 def bubblewrap_argv(
@@ -95,6 +125,7 @@ def bubblewrap_argv(
         "--ro-bind",
         "/etc",
         "/etc",
+        *resolver_mount_argv(),
         "--proc",
         "/proc",
         "--dev",

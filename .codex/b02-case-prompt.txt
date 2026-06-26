@@ -10,8 +10,10 @@ credentials, SSH keys, browser data, tokens, or private configuration. Network
 use is limited to the documented clone and dependency provisioning needed by
 the case. Never use sudo, SSH tools, git push, git remote modification, GitHub
 publication, releases, or pull requests. Do not alter or bypass the repository
-exec policy. Make exactly one local commit for the completed case and never
-push it.
+exec policy. Do not run git add or git commit. For a normal case, leave only the
+screening ledger and required run report changed. For the B02-01 amended rerun,
+leave only its dedicated amended-policy report changed because the original
+ledger record is immutable. The trusted outer driver will inspect and commit.
 
 All candidate-controlled execution MUST go through the repository-owned
 `benchmarks/corpus/b02_isolation.py` bubblewrap wrapper. This includes every
@@ -22,6 +24,6 @@ candidate code. Use an explicit cwd beneath
 pass required clean-environment additions with repeatable `--env NAME=VALUE`.
 The harness `run-isolated` action applies the same wrapper while recording
 stage logs and fixed timeout classes. Never run candidate-controlled commands
-directly or with `shell=True`. Trusted bookkeeping, corpus validation, local
-git operations in MLReproMutate, and purely static inspection may remain
-outside bubblewrap.
+directly or with `shell=True`. Trusted bookkeeping, corpus validation, read-only
+local git inspection, and purely static inspection may remain outside
+bubblewrap.

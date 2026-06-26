@@ -8,6 +8,10 @@ from pathlib import Path
 
 import pytest
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "benchmarks" / "corpus"))
+
+from b02_isolation import bubblewrap_argv, resolver_mount_argv
+
 ROOT = Path(__file__).resolve().parents[1]
 WRAPPER = ROOT / "benchmarks" / "corpus" / "b02_isolation.py"
 WORK_ROOT = Path("/home/ilya/.cache/mlrepromutate/b02")
@@ -115,3 +119,38 @@ def test_cwd_outside_fixed_work_root_is_rejected(tmp_path: Path) -> None:
 
     assert completed.returncode != 0
     assert "cwd must be inside the B02 work root" in completed.stderr
+
+
+def test_resolver_symlink_target_is_exposed_read_only(tmp_path: Path) -> None:
+    run = tmp_path / "run" / "systemd" / "resolve"
+    etc = tmp_path / "etc"
+    run.mkdir(parents=True)
+    etc.mkdir()
+    target = run / "stub-resolv.conf"
+    target.write_text("nameserver 127.0.0.53\n", encoding="utf-8")
+    (etc / "resolv.conf").symlink_to(target)
+
+    assert resolver_mount_argv(etc / "resolv.conf", tmp_path / "run") == [
+        "--dir",
+        str(run.parent),
+        "--dir",
+        str(run),
+        "--ro-bind",
+        str(target),
+        str(target),
+    ]
+
+
+def test_host_resolver_mount_is_minimal_and_home_paths_stay_hidden(
+    synthetic_work_dir: Path,
+) -> None:
+    resolver_args = resolver_mount_argv()
+    assert resolver_args[-3:] == [
+        "--ro-bind",
+        "/run/systemd/resolve/stub-resolv.conf",
+        "/run/systemd/resolve/stub-resolv.conf",
+    ]
+    argv = bubblewrap_argv(["/usr/bin/true"], synthetic_work_dir)
+    assert "/run" not in argv
+    assert "/home/ilya/.ssh" not in argv
+    assert "/home/ilya/Desktop" not in argv

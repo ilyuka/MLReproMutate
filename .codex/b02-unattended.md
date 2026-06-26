@@ -5,23 +5,24 @@ approval review, the repository as working root, and only the B02 cache as an
 additional writable root. Never use `danger-full-access` or
 `--dangerously-bypass-approvals-and-sandbox`.
 
-Run one explicitly requested case with:
+Run one case through the trusted repository-owned driver with:
 
-    codex exec \
-      --approve-for-me \
-      --sandbox workspace-write \
-      --cd /home/ilya/Desktop/projekts/joss/ml-repro-mutate \
-      --add-dir /home/ilya/.cache/mlrepromutate/b02 \
-      --strict-config \
-      -c 'sandbox_workspace_write.network_access=true' \
-      -c 'sandbox_workspace_write.writable_roots=["/home/ilya/Desktop/projekts/joss/ml-repro-mutate","/home/ilya/.cache/mlrepromutate/b02"]' \
-      - < .codex/b02-case-prompt.txt
+    python benchmarks/corpus/b02_unattended.py
 
-The checked-in prompt resolves exactly one case mechanically from the harness.
-It states that candidate code is untrusted, unrelated user files and
+The driver requires a clean tree, resolves exactly one case mechanically, and
+starts Codex with `--approve-for-me`, `--sandbox workspace-write`, and only the
+B02 cache as an additional writable root. The checked-in prompt states that
+candidate code is untrusted, unrelated user files and
 credentials must not be read, the local rules forbid publication, remote
-changes, sudo, and SSH tools, and exactly one local commit is required. Do not
-pass `--ignore-rules`.
+changes, sudo, SSH tools, staging, and commits. Do not pass `--ignore-rules`.
+
+After Codex exits, the trusted driver requires exactly the screening ledger and
+one case-matching report for a normal case, or only the dedicated amended-policy
+report for B02-01 because its original ledger record is immutable. It then
+checks the frozen sampling frame and disabled push URL, runs corpus validation,
+verifies harness advancement, stages only the allowlisted files, and makes the
+local commit. It stops without committing on any unexpected path and verifies
+that the resulting tree is clean. The driver contains no publication command.
 
 ## Mandatory candidate bubblewrap boundary
 
@@ -40,7 +41,8 @@ environment. `HOME=/tmp/home` and `TMPDIR=/tmp` are fixed and cannot be
 overridden. Network remains enabled for documented clone/install/workflows.
 The wrapper unshares user, PID, IPC, UTS, cgroup, and mount namespaces, drops
 all capabilities, provides synthetic `/proc`, `/dev`, `/tmp`, and HOME, mounts
-system runtime trees read-only, and exposes only
+system runtime trees read-only, exposes the resolved `/etc/resolv.conf` target
+file read-only when it lives below `/run`, and exposes only
 `/home/ilya/.cache/mlrepromutate/b02` as writable candidate storage. The host
 home, `.ssh`, Desktop, and browser/config credential directories are absent.
 
@@ -58,7 +60,7 @@ Candidate package installation (including pip operations that may execute
 build/setup code), baseline validation, mutant validation, and semantic
 verification that imports or executes candidate code must use one of these
 forms. Direct execution and `shell=True` are prohibited. Trusted
-MLReproMutate bookkeeping, corpus validators, local repository git operations,
+MLReproMutate bookkeeping, corpus validators, read-only local git inspection,
 and purely static candidate-source inspection may run outside the wrapper.
 
 `--approve-for-me` is preferred to `--ask-for-approval never`: it retains an
