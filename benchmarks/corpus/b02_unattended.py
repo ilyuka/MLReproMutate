@@ -105,7 +105,8 @@ def push_url() -> str:
 
 def codex_command() -> list[str]:
     return [
-        "codex", "exec", "--approve-for-me", "--sandbox", "workspace-write",
+        "codex", "exec", "-c",
+        'approval_policy="never"', "--sandbox", "workspace-write",
         "--cd", str(ROOT), "--add-dir", "/home/ilya/.cache/mlrepromutate/b02",
         "--strict-config", "-c", "sandbox_workspace_write.network_access=true",
         "-c", f'sandbox_workspace_write.writable_roots=["{ROOT}","/home/ilya/.cache/mlrepromutate/b02"]',
