@@ -1,6 +1,8 @@
 import importlib.util
 import json
+import shutil
 import sys
+import tempfile
 from pathlib import Path
 
 import pytest
@@ -8,6 +10,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 HARNESS_PATH = ROOT / "benchmarks" / "corpus" / "b02_harness.py"
 FRAME_PATH = ROOT / "benchmarks" / "corpus" / "sampling_frame.jsonl"
+sys.path.insert(0, str(HARNESS_PATH.parent))
 
 SPEC = importlib.util.spec_from_file_location("b02_harness", HARNESS_PATH)
 assert SPEC is not None
@@ -19,7 +22,7 @@ load_sampling_frame = MODULE.load_sampling_frame
 next_unprocessed_case = MODULE.next_unprocessed_case
 processed_case_ids = MODULE.processed_case_ids
 case_work_dir = MODULE.case_work_dir
-run_local_command = MODULE.run_local_command
+run_candidate_command = MODULE.run_candidate_command
 timeout_for_class = MODULE.timeout_for_class
 
 
@@ -40,6 +43,16 @@ def small_frame() -> list[dict]:
         }
         for index in range(1, 4)
     ]
+
+
+@pytest.fixture
+def candidate_work_dir() -> Path:
+    work_root = Path("/home/ilya/.cache/mlrepromutate/b02")
+    path = Path(tempfile.mkdtemp(prefix="synthetic-harness-test-", dir=work_root))
+    try:
+        yield path
+    finally:
+        shutil.rmtree(path)
 
 
 def test_loads_all_frozen_cases_in_case_id_order() -> None:
@@ -155,15 +168,22 @@ def test_rejects_malformed_case_id_in_ledger(tmp_path: Path) -> None:
 
 
 def test_local_command_writes_full_logs_and_compact_success_summary(
-    tmp_path: Path,
+    candidate_work_dir: Path,
 ) -> None:
     command = [
-        sys.executable,
+        "/usr/bin/python3",
         "-c",
         "import sys; print('hello'); print('warning', file=sys.stderr)",
     ]
 
-    result = run_local_command("B02-01", "baseline", command, tmp_path, 2, tmp_path)
+    result = run_candidate_command(
+        "B02-01",
+        "baseline",
+        command,
+        candidate_work_dir,
+        2,
+        candidate_work_dir,
+    )
 
     assert result["command"] == command
     assert result["return_code"] == 0
@@ -172,24 +192,33 @@ def test_local_command_writes_full_logs_and_compact_success_summary(
     assert Path(result["stdout_log"]).read_text(encoding="utf-8") == "hello\n"
     assert Path(result["stderr_log"]).read_text(encoding="utf-8") == "warning\n"
     assert result["stdout_tail"] == ["hello"]
-    summary_path = tmp_path / "B02-01" / "stages" / "baseline" / "summary.json"
+    summary_path = (
+        candidate_work_dir / "B02-01" / "stages" / "baseline" / "summary.json"
+    )
     assert json.loads(summary_path.read_text(encoding="utf-8")) == result
 
 
-def test_local_command_records_nonzero_return_code(tmp_path: Path) -> None:
-    command = [sys.executable, "-c", "import sys; sys.exit(7)"]
+def test_local_command_records_nonzero_return_code(candidate_work_dir: Path) -> None:
+    command = ["/usr/bin/python3", "-c", "import sys; sys.exit(7)"]
 
-    result = run_local_command("B02-01", "setup", command, tmp_path, 2, tmp_path)
+    result = run_candidate_command(
+        "B02-01", "setup", command, candidate_work_dir, 2, candidate_work_dir
+    )
 
     assert result["return_code"] == 7
     assert result["timed_out"] is False
 
 
-def test_local_command_records_short_timeout(tmp_path: Path) -> None:
-    command = [sys.executable, "-c", "import time; time.sleep(1)"]
+def test_local_command_records_short_timeout(candidate_work_dir: Path) -> None:
+    command = ["/usr/bin/python3", "-c", "import time; time.sleep(1)"]
 
-    result = run_local_command(
-        "B02-01", "timeout-check", command, tmp_path, 0.02, tmp_path
+    result = run_candidate_command(
+        "B02-01",
+        "timeout-check",
+        command,
+        candidate_work_dir,
+        0.02,
+        candidate_work_dir,
     )
 
     assert result["return_code"] is None
@@ -199,16 +228,22 @@ def test_local_command_records_short_timeout(tmp_path: Path) -> None:
 
 
 def test_compact_tails_are_line_bounded_but_full_log_is_retained(
-    tmp_path: Path,
+    candidate_work_dir: Path,
 ) -> None:
     command = [
-        sys.executable,
+        "/usr/bin/python3",
         "-c",
         "print('\\n'.join(f'line-{i}' for i in range(100)))",
     ]
 
-    result = run_local_command(
-        "B02-01", "bounded", command, tmp_path, 2, tmp_path, tail_lines=4
+    result = run_candidate_command(
+        "B02-01",
+        "bounded",
+        command,
+        candidate_work_dir,
+        2,
+        candidate_work_dir,
+        tail_lines=4,
     )
 
     assert result["stdout_tail"] == ["line-96", "line-97", "line-98", "line-99"]
@@ -220,10 +255,8 @@ def test_compact_tails_are_line_bounded_but_full_log_is_retained(
 
 def test_case_work_dir_is_deterministic_and_configurable(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     configured = tmp_path / "persistent-work"
-    monkeypatch.setenv("MLREPRO_B02_WORK_ROOT", str(configured))
 
-    assert case_work_dir("B02-01") == configured / "B02-01"
+    assert case_work_dir("B02-01", configured) == configured / "B02-01"
     assert case_work_dir("B02-01") == case_work_dir("B02-01")

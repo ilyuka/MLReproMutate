@@ -11,6 +11,8 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
 
+from b02_isolation import run_isolated as run_in_candidate_sandbox
+
 CORPUS_ROOT = Path(__file__).resolve().parent
 DEFAULT_FRAME = CORPUS_ROOT / "sampling_frame.jsonl"
 DEFAULT_LEDGER = CORPUS_ROOT / "screening.jsonl"
@@ -189,14 +191,10 @@ def next_unprocessed_case(
     return None
 
 
-def b02_work_root(environ: dict[str, str] | None = None) -> Path:
-    """Return the configured persistent work root, without creating it."""
+def b02_work_root() -> Path:
+    """Return the fixed persistent candidate work root."""
 
-    environment = os.environ if environ is None else environ
-    configured = environment.get("MLREPRO_B02_WORK_ROOT")
-    if configured:
-        return Path(configured).expanduser().resolve()
-    return (Path.home() / ".cache" / "mlrepromutate" / "b02").resolve()
+    return Path("/home/ilya/.cache/mlrepromutate/b02")
 
 
 def case_work_dir(case_id: str, work_root: Path | None = None) -> Path:
@@ -220,7 +218,7 @@ def _tail(path: Path, line_limit: int = DEFAULT_TAIL_LINES) -> tuple[list[str], 
     return lines[-line_limit:], truncated
 
 
-def run_local_command(
+def run_candidate_command(
     case_id: str,
     stage: str,
     command: list[str],
@@ -228,8 +226,9 @@ def run_local_command(
     timeout_seconds: float,
     work_root: Path | None = None,
     tail_lines: int = DEFAULT_TAIL_LINES,
+    environment: dict[str, str] | None = None,
 ) -> dict[str, Any]:
-    """Run argv locally, writing full logs and a compact JSON summary to disk."""
+    """Run candidate argv via bubblewrap and persist a compact stage summary."""
 
     if not command or not all(isinstance(argument, str) for argument in command):
         raise ValueError("command must be a non-empty argv list of strings")
@@ -259,15 +258,14 @@ def run_local_command(
     return_code: int | None = None
     with stdout_path.open("wb") as stdout, stderr_path.open("wb") as stderr:
         try:
-            completed = subprocess.run(
+            completed = run_in_candidate_sandbox(
                 command,
                 cwd=resolved_cwd,
+                environment=environment,
                 stdin=subprocess.DEVNULL,
                 stdout=stdout,
                 stderr=stderr,
                 timeout=timeout_seconds,
-                check=False,
-                shell=False,
             )
             return_code = completed.returncode
         except subprocess.TimeoutExpired:
@@ -280,6 +278,7 @@ def run_local_command(
         "case_id": case_id,
         "stage": stage,
         "command": list(command),
+        "environment": dict(environment or {}),
         "cwd": str(resolved_cwd),
         "timeout_seconds": timeout_seconds,
         "duration_seconds": duration_seconds,
@@ -331,7 +330,7 @@ def build_parser() -> argparse.ArgumentParser:
     status_parser.add_argument("--sampling-frame", type=Path, default=DEFAULT_FRAME)
     status_parser.add_argument("--work-root", type=Path)
 
-    run_parser = subparsers.add_parser("run-local")
+    run_parser = subparsers.add_parser("run-isolated")
     run_parser.add_argument("case_id")
     run_parser.add_argument("--stage", required=True)
     run_parser.add_argument(
@@ -343,6 +342,12 @@ def build_parser() -> argparse.ArgumentParser:
     run_parser.add_argument("--tail-lines", type=int, default=DEFAULT_TAIL_LINES)
     run_parser.add_argument("--sampling-frame", type=Path, default=DEFAULT_FRAME)
     run_parser.add_argument("--work-root", type=Path)
+    run_parser.add_argument(
+        "--env",
+        action="append",
+        default=[],
+        metavar="NAME=VALUE",
+    )
     run_parser.add_argument("command", nargs=argparse.REMAINDER)
     return parser
 
@@ -363,7 +368,9 @@ def main(argv: list[str] | None = None) -> None:
         result = status_for_case(args.case_id, args.work_root)
     else:
         command = args.command[1:] if args.command[:1] == ["--"] else args.command
-        result = run_local_command(
+        from b02_isolation import parse_environment
+
+        result = run_candidate_command(
             args.case_id,
             args.stage,
             command,
@@ -371,6 +378,7 @@ def main(argv: list[str] | None = None) -> None:
             timeout_for_class(args.timeout_class),
             args.work_root,
             args.tail_lines,
+            parse_environment(args.env),
         )
     print(json.dumps(result, ensure_ascii=False, sort_keys=True))
 

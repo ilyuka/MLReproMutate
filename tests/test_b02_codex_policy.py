@@ -52,9 +52,16 @@ def test_unattended_guidance_keeps_sandbox_and_automatic_review() -> None:
     assert "--add-dir /home/ilya/.cache/mlrepromutate/b02" in text
     assert "--dangerously-bypass-approvals-and-sandbox" in text
     assert "Never use" in text
+    assert "b02_isolation.py" in text
+    assert "run-isolated" in text
+    assert "candidate-controlled execution MUST use" in text
+    assert "shell=True" in text
 
     prompt = PROMPT.read_text(encoding="utf-8")
     assert "exactly one B02 case" in prompt
     assert "Do not read unrelated user files" in prompt
     assert "Never use sudo" in prompt
     assert "never\npush it" in prompt
+    assert "All candidate-controlled execution MUST go through" in prompt
+    assert "b02_isolation.py" in prompt
+    assert "run-isolated" in prompt
