@@ -1,0 +1,69 @@
+{
+  "case_id": "B02-01",
+  "environment_adaptations": {
+    "MPLBACKEND": {
+      "baseline": "Agg",
+      "mutant": "Agg",
+      "predeclared": true,
+      "used": false
+    }
+  },
+  "frozen_case": {
+    "candidate_evidence": "np.random.seed(42) -> np.random.seed(43)",
+    "operator": "random-seed",
+    "oracle_kind": "completion-only",
+    "repository": "tslearn-team/tslearn",
+    "revision": "46586963d332c908ca4a4dc9457e231bb275e703",
+    "target": "docs/examples/metrics/plot_frechet.py",
+    "workflow_command": "python docs/examples/metrics/plot_frechet.py",
+    "workflow_kind": "documented-example"
+  },
+  "revision_verification": {
+    "actual_head": "46586963d332c908ca4a4dc9457e231bb275e703",
+    "matches_frozen_revision": true
+  },
+  "schema_version": 2,
+  "screening": {
+    "baseline": {
+      "command": "python docs/examples/metrics/plot_frechet.py",
+      "duration_seconds": null,
+      "python_executable": "/home/ilya/.cache/mlrepromutate/b02/B02-01/venv/bin/python",
+      "return_code": null,
+      "status": "not-run",
+      "timed_out": false
+    },
+    "compatibility_retry_used": false,
+    "documented_setup": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-01/venv/bin/python -m pip install -e .[docs,all_features]",
+      "cwd": "/home/ilya/.cache/mlrepromutate/b02/B02-01/source",
+      "duration_seconds": 300.0072379200028,
+      "reference": "CONTRIBUTING.rst local documentation setup",
+      "return_code": null,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-01/stages/setup-install/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-01/stages/setup-install/stdout.log",
+      "timed_out": true,
+      "timeout_seconds": 300.0
+    },
+    "reason": "The first documented setup attempt exceeded the frozen 300-second timeout while downloading declared all_features dependencies.",
+    "status": "setup-failed"
+  },
+  "static_verification": {
+    "downstream_execution": "The example generates s1 and s2 with np.random.rand after the seed call, then passes them to dtw_path and frechet_path.",
+    "frozen_seed_call_present": true,
+    "selected_source": "np.random.seed(42)"
+  },
+  "mutation": {
+    "applied": false,
+    "candidate_index": null,
+    "mutant_validation": {
+      "command": "python docs/examples/metrics/plot_frechet.py",
+      "duration_seconds": null,
+      "return_code": null,
+      "status": "not-run",
+      "timed_out": false
+    },
+    "outcome": null,
+    "semantic_verification": "not-run",
+    "status": "not-evaluated"
+  }
+}
