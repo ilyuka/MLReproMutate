@@ -145,6 +145,8 @@ def bubblewrap_argv(
         str(work_root),
         "--dir",
         str(SYNTHETIC_HOME),
+        "--dir",
+        str(SYNTHETIC_HOME / ".cache"),
     ]
     for name, value in {**DEFAULT_ENVIRONMENT, **additions}.items():
         argv.extend(("--setenv", name, value))

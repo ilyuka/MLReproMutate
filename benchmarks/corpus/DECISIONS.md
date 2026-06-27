@@ -556,3 +556,33 @@ Provenance treatment:
 Status:
 
 FROZEN PROSPECTIVELY BEFORE B02-03.
+
+---
+
+## D025 — Synthetic HOME cache-directory isolation correction
+
+Decision date:
+
+    2026-08-24, after B02-08 and before subsequent B02 execution
+
+Decision:
+
+The bubblewrap synthetic HOME remains `/tmp/home` on the sandbox-private tmpfs
+and now includes a writable `/tmp/home/.cache` directory. No real host HOME or
+host cache is exposed.
+
+Reason:
+
+B02-08 exposed an isolation artifact when software expanded `~/.cache` and
+expected the cache directory to exist before creating a symlink beneath it.
+
+Provenance treatment:
+
+This is a prospective execution-infrastructure correction, not an empirical
+compatibility correction or retry under D005. It does not alter the frozen
+sample, workflow, candidate, mutation, timeout, or outcome policy, and no
+existing screening or run record is rewritten by this change.
+
+Status:
+
+FROZEN PROSPECTIVELY AFTER B02-08.

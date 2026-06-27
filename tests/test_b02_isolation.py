@@ -41,7 +41,14 @@ def test_synthetic_command_is_isolated_and_work_root_is_writable(
     probe = (
         "import json, os, pathlib; "
         "pathlib.Path('created-inside-sandbox').write_text('ok'); "
+        "cache = pathlib.Path.home() / '.cache'; "
+        "cache_probe = cache / 'write-probe'; "
+        "cache_probe.write_text('cache-ok'); "
+        "(cache / 'probe-link').symlink_to(cache_probe); "
         "print(json.dumps({'cwd': os.getcwd(), 'home': os.environ['HOME'], "
+        "'cache_dir': str(cache), 'cache_writable': cache_probe.read_text(), "
+        "'cache_symlink': (cache / 'probe-link').is_symlink(), "
+        "'cache_symlink_contents': (cache / 'probe-link').read_text(), "
         "'secret': os.environ.get('MLREPRO_SYNTHETIC_HOST_SECRET'), "
         "'mpl': os.environ.get('MPLBACKEND'), "
         "'ssh': pathlib.Path('/home/ilya/.ssh').exists(), "
@@ -67,6 +74,10 @@ def test_synthetic_command_is_isolated_and_work_root_is_writable(
     assert observed == {
         "cwd": str(synthetic_work_dir),
         "home": "/tmp/home",
+        "cache_dir": "/tmp/home/.cache",
+        "cache_writable": "cache-ok",
+        "cache_symlink": True,
+        "cache_symlink_contents": "cache-ok",
         "secret": None,
         "mpl": "Agg",
         "ssh": False,
