@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "analysis_kind": "secondary-compatibility-sensitivity",
+  "sensitivity_policy": "S1",
+  "case_id": "B02-07",
+  "generated_at_utc": "2026-08-24T16:58:58Z",
+  "primary_case_identity": {
+    "repository": "kLabUM/rrcf",
+    "revision": "1795a1b4dd39a3ffb196be7e251b177b3d1ab489",
+    "operator": "random-seed",
+    "target": "test/test_rrcf.py",
+    "candidate_index": 1,
+    "candidate_evidence": "np.random.seed(0) -> np.random.seed(1)",
+    "workflow_command": "pytest",
+    "workflow_kind": "upstream-test",
+    "workflow_reference": ".github/workflows/python-package.yml; test/test_rrcf.py",
+    "oracle_kind": "assertion",
+    "primary_report": "benchmarks/corpus/runs/B02-07-rrcf-seed.json"
+  },
+  "primary_outcome_statement": "The primary strict outcome remains canonical and is not modified by this secondary S1 result.",
+  "execution_policy": {
+    "clone_checkout_venv_timeout_seconds": 300.0,
+    "setup_install_timeout_seconds": 900.0,
+    "baseline_validation_timeout_seconds": 300.0,
+    "mutant_validation_timeout_seconds": 300.0,
+    "semantic_verification_timeout_seconds": 300.0,
+    "maximum_error_directed_corrections": 2,
+    "candidate_execution_isolation": "All candidate-controlled commands executed through benchmarks/corpus/b02_isolation.py using bubblewrap."
+  },
+  "fresh_work_directory": "/home/ilya/.cache/mlrepromutate/b02/B02-07-S1-b4CxXSl3",
+  "revision_verification": {
+    "expected_revision": "1795a1b4dd39a3ffb196be7e251b177b3d1ab489",
+    "actual_head_before_baseline": "1795a1b4dd39a3ffb196be7e251b177b3d1ab489",
+    "actual_head_after_restoration": "1795a1b4dd39a3ffb196be7e251b177b3d1ab489",
+    "matches_frozen_revision": true
+  },
+  "setup_result": {
+    "status": "passed",
+    "reference": ".github/workflows/python-package.yml",
+    "commands": [
+      "python -m pip install --upgrade pip",
+      "python -m pip install flake8 pytest",
+      "python -m pip install -r requirements.txt"
+    ],
+    "resolved_environment": {
+      "python": "3.12.3",
+      "pip": "26.2.1",
+      "pytest": "9.1.1",
+      "numpy": "2.5.2",
+      "rrcf": "0.4.4"
+    }
+  },
+  "baseline_attempts": [
+    {
+      "attempt": 1,
+      "command": "pytest",
+      "timeout_seconds": 300.0,
+      "timed_out": false,
+      "return_code": 2,
+      "status": "failed",
+      "terminal_error": "ModuleNotFoundError: No module named 'pkg_resources' during collection of test/test_rrcf.py"
+    },
+    {
+      "attempt": 2,
+      "command": "pytest",
+      "timeout_seconds": 300.0,
+      "timed_out": false,
+      "return_code": 0,
+      "status": "passed",
+      "summary": "16 passed, 1 warning in 0.24s",
+      "environment_correction_state": "setuptools<81 installed; resolved setuptools 80.10.2"
+    }
+  ],
+  "corrections_used": [
+    {
+      "order": 1,
+      "kind": "compatible-upstream-dependency-version",
+      "command": "python -m pip install 'setuptools<81'",
+      "timeout_seconds": 900.0,
+      "timed_out": false,
+      "return_code": 0,
+      "resolved_version": "setuptools 80.10.2",
+      "observed_error_motivation": "The initial baseline failed because the frozen revision imports pkg_resources. Setuptools historically provides that module, and the removal warning itself identifies setuptools<81 as the compatible range.",
+      "preserves_workflow_semantics": true
+    }
+  ],
+  "corrections_used_count": 1,
+  "final_baseline_result": {
+    "status": "passed",
+    "return_code": 0,
+    "oracle_kind": "assertion",
+    "summary": "16 passed, 1 warning in 0.24s"
+  },
+  "mutation_result": {
+    "status": "evaluated",
+    "applied": true,
+    "candidate_index": 1,
+    "source_change": "np.random.seed(0) -> np.random.seed(1)",
+    "application_verification": "The candidate file diff contained only the frozen one-line seed mutation.",
+    "validation_command": "pytest",
+    "timeout_seconds": 300.0,
+    "timed_out": false,
+    "return_code": 0,
+    "summary": "16 passed, 1 warning in 0.24s",
+    "oracle_outcome": "SURVIVED",
+    "source_restored": true,
+    "post_restore_source_diff_empty": true,
+    "remaining_untracked_workflow_artifact": "tree.json"
+  },
+  "semantic_verification": {
+    "status": "confirmed-non-equivalent",
+    "method": "Replayed the target module's NumPy data generation and shuffle prefix for seeds 0 and 1 in the isolated corrected environment; this was post-hoc evidence and not a replacement oracle.",
+    "seed_0": {
+      "x_sha256": "7ae07dc030dfdaf3295956aa9c343449dfa0ddf64d74443dcf854bdcf4d42e14",
+      "indexes": [44, 29, 9, 61, 74]
+    },
+    "seed_1": {
+      "x_sha256": "ec8e3fc1cb059b9e8ce621ba2f5d539d8c7980ca5d71a8185b1e9e1eb3ef96d5",
+      "indexes": [46, 35, 6, 10, 60]
+    },
+    "behavior_changed": true
+  },
+  "final_sensitivity_result": "SURVIVED",
+  "primary_strict_outcome_remains_canonical": true
+}
