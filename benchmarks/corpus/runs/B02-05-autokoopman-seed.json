@@ -1,0 +1,92 @@
+{
+  "case_id": "B02-05",
+  "execution_policy": {
+    "amendment": "D024",
+    "baseline_validation_timeout_seconds": 300.0,
+    "clone_checkout_venv_timeout_seconds": 300.0,
+    "mutant_validation_timeout_seconds": 300.0,
+    "semantic_verification_timeout_seconds": 300.0,
+    "setup_install_timeout_seconds": 900.0
+  },
+  "frozen_case": {
+    "candidate_evidence": "np.random.seed(1234) -> np.random.seed(1235)",
+    "candidate_index": 1,
+    "operator": "random-seed",
+    "oracle_kind": "completion-only",
+    "repository": "EthanJamesLew/AutoKoopman",
+    "revision": "3808e0f061983388e69df06cc5ceda097773603f",
+    "target": "benchmarks/trainingCurve.py",
+    "workflow_command": "python benchmarks/trainingCurve.py",
+    "workflow_kind": "documented-experiment",
+    "workflow_reference": "benchmarks/trainingCurve.py"
+  },
+  "generated_at_utc": "2026-08-24T15:22:37Z",
+  "revision_verification": {
+    "actual_head": "3808e0f061983388e69df06cc5ceda097773603f",
+    "matches_frozen_revision": true
+  },
+  "schema_version": 2,
+  "screening": {
+    "baseline": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-05/venv/bin/python benchmarks/trainingCurve.py",
+      "duration_seconds": 2.221707485994557,
+      "environment": {
+        "MPLBACKEND": "Agg"
+      },
+      "return_code": 1,
+      "status": "failed",
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-05/stages/baseline/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-05/stages/baseline/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "compatibility_correction": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-05/venv/bin/pip install gpy==1.10.0 gpyopt==1.2.6",
+      "duration_seconds": 10.490404151998519,
+      "reason": "The selected documented experiment imports GPyOpt for its Bayesian tuner, while upstream setup.py uses the ineffective key extra_requires and the repository requirements.txt pins gpy==1.10.0 and gpyopt==1.2.6.",
+      "return_code": 1,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-05/stages/compatibility-install/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-05/stages/compatibility-install/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "compatibility_retry_used": true,
+    "documented_setup": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-05/venv/bin/pip install .",
+      "cwd": "/home/ilya/.cache/mlrepromutate/b02/B02-05/repo",
+      "duration_seconds": 894.9923836250018,
+      "reference": "README.md installation section; fixed-revision source equivalent of pip install autokoopman",
+      "return_code": 0,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-05/stages/setup-install/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-05/stages/setup-install/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "reason": "The documented source installation succeeded. The baseline then failed at the selected Bayesian tuner because GPyOpt was absent. The single allowed obvious compatibility correction attempted the repository-pinned gpy==1.10.0 and gpyopt==1.2.6 dependencies, but GPy could not build because Python.h was unavailable. No further setup correction was attempted, and mutation validation was not run under the baseline-first rule.",
+    "status": "setup-failed"
+  },
+  "static_verification": {
+    "downstream_execution": "The selected NumPy seed precedes generation of 30 random initial states used to construct the training trajectories consumed by all three benchmark tuners.",
+    "frozen_seed_call_present": true,
+    "selected_source": "np.random.seed(1234)"
+  },
+  "mutation": {
+    "applied": false,
+    "candidate_index": null,
+    "mutant_validation": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-05/venv/bin/python benchmarks/trainingCurve.py",
+      "duration_seconds": null,
+      "return_code": null,
+      "status": "not-run",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "outcome": null,
+    "semantic_verification": {
+      "evidence": null,
+      "method": null,
+      "status": "not-run"
+    },
+    "status": "not-evaluated"
+  }
+}
