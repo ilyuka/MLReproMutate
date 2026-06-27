@@ -1,0 +1,97 @@
+{
+  "case_id": "B02-08",
+  "execution_policy": {
+    "amendment": "D024",
+    "baseline_validation_timeout_seconds": 300.0,
+    "clone_checkout_venv_timeout_seconds": 300.0,
+    "mutant_validation_timeout_seconds": 300.0,
+    "semantic_verification_timeout_seconds": 300.0,
+    "setup_install_timeout_seconds": 900.0
+  },
+  "frozen_case": {
+    "candidate_evidence": "torch.manual_seed(42) -> torch.manual_seed(43)",
+    "candidate_index": 5,
+    "operator": "random-seed",
+    "oracle_kind": "completion-only",
+    "repository": "eric-mitchell/detect-gpt",
+    "revision": "447d2ce8177004203f42d1da87d7f93a2e31ad52",
+    "target": "run.py",
+    "workflow_command": "python run.py --output_name main --base_model_name gpt2-xl --mask_filling_model_name t5-3b --n_perturbation_list 1,10,100 --n_samples 500 --pct_words_masked 0.3 --span_length 2",
+    "workflow_kind": "documented-experiment",
+    "workflow_reference": "README.md Instructions; paper_scripts/main.sh; run.py"
+  },
+  "generated_at_utc": "2026-08-24T15:46:24Z",
+  "revision_verification": {
+    "actual_head": "447d2ce8177004203f42d1da87d7f93a2e31ad52",
+    "matches_frozen_revision": true
+  },
+  "schema_version": 2,
+  "screening": {
+    "baseline": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-08/venv/bin/python run.py --output_name main --base_model_name gpt2-xl --mask_filling_model_name t5-3b --n_perturbation_list 1,10,100 --n_samples 500 --pct_words_masked 0.3 --span_length 2",
+      "duration_seconds": 4.727083457997651,
+      "return_code": 1,
+      "status": "failed",
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-08/stages/baseline-retry/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-08/stages/baseline-retry/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "compatibility_correction": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-08/venv/bin/pip install transformers<5",
+      "duration_seconds": 8.882045897000353,
+      "reason": "The unpinned requirements resolved Transformers 5.15.1, and the initial baseline failed because that release rejected the standard gpt2-xl model configuration. The retry constrained Transformers to its prior major version.",
+      "return_code": 0,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-08/stages/compatibility-transformers/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-08/stages/compatibility-transformers/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "compatibility_retry_used": true,
+    "documented_setup": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-08/venv/bin/pip install -r requirements.txt",
+      "cwd": "/home/ilya/.cache/mlrepromutate/b02/B02-08/source",
+      "duration_seconds": 378.39976979300263,
+      "reference": "README.md Instructions",
+      "return_code": 0,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-08/stages/install/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-08/stages/install/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "initial_baseline": {
+      "duration_seconds": 11.49437343399768,
+      "return_code": 1,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-08/stages/baseline/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-08/stages/baseline/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "reason": "The documented dependency setup completed. The initial baseline failed before the selected seed call because the unpinned requirements resolved Transformers 5.15.1, which rejected the standard gpt2-xl model configuration. The single allowed compatibility correction installed Transformers 4.57.6, but the retry failed independently while Hugging Face Hub created the GPT-2 tokenizer cache symlink. No further correction was attempted, and mutation validation was not run under the baseline-first rule.",
+    "status": "setup-failed"
+  },
+  "static_verification": {
+    "downstream_execution": "The selected Torch seed is called in generate_samples immediately before batches of source passages are sampled with the base language model.",
+    "frozen_seed_call_present": true,
+    "selected_source": "torch.manual_seed(42)"
+  },
+  "mutation": {
+    "applied": false,
+    "candidate_index": null,
+    "mutant_validation": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-08/venv/bin/python run.py --output_name main --base_model_name gpt2-xl --mask_filling_model_name t5-3b --n_perturbation_list 1,10,100 --n_samples 500 --pct_words_masked 0.3 --span_length 2",
+      "duration_seconds": null,
+      "return_code": null,
+      "status": "not-run",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "outcome": null,
+    "semantic_verification": {
+      "evidence": null,
+      "method": null,
+      "status": "not-run"
+    },
+    "status": "not-evaluated"
+  }
+}
