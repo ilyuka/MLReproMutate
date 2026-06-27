@@ -586,3 +586,29 @@ existing screening or run record is rewritten by this change.
 Status:
 
 FROZEN PROSPECTIVELY AFTER B02-08.
+
+### S1 — relaxed compatibility sensitivity analysis
+
+After completion of the strict primary random-seed execution pass, a secondary
+sensitivity analysis may be run for primary cases that were not mutation-evaluable
+because the documented workflow failed under the bounded compatibility policy.
+
+S1 does not replace or modify primary outcomes.
+
+S1 permits at most two error-directed compatibility corrections per fresh case run.
+
+A correction must be directly motivated by an observed execution error and may only:
+- install an evidently required missing runtime dependency;
+- select a compatible release/range of an upstream dependency;
+- normalize an environment/path representation without changing workflow semantics.
+
+S1 must not:
+- edit candidate source except for the frozen mutation;
+- change the selected candidate;
+- change the validation oracle;
+- weaken or skip tests/checks;
+- substitute CPU for a workflow that semantically requires CUDA;
+- increase frozen setup or validation timeouts;
+- search arbitrary fixes after two corrections.
+
+Primary strict results remain canonical and are reported separately from S1 results.
