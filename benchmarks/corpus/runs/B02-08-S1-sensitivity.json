@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-08-24T16:52:16Z",
+  "analysis_kind": "secondary-compatibility-sensitivity",
+  "sensitivity_policy": "S1",
+  "primary_case_identity": {
+    "case_id": "B02-08",
+    "repository": "eric-mitchell/detect-gpt",
+    "revision": "447d2ce8177004203f42d1da87d7f93a2e31ad52",
+    "operator": "random-seed",
+    "target": "run.py",
+    "candidate_index": 1,
+    "selected_source": "random.seed(0)",
+    "frozen_mutation": "random.seed(0) -> random.seed(1)",
+    "oracle_kind": "completion-only",
+    "workflow_command": "python run.py --output_name main --base_model_name gpt2-xl --mask_filling_model_name t5-3b --n_perturbation_list 1,10,100 --n_samples 500 --pct_words_masked 0.3 --span_length 2"
+  },
+  "execution_policy": {
+    "clone_checkout_venv_timeout_seconds": 300.0,
+    "setup_install_timeout_seconds": 900.0,
+    "baseline_validation_timeout_seconds": 300.0,
+    "mutant_validation_timeout_seconds": 300.0,
+    "semantic_verification_timeout_seconds": 300.0,
+    "maximum_error_directed_corrections": 2,
+    "fresh_work_directory": "/home/ilya/.cache/mlrepromutate/b02/B02-08-S1-20260824",
+    "isolation": "benchmarks/corpus/b02_isolation.py bubblewrap wrapper"
+  },
+  "revision_verification": {
+    "actual_head": "447d2ce8177004203f42d1da87d7f93a2e31ad52",
+    "matches_frozen_revision": true
+  },
+  "documented_setup": {
+    "command": "/home/ilya/.cache/mlrepromutate/b02/B02-08-S1-20260824/venv/bin/pip install -r requirements.txt",
+    "duration_seconds": 362.2338401579982,
+    "return_code": 0,
+    "timed_out": false,
+    "timeout_seconds": 900.0,
+    "resolved_transformers_version": "5.15.1",
+    "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-08-S1-20260824/B02-08/stages/setup-unpinned/stdout.log",
+    "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-08-S1-20260824/B02-08/stages/setup-unpinned/stderr.log"
+  },
+  "corrections_used": [
+    {
+      "order": 1,
+      "kind": "compatible-dependency-range",
+      "trigger": "The unpinned baseline resolved Transformers 5.15.1 and failed with ValueError: Unrecognized model in gpt2-xl.",
+      "action": "pip install transformers<5",
+      "result": "passed",
+      "resolved_transformers_version": "4.57.6",
+      "duration_seconds": 9.882751723998808,
+      "return_code": 0
+    },
+    {
+      "order": 2,
+      "kind": "path-only-normalization",
+      "trigger": "After correction 1, Hugging Face failed while creating the GPT-2 tokenizer snapshot symlink beneath the literal cache_dir ~/.cache.",
+      "action": "Added only --cache_dir /tmp/home/.cache to the otherwise identical workflow command.",
+      "result": "applied-to-final-baseline"
+    }
+  ],
+  "baseline_attempts": [
+    {
+      "name": "initial-unpinned",
+      "command_correction": null,
+      "duration_seconds": 14.34769937999954,
+      "return_code": 1,
+      "timed_out": false,
+      "status": "failed",
+      "reason": "Transformers 5.15.1 rejected the gpt2-xl configuration.",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-08-S1-20260824/B02-08/stages/baseline-initial/stdout.log",
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-08-S1-20260824/B02-08/stages/baseline-initial/stderr.log"
+    },
+    {
+      "name": "after-correction-1",
+      "command_correction": "Transformers<5",
+      "duration_seconds": 5.175698848994216,
+      "return_code": 1,
+      "timed_out": false,
+      "status": "failed",
+      "reason": "Hugging Face could not construct the tokenizer snapshot symlink beneath the literal cache_dir ~/.cache.",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-08-S1-20260824/B02-08/stages/baseline-after-correction-1/stdout.log",
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-08-S1-20260824/B02-08/stages/baseline-after-correction-1/stderr.log"
+    },
+    {
+      "name": "after-correction-2",
+      "command_correction": "Transformers<5 and --cache_dir /tmp/home/.cache",
+      "duration_seconds": 300.0008987609981,
+      "return_code": null,
+      "timed_out": true,
+      "timeout_seconds": 300.0,
+      "status": "timeout",
+      "reason": "The corrected workflow did not complete within the frozen baseline timeout.",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-08-S1-20260824/B02-08/stages/baseline-after-correction-2/stdout.log",
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-08-S1-20260824/B02-08/stages/baseline-after-correction-2/stderr.log"
+    }
+  ],
+  "baseline_result": {
+    "status": "timeout",
+    "passed": false,
+    "corrections_exhausted": true,
+    "workflow_unavailable_due_to_cuda": false,
+    "reason": "After both permitted S1 corrections, the baseline exceeded the frozen 300-second validation timeout. The run did not reach a reported CUDA-unavailable failure."
+  },
+  "static_candidate_reconfirmation": {
+    "performed_before_any_possible_mutation": true,
+    "selected_source_present": true,
+    "selected_source": "random.seed(0)",
+    "location": "run.py:649",
+    "execution_context": "generate_data calls random.seed(0) immediately before random.shuffle(data)."
+  },
+  "mutation_result": {
+    "status": "not-evaluated",
+    "applied": false,
+    "outcome": null,
+    "reason": "The S1 baseline did not pass; the baseline-first rule prohibits mutation evaluation.",
+    "source_restored": true,
+    "source_tree_tracked_changes_after_run": false,
+    "run_py_sha256": "95889e6f1d07800b6bd7f7077846d6f9c1da7da6ff36dde23da52a175be842ba",
+    "revision_run_py_sha256": "95889e6f1d07800b6bd7f7077846d6f9c1da7da6ff36dde23da52a175be842ba"
+  },
+  "semantic_verification": {
+    "status": "not-run",
+    "method": null,
+    "evidence": null,
+    "reason": "Mutation was not evaluated because the baseline timed out."
+  },
+  "primary_provenance": {
+    "strict_primary_outcome_remains_canonical": true,
+    "statement": "This S1 secondary sensitivity result does not replace, modify, or reclassify the strict primary B02-08 screening outcome or run report.",
+    "primary_screening_record_modified": false,
+    "primary_run_report_modified": false,
+    "primary_screening_sha256_observed_after_s1": "aa3bc65443a050d611979ff0960c60b4fac4a41c7f871bf99d93fcafb6f41931",
+    "primary_run_report_sha256_observed_after_s1": "c1b2f19431a49454f0a57be52dc683da88e4c2c297a64fee1044fcc7956adf1"
+  },
+  "sensitivity_result": "baseline-timeout"
+}
