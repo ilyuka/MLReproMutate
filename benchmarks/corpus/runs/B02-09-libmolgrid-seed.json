@@ -1,0 +1,78 @@
+{
+  "case_id": "B02-09",
+  "execution_policy": {
+    "amendment": "D024",
+    "baseline_validation_timeout_seconds": 300.0,
+    "clone_checkout_venv_timeout_seconds": 300.0,
+    "mutant_validation_timeout_seconds": 300.0,
+    "semantic_verification_timeout_seconds": 300.0,
+    "setup_install_timeout_seconds": 900.0
+  },
+  "frozen_case": {
+    "candidate_evidence": "torch.manual_seed(0) -> torch.manual_seed(1)",
+    "candidate_index": 1,
+    "operator": "random-seed",
+    "oracle_kind": "assertion",
+    "repository": "gnina/libmolgrid",
+    "revision": "e11f058c2ae6baa6483fe0b8ba0f5c0dbc86fc10",
+    "target": "test/test_torch_cnn.py",
+    "workflow_command": "pytest test/test_torch_cnn.py",
+    "workflow_kind": "upstream-test",
+    "workflow_reference": "README.md; .github/workflows/CI.yml; test/test_torch_cnn.py"
+  },
+  "generated_at_utc": "2026-08-24T15:56:38Z",
+  "revision_verification": {
+    "actual_head": "e11f058c2ae6baa6483fe0b8ba0f5c0dbc86fc10",
+    "matches_frozen_revision": true
+  },
+  "schema_version": 2,
+  "screening": {
+    "baseline": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-09/venv/bin/pytest test/test_torch_cnn.py",
+      "duration_seconds": 2.6193715690023964,
+      "return_code": 1,
+      "status": "failed",
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-09/stages/baseline/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-09/stages/baseline/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "compatibility_correction": null,
+    "compatibility_retry_used": false,
+    "documented_setup": {
+      "commands": [
+        "/home/ilya/.cache/mlrepromutate/b02/B02-09/venv/bin/python -m pip install molgrid pytest",
+        "/home/ilya/.cache/mlrepromutate/b02/B02-09/venv/bin/python -m pip install torch"
+      ],
+      "cwd": "/home/ilya/.cache/mlrepromutate/b02/B02-09/repo",
+      "reference": "README.md installation and example; test/test_torch_cnn.py",
+      "status": "passed"
+    },
+    "reason": "The upstream-documented package and test dependencies installed successfully. The frozen pytest baseline then failed when the selected test moved its model to CUDA because no CUDA GPU was available. The workflow requires unsupported specialized hardware, so no compatibility correction was applicable and mutation validation was not run under the baseline-first rule.",
+    "status": "workflow-unavailable"
+  },
+  "static_verification": {
+    "downstream_execution": "The selected Torch seed initializes the CNN before Xavier initialization and stochastic training; the upstream test asserts that the mean final loss is below 0.4.",
+    "frozen_seed_call_present": true,
+    "selected_source": "torch.manual_seed(0)"
+  },
+  "mutation": {
+    "applied": false,
+    "candidate_index": null,
+    "mutant_validation": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-09/venv/bin/pytest test/test_torch_cnn.py",
+      "duration_seconds": null,
+      "return_code": null,
+      "status": "not-run",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "outcome": null,
+    "semantic_verification": {
+      "evidence": null,
+      "method": null,
+      "status": "not-run"
+    },
+    "status": "not-evaluated"
+  }
+}
