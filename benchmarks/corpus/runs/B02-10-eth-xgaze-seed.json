@@ -1,0 +1,90 @@
+{
+  "case_id": "B02-10",
+  "execution_policy": {
+    "amendment": "D024",
+    "baseline_validation_timeout_seconds": 300.0,
+    "clone_checkout_venv_timeout_seconds": 300.0,
+    "mutant_validation_timeout_seconds": 300.0,
+    "semantic_verification_timeout_seconds": 300.0,
+    "setup_install_timeout_seconds": 900.0
+  },
+  "frozen_case": {
+    "candidate_evidence": "torch.manual_seed(0) -> torch.manual_seed(1)",
+    "candidate_index": 1,
+    "operator": "random-seed",
+    "oracle_kind": "completion-only",
+    "repository": "xucong-zhang/ETH-XGaze",
+    "revision": "3abb72840deb954df1c4ea5d89f243d7bd0d085f",
+    "target": "main.py",
+    "workflow_command": "python main.py",
+    "workflow_kind": "documented-experiment",
+    "workflow_reference": "README.md Training; main.py"
+  },
+  "generated_at_utc": "2026-08-24T16:06:13Z",
+  "revision_verification": {
+    "actual_head": "3abb72840deb954df1c4ea5d89f243d7bd0d085f",
+    "matches_frozen_revision": true
+  },
+  "schema_version": 2,
+  "screening": {
+    "baseline": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-10/venv/bin/python main.py",
+      "duration_seconds": 2.9222209439976723,
+      "environment": {},
+      "return_code": 1,
+      "status": "failed",
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-10/stages/baseline/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-10/stages/baseline/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "compatibility_correction": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-10/venv/bin/python -m pip install torch torchvision opencv-python h5py configparser",
+      "duration_seconds": 377.39432233299885,
+      "reason": "The repository documents Python 3.5 and PyTorch 1.1.0, but PyTorch 1.1.0 has no distribution for the available Python 3.12 interpreter; the retry installed current releases of the same documented dependency set.",
+      "return_code": 0,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-10/stages/setup-compatibility-retry/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-10/stages/setup-compatibility-retry/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "compatibility_retry_used": true,
+    "documented_setup": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-10/venv/bin/python -m pip install torch==1.1.0 torchvision opencv-python h5py configparser",
+      "cwd": "/home/ilya/.cache/mlrepromutate/b02/B02-10/repo",
+      "duration_seconds": 0.5652911349970964,
+      "reference": "README.md Requirement",
+      "return_code": 1,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-10/stages/setup-documented/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-10/stages/setup-documented/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "reason": "The documented PyTorch 1.1.0 dependency was unavailable for the available Python 3.12 interpreter. The single allowed obvious compatibility correction installed current releases of the same documented dependencies, but the frozen baseline then failed during import because the undeclared tensorboard dependency was absent. No further setup correction was attempted, and mutation validation was not run under the baseline-first rule.",
+    "status": "setup-failed"
+  },
+  "static_verification": {
+    "downstream_execution": "The selected Torch seed is executed on the default GPU-enabled path before construction of the shuffled ETH-XGaze training data loader and Trainer.",
+    "frozen_seed_call_present": true,
+    "selected_source": "torch.manual_seed(0)"
+  },
+  "mutation": {
+    "applied": false,
+    "candidate_index": null,
+    "mutant_validation": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-10/venv/bin/python main.py",
+      "duration_seconds": null,
+      "return_code": null,
+      "status": "not-run",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "outcome": null,
+    "semantic_verification": {
+      "evidence": null,
+      "method": null,
+      "status": "not-run"
+    },
+    "status": "not-evaluated"
+  }
+}
