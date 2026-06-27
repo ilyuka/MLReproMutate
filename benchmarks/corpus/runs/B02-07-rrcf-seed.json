@@ -1,0 +1,96 @@
+{
+  "case_id": "B02-07",
+  "execution_policy": {
+    "amendment": "D024",
+    "baseline_validation_timeout_seconds": 300.0,
+    "clone_checkout_venv_timeout_seconds": 300.0,
+    "mutant_validation_timeout_seconds": 300.0,
+    "semantic_verification_timeout_seconds": 300.0,
+    "setup_install_timeout_seconds": 900.0
+  },
+  "frozen_case": {
+    "candidate_evidence": "np.random.seed(0) -> np.random.seed(1)",
+    "candidate_index": 1,
+    "operator": "random-seed",
+    "oracle_kind": "assertion",
+    "repository": "kLabUM/rrcf",
+    "revision": "1795a1b4dd39a3ffb196be7e251b177b3d1ab489",
+    "target": "test/test_rrcf.py",
+    "workflow_command": "pytest",
+    "workflow_kind": "upstream-test",
+    "workflow_reference": ".github/workflows/python-package.yml; test/test_rrcf.py"
+  },
+  "generated_at_utc": "2026-08-24T15:34:02Z",
+  "revision_verification": {
+    "actual_head": "1795a1b4dd39a3ffb196be7e251b177b3d1ab489",
+    "matches_frozen_revision": true
+  },
+  "schema_version": 2,
+  "screening": {
+    "baseline": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-07/venv/bin/pytest",
+      "duration_seconds": 0.31628825399820926,
+      "return_code": 2,
+      "status": "failed",
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-07/stages/baseline-retry/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-07/stages/baseline-retry/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "compatibility_correction": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-07/venv/bin/python -m pip install setuptools",
+      "duration_seconds": 1.6177135460020509,
+      "reason": "The initial baseline failed during collection because the fixed revision imports pkg_resources while the fresh environment did not provide it; setuptools is the package that historically provides that module.",
+      "return_code": 0,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-07/stages/compatibility-setuptools/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-07/stages/compatibility-setuptools/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "compatibility_retry_used": true,
+    "documented_setup": {
+      "commands": [
+        "/home/ilya/.cache/mlrepromutate/b02/B02-07/venv/bin/python -m pip install --upgrade pip",
+        "/home/ilya/.cache/mlrepromutate/b02/B02-07/venv/bin/python -m pip install flake8 pytest",
+        "/home/ilya/.cache/mlrepromutate/b02/B02-07/venv/bin/python -m pip install -r requirements.txt"
+      ],
+      "cwd": "/home/ilya/.cache/mlrepromutate/b02/B02-07/repo",
+      "reference": ".github/workflows/python-package.yml",
+      "status": "passed"
+    },
+    "initial_baseline": {
+      "duration_seconds": 0.3149957510031527,
+      "return_code": 2,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-07/stages/baseline/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-07/stages/baseline/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "reason": "The CI-documented dependency setup completed. The initial pytest baseline failed during collection because the fixed revision imports pkg_resources, which was absent. The single allowed obvious compatibility correction installed setuptools, but current setuptools still did not provide pkg_resources and the identical collection failure remained on retry. No further correction was attempted, and mutation validation was not run under the baseline-first rule.",
+    "status": "setup-failed"
+  },
+  "static_verification": {
+    "downstream_execution": "The module-level NumPy seed generates X and controls the shuffled index deck consumed by upstream tree mutation tests and their assertions.",
+    "frozen_seed_call_present": true,
+    "selected_source": "np.random.seed(0)"
+  },
+  "mutation": {
+    "applied": false,
+    "candidate_index": null,
+    "mutant_validation": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-07/venv/bin/pytest",
+      "duration_seconds": null,
+      "return_code": null,
+      "status": "not-run",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "outcome": null,
+    "semantic_verification": {
+      "evidence": null,
+      "method": null,
+      "status": "not-run"
+    },
+    "status": "not-evaluated"
+  }
+}
