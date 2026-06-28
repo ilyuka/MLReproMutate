@@ -1,0 +1,88 @@
+{
+  "case_id": "B02-17",
+  "execution_policy": {
+    "amendment": "D024",
+    "baseline_validation_timeout_seconds": 300.0,
+    "clone_checkout_venv_timeout_seconds": 300.0,
+    "mutant_validation_timeout_seconds": 300.0,
+    "semantic_verification_timeout_seconds": 300.0,
+    "setup_install_timeout_seconds": 900.0
+  },
+  "frozen_case": {
+    "candidate_evidence": "jax==0.4.14 -> jax>=0.4.14",
+    "candidate_index": 1,
+    "operator": "dependency-pin",
+    "oracle_kind": "assertion",
+    "repository": "AaltoML/BayesNewton",
+    "revision": "f72ae9a6ca69f9cce8e62135c9f78dda4825b4df",
+    "target": "requirements.txt",
+    "workflow_command": "cd tests && pytest",
+    "workflow_kind": "upstream-test",
+    "workflow_reference": "README.md Step-by-step setup and Run tests; tests/"
+  },
+  "generated_at_utc": "2026-08-24T18:55:57Z",
+  "revision_verification": {
+    "actual_head": "f72ae9a6ca69f9cce8e62135c9f78dda4825b4df",
+    "matches_frozen_revision": true
+  },
+  "schema_version": 2,
+  "screening": {
+    "baseline": {
+      "command": "cd tests && pytest",
+      "duration_seconds": null,
+      "return_code": null,
+      "status": "not-run",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "compatibility_correction": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-17/baseline311-venv/bin/python -m pip install -r requirements.txt",
+      "duration_seconds": 4.376246535000973,
+      "python_version": "3.11.9",
+      "reason": "The documented exact requirements could not resolve jaxlib==0.4.14 on the available Python 3.12 runtime, so the single compatibility correction selected Python 3.11.9 while retaining the unchanged documented dependency set.",
+      "return_code": 1,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-17/stages/baseline-install-requirements-compatibility/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-17/stages/baseline-install-requirements-compatibility/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "compatibility_retry_used": true,
+    "documented_setup": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-17/baseline-venv/bin/python -m pip install -r requirements.txt",
+      "cwd": "/home/ilya/.cache/mlrepromutate/b02/B02-17/repo",
+      "duration_seconds": 3.2716696779971244,
+      "reference": "README.md Step-by-step: Getting started with the examples",
+      "return_code": 1,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-17/stages/baseline-install-requirements/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-17/stages/baseline-install-requirements/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "reason": "The documented requirements installation failed because jaxlib==0.4.14 has no distribution on the package index for the available Python 3.12 runtime. The single allowed compatibility correction provisioned Python 3.11.9 while retaining every documented dependency pin, but jaxlib==0.4.14 was likewise unavailable. No further setup correction was attempted, and baseline and mutation validation were not run under the baseline-first rule.",
+    "status": "setup-failed"
+  },
+  "static_verification": {
+    "frozen_pin_present": true,
+    "selected_requirement": "jax==0.4.14",
+    "workflow_usage": "BayesNewton is explicitly a JAX library; its package modules and upstream tests exercise the JAX-backed implementation selected by the frozen dependency candidate."
+  },
+  "mutation": {
+    "applied": false,
+    "candidate_index": null,
+    "mutant_validation": {
+      "command": "cd tests && pytest",
+      "duration_seconds": null,
+      "return_code": null,
+      "status": "not-run",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "outcome": null,
+    "semantic_verification": {
+      "evidence": null,
+      "method": null,
+      "status": "not-run"
+    },
+    "status": "not-evaluated"
+  }
+}
