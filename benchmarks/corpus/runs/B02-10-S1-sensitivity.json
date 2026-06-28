@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "analysis_kind": "secondary-compatibility-sensitivity",
+  "sensitivity_policy": "S1",
+  "case_id": "B02-10",
+  "generated_at_utc": "2026-08-24T17:13:26Z",
+  "primary_case_identity": {
+    "repository": "xucong-zhang/ETH-XGaze",
+    "revision": "3abb72840deb954df1c4ea5d89f243d7bd0d085f",
+    "operator": "random-seed",
+    "target": "main.py",
+    "candidate_index": 1,
+    "candidate_evidence": "torch.manual_seed(0) -> torch.manual_seed(1)",
+    "workflow_command": "python main.py",
+    "workflow_kind": "documented-experiment",
+    "workflow_reference": "README.md Training; main.py",
+    "oracle_kind": "completion-only",
+    "primary_report": "benchmarks/corpus/runs/B02-10-eth-xgaze-seed.json"
+  },
+  "primary_outcome_statement": "The primary strict outcome remains canonical and is not modified by this secondary S1 result.",
+  "execution_policy": {
+    "clone_checkout_venv_timeout_seconds": 300.0,
+    "setup_install_timeout_seconds": 900.0,
+    "baseline_validation_timeout_seconds": 300.0,
+    "mutant_validation_timeout_seconds": 300.0,
+    "semantic_verification_timeout_seconds": 300.0,
+    "maximum_error_directed_corrections": 2,
+    "candidate_execution_isolation": "All candidate-controlled commands executed through benchmarks/corpus/b02_isolation.py using bubblewrap."
+  },
+  "fresh_work_directory": "/home/ilya/.cache/mlrepromutate/b02/B02-10-S1-Qj7wDtOk",
+  "revision_verification": {
+    "expected_revision": "3abb72840deb954df1c4ea5d89f243d7bd0d085f",
+    "actual_head_before_baseline": "3abb72840deb954df1c4ea5d89f243d7bd0d085f",
+    "actual_head_after_baseline": "3abb72840deb954df1c4ea5d89f243d7bd0d085f",
+    "matches_frozen_revision": true,
+    "target_diff_empty": true
+  },
+  "setup_result": {
+    "status": "passed-with-two-s1-corrections",
+    "reference": "README.md Requirement",
+    "documented_command": "/home/ilya/.cache/mlrepromutate/b02/B02-10-S1-Qj7wDtOk/venv/bin/python -m pip install torch==1.1.0 torchvision opencv-python h5py configparser",
+    "documented_attempt": {
+      "timeout_seconds": 900.0,
+      "timed_out": false,
+      "return_code": 1,
+      "terminal_error": "No matching distribution found for torch==1.1.0; available wheels for the Python 3.12 environment begin at PyTorch 2.2.0.",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-10-S1-Qj7wDtOk/B02-10/stages/setup-documented/stdout.log",
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-10-S1-Qj7wDtOk/B02-10/stages/setup-documented/stderr.log"
+    },
+    "resolved_environment": {
+      "python": "3.12.3",
+      "torch": "2.13.0+cu130",
+      "torchvision": "0.28.0+cu130",
+      "tensorboard": "2.21.0"
+    }
+  },
+  "baseline_attempts": [
+    {
+      "attempt": 1,
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-10-S1-Qj7wDtOk/venv/bin/python main.py",
+      "timeout_seconds": 300.0,
+      "timed_out": false,
+      "return_code": 1,
+      "status": "failed",
+      "terminal_error": "ModuleNotFoundError: No module named 'tensorboard' while importing torch.utils.tensorboard.SummaryWriter.",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-10-S1-Qj7wDtOk/B02-10/stages/baseline-attempt-1/stdout.log",
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-10-S1-Qj7wDtOk/B02-10/stages/baseline-attempt-1/stderr.log"
+    },
+    {
+      "attempt": 2,
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-10-S1-Qj7wDtOk/venv/bin/python main.py",
+      "timeout_seconds": 300.0,
+      "timed_out": false,
+      "return_code": 1,
+      "status": "failed",
+      "terminal_error": "FileNotFoundError: /data/xgaze/train_test_split.json. The documented ETH-XGaze training dataset is unavailable in the isolated study environment.",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-10-S1-Qj7wDtOk/B02-10/stages/baseline-attempt-2/stdout.log",
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-10-S1-Qj7wDtOk/B02-10/stages/baseline-attempt-2/stderr.log"
+    }
+  ],
+  "corrections_used": [
+    {
+      "order": 1,
+      "kind": "compatible-upstream-dependency-version",
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-10-S1-Qj7wDtOk/venv/bin/python -m pip install torch torchvision opencv-python h5py configparser",
+      "timeout_seconds": 900.0,
+      "timed_out": false,
+      "return_code": 0,
+      "observed_error_motivation": "The documented PyTorch 1.1.0 release had no distribution compatible with the available Python 3.12 interpreter.",
+      "preserves_workflow_semantics": true,
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-10-S1-Qj7wDtOk/B02-10/stages/correction-1-compatible-dependencies-retry/stdout.log",
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-10-S1-Qj7wDtOk/B02-10/stages/correction-1-compatible-dependencies-retry/stderr.log"
+    },
+    {
+      "order": 2,
+      "kind": "missing-runtime-dependency",
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-10-S1-Qj7wDtOk/venv/bin/python -m pip install tensorboard",
+      "timeout_seconds": 900.0,
+      "timed_out": false,
+      "return_code": 0,
+      "resolved_version": "tensorboard 2.21.0",
+      "observed_error_motivation": "The first baseline attempt directly failed because trainer.py imports SummaryWriter through torch.utils.tensorboard but tensorboard was absent.",
+      "preserves_workflow_semantics": true,
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-10-S1-Qj7wDtOk/B02-10/stages/correction-2-tensorboard/stdout.log",
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-10-S1-Qj7wDtOk/B02-10/stages/correction-2-tensorboard/stderr.log"
+    }
+  ],
+  "corrections_used_count": 2,
+  "final_baseline_result": {
+    "status": "workflow-unavailable",
+    "return_code": 1,
+    "oracle_kind": "completion-only",
+    "terminal_reason": "external-dataset-unavailable",
+    "reason": "The corrected documented workflow requires the ETH-XGaze training dataset at /data/xgaze, specifically /data/xgaze/train_test_split.json. The dataset is not present, and supplying, synthesizing, or substituting it is not an S1 compatibility correction and would change workflow prerequisites."
+  },
+  "mutation_result": {
+    "status": "not-evaluated",
+    "applied": false,
+    "candidate_index": 1,
+    "source_change": "torch.manual_seed(0) -> torch.manual_seed(1)",
+    "validation_command": "python main.py",
+    "oracle_outcome": null,
+    "reason": "The S1 baseline did not pass; the baseline-first rule prohibits mutation evaluation.",
+    "source_restored": "not-required",
+    "target_diff_empty": true
+  },
+  "semantic_verification": {
+    "status": "not-run",
+    "reason": "Mutation was not applied or evaluated because the baseline workflow was unavailable."
+  },
+  "final_sensitivity_result": "workflow-unavailable",
+  "terminal_reason": "external-dataset-unavailable",
+  "primary_strict_outcome_remains_canonical": true
+}
