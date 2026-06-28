@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "analysis_kind": "secondary-compatibility-sensitivity",
+  "sensitivity_policy": "S1",
+  "case_id": "B02-03",
+  "generated_at_utc": "2026-08-24T17:40:21Z",
+  "primary_case_identity": {
+    "repository": "braindecode/braindecode",
+    "revision": "eb3ddee6b72b07ff7457f9273cff179400b925c5",
+    "operator": "random-seed",
+    "target": "examples/model_building/plot_channel_interpolation.py",
+    "candidate_index": 1,
+    "candidate_evidence": "torch.manual_seed(0) -> torch.manual_seed(1)",
+    "workflow_command": "python examples/model_building/plot_channel_interpolation.py",
+    "workflow_kind": "documented-example",
+    "workflow_reference": "Braindecode example gallery",
+    "oracle_kind": "completion-only",
+    "primary_report": "benchmarks/corpus/runs/B02-03-braindecode-seed.json"
+  },
+  "primary_outcome_statement": "The primary strict outcome remains canonical and is not modified by this secondary S1 result.",
+  "execution_policy": {
+    "clone_checkout_venv_timeout_seconds": 300.0,
+    "setup_install_timeout_seconds": 900.0,
+    "baseline_validation_timeout_seconds": 300.0,
+    "mutant_validation_timeout_seconds": 300.0,
+    "semantic_verification_timeout_seconds": 300.0,
+    "maximum_error_directed_corrections": 2,
+    "candidate_execution_isolation": "All candidate-controlled commands executed through benchmarks/corpus/b02_isolation.py using bubblewrap."
+  },
+  "fresh_work_directory": "/home/ilya/.cache/mlrepromutate/b02/B02-03-S1-uuSBrMQR",
+  "revision_verification": {
+    "expected_revision": "eb3ddee6b72b07ff7457f9273cff179400b925c5",
+    "actual_head_before_baseline": "eb3ddee6b72b07ff7457f9273cff179400b925c5",
+    "actual_head_before_mutation": "eb3ddee6b72b07ff7457f9273cff179400b925c5",
+    "actual_head_after_restoration": "eb3ddee6b72b07ff7457f9273cff179400b925c5",
+    "matches_frozen_revision": true
+  },
+  "setup_result": {
+    "status": "passed",
+    "reference": "docs/install/install_source.rst optional MOABB and Hub source-install extras",
+    "command": "/home/ilya/.cache/mlrepromutate/b02/B02-03-S1-uuSBrMQR/venv/bin/pip install -e .[moabb,hub]",
+    "timeout_seconds": 900.0,
+    "duration_seconds": 374.67,
+    "timed_out": false,
+    "return_code": 0,
+    "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-03-S1-uuSBrMQR/stages/setup-install/stdout.log",
+    "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-03-S1-uuSBrMQR/stages/setup-install/stderr.log"
+  },
+  "baseline_attempts": [
+    {
+      "attempt": 1,
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-03-S1-uuSBrMQR/venv/bin/python examples/model_building/plot_channel_interpolation.py",
+      "timeout_seconds": 300.0,
+      "duration_seconds": 145.10,
+      "timed_out": false,
+      "return_code": 0,
+      "status": "passed",
+      "summary": "The documented example completed successfully, including MOABB data loading, pretrained model loading, forward passes, and interpolation output.",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-03-S1-uuSBrMQR/stages/baseline-1/stdout.log",
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-03-S1-uuSBrMQR/stages/baseline-1/stderr.log"
+    }
+  ],
+  "corrections_used": [],
+  "corrections_used_count": 0,
+  "final_baseline_result": {
+    "status": "passed",
+    "return_code": 0,
+    "oracle_kind": "completion-only",
+    "summary": "The first S1 baseline attempt passed without a compatibility correction."
+  },
+  "mutation_result": {
+    "status": "evaluated",
+    "applied": true,
+    "candidate_index": 1,
+    "source_change": "torch.manual_seed(0) -> torch.manual_seed(1)",
+    "application_verification": "The target diff contained only the frozen one-line candidate-index-1 seed mutation.",
+    "validation_command": "/home/ilya/.cache/mlrepromutate/b02/B02-03-S1-uuSBrMQR/venv/bin/python examples/model_building/plot_channel_interpolation.py",
+    "timeout_seconds": 300.0,
+    "duration_seconds": 28.11,
+    "timed_out": false,
+    "return_code": 0,
+    "summary": "The identical documented example workflow completed successfully under the frozen completion-only oracle.",
+    "oracle_outcome": "SURVIVED",
+    "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-03-S1-uuSBrMQR/stages/mutant-validation/stdout.log",
+    "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-03-S1-uuSBrMQR/stages/mutant-validation/stderr.log",
+    "source_restored": true,
+    "post_restore_source_diff_empty": true,
+    "post_restore_repository_status_clean": true
+  },
+  "semantic_verification": {
+    "status": "confirmed-non-equivalent",
+    "method": "In the isolated installed environment, generated the example's downstream torch.randn tensor shape (2, 22, 3000) after torch.manual_seed(0) and torch.manual_seed(1), then compared tensor content and SHA-256 digests. This is post-hoc evidence and does not replace the frozen completion-only oracle.",
+    "timeout_seconds": 300.0,
+    "duration_seconds": 1.23,
+    "timed_out": false,
+    "return_code": 0,
+    "seed_0_tensor_sha256": "98e46f09377c0042e0d04ee5c80067b6c0244f59f0f2900974a2a77b8b516411",
+    "seed_1_tensor_sha256": "ffbc5f144c399b84a26d168231c8cb8a916e49dcc573fd31269df133351fd436",
+    "tensor_shape": [2, 22, 3000],
+    "tensors_equal": false,
+    "behavior_changed": true,
+    "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-03-S1-uuSBrMQR/stages/semantic-verification/stdout.log",
+    "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-03-S1-uuSBrMQR/stages/semantic-verification/stderr.log"
+  },
+  "final_sensitivity_result": "SURVIVED",
+  "primary_strict_outcome_remains_canonical": true
+}
