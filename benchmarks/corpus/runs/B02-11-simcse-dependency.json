@@ -1,0 +1,79 @@
+{
+  "case_id": "B02-11",
+  "execution_policy": {
+    "amendment": "D024",
+    "baseline_validation_timeout_seconds": 300.0,
+    "clone_checkout_venv_timeout_seconds": 300.0,
+    "mutant_validation_timeout_seconds": 300.0,
+    "semantic_verification_timeout_seconds": 300.0,
+    "setup_install_timeout_seconds": 900.0
+  },
+  "frozen_case": {
+    "candidate_evidence": "transformers==4.2.1 -> transformers>=4.2.1",
+    "candidate_index": 1,
+    "operator": "dependency-pin",
+    "oracle_kind": "completion-only",
+    "repository": "princeton-nlp/SimCSE",
+    "revision": "49fa580a853752ede55b8c76d9debf748e214d3f",
+    "target": "requirements.txt",
+    "workflow_command": "python evaluation.py --model_name_or_path princeton-nlp/sup-simcse-bert-base-uncased --pooler cls --task_set sts --mode test",
+    "workflow_kind": "documented-validation",
+    "workflow_reference": "README.md Requirements/Evaluation; evaluation.py"
+  },
+  "generated_at_utc": "2026-08-24T18:10:14Z",
+  "revision_verification": {
+    "actual_head": "49fa580a853752ede55b8c76d9debf748e214d3f",
+    "matches_frozen_revision": true
+  },
+  "schema_version": 2,
+  "screening": {
+    "baseline": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-11/venv/bin/python evaluation.py --model_name_or_path princeton-nlp/sup-simcse-bert-base-uncased --pooler cls --task_set sts --mode test",
+      "duration_seconds": 117.18044162400474,
+      "return_code": 1,
+      "status": "failed",
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-11/stages/baseline/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-11/stages/baseline/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "compatibility_correction": "Replaced the Python-3.12-incompatible transformers==4.2.1 dependency with the current release while retaining the remaining documented dependency set.",
+    "compatibility_retry_used": true,
+    "documented_setup": {
+      "commands": [
+        "/home/ilya/.cache/mlrepromutate/b02/B02-11/venv/bin/python -m pip install torch",
+        "/home/ilya/.cache/mlrepromutate/b02/B02-11/venv/bin/python -m pip install -r requirements.txt",
+        "bash SentEval/data/downstream/download_dataset.sh"
+      ],
+      "cwd": "/home/ilya/.cache/mlrepromutate/b02/B02-11/repo",
+      "reference": "README.md Requirements and Evaluation",
+      "status": "failed"
+    },
+    "reason": "The documented CPU PyTorch installation succeeded, but the pinned Transformers 4.2.1 dependency could not install on Python 3.12 because its tokenizers dependency lacked a compatible wheel and required an unavailable Rust compiler. The single allowed compatibility correction installed a current Transformers release and the remaining documented dependencies, and the documented SentEval dataset download succeeded. The frozen baseline then failed because the current BertTokenizer no longer provides batch_encode_plus, which the fixed evaluation.py calls. No further compatibility correction was attempted, and mutation validation was not run under the baseline-first rule.",
+    "status": "setup-failed"
+  },
+  "static_verification": {
+    "frozen_pin_present": true,
+    "selected_requirement": "transformers==4.2.1",
+    "workflow_usage": "evaluation.py directly imports AutoModel and AutoTokenizer from transformers and uses them on the documented evaluation path."
+  },
+  "mutation": {
+    "applied": false,
+    "candidate_index": null,
+    "mutant_validation": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-11/venv/bin/python evaluation.py --model_name_or_path princeton-nlp/sup-simcse-bert-base-uncased --pooler cls --task_set sts --mode test",
+      "duration_seconds": null,
+      "return_code": null,
+      "status": "not-run",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "outcome": null,
+    "semantic_verification": {
+      "evidence": null,
+      "method": null,
+      "status": "not-run"
+    },
+    "status": "not-evaluated"
+  }
+}
