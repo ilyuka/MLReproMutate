@@ -1,0 +1,97 @@
+{
+  "case_id": "B02-12",
+  "execution_policy": {
+    "amendment": "D024",
+    "baseline_validation_timeout_seconds": 300.0,
+    "clone_checkout_venv_timeout_seconds": 300.0,
+    "mutant_validation_timeout_seconds": 300.0,
+    "semantic_verification_timeout_seconds": 300.0,
+    "setup_install_timeout_seconds": 900.0
+  },
+  "frozen_case": {
+    "candidate_evidence": "matplotlib==2.0.2 -> matplotlib>=2.0.2",
+    "candidate_index": 2,
+    "operator": "dependency-pin",
+    "oracle_kind": "completion-only",
+    "repository": "sunblaze-ucb/dpml-benchmark",
+    "revision": "95feb4683acc421b9fe970b10249e3deec98d7a8",
+    "target": "requirements.txt",
+    "workflow_command": "python gridsearch.py AMP mnist LR",
+    "workflow_kind": "documented-experiment",
+    "workflow_reference": "README.md Installing/Running the benchmark; gridsearch.py"
+  },
+  "generated_at_utc": "2026-08-24T18:16:46Z",
+  "revision_verification": {
+    "actual_head": "95feb4683acc421b9fe970b10249e3deec98d7a8",
+    "matches_frozen_revision": true
+  },
+  "schema_version": 2,
+  "screening": {
+    "baseline": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-12/venv/bin/python gridsearch.py AMP mnist LR",
+      "duration_seconds": null,
+      "return_code": null,
+      "status": "not-run",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "compatibility_correction": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-12/venv/bin/python -m pip install cycler matplotlib numpy pyparsing python-dateutil pytz scipy scikit-learn six xlrd tensorflow",
+      "duration_seconds": 113.45971988900419,
+      "reason": "The documented matplotlib==2.0.2 release could not build on Python 3.12 because its legacy setup attempted an HTTP setuptools download rejected with HTTP 403; the retry installed current releases of the same documented dependency set.",
+      "return_code": 0,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-12/stages/setup-compatibility-retry/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-12/stages/setup-compatibility-retry/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "compatibility_retry_used": true,
+    "dataset_preprocessing": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-12/venv/bin/python main_preprocess.py mnist",
+      "cwd": "/home/ilya/.cache/mlrepromutate/b02/B02-12/repo/datasets",
+      "duration_seconds": 3.4745707280017086,
+      "return_code": 1,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-12/stages/dataset-preprocess/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-12/stages/dataset-preprocess/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "documented_setup": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-12/venv/bin/python -m pip install -r requirements.txt",
+      "cwd": "/home/ilya/.cache/mlrepromutate/b02/B02-12/repo",
+      "duration_seconds": 11.735110647998226,
+      "reference": "README.md Getting Started/Installing",
+      "return_code": 1,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-12/stages/setup-documented/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-12/stages/setup-documented/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "reason": "The documented pinned install failed because matplotlib 2.0.2's legacy build attempted a non-SSL setuptools download. The single allowed compatibility correction installed current releases of the same documented dependencies. The subsequently documented MNIST preprocessing command failed because the fixed revision imports tensorflow.examples.tutorials.mnist, an API absent from the resolved current TensorFlow release. No further compatibility correction was attempted, and baseline and mutation validation were not run under the baseline-first rule.",
+    "status": "setup-failed"
+  },
+  "static_verification": {
+    "frozen_pin_present": true,
+    "selected_requirement": "matplotlib==2.0.2",
+    "workflow_usage": "gridsearch.py directly imports matplotlib and matplotlib.pyplot before loading and executing the documented MNIST benchmark."
+  },
+  "mutation": {
+    "applied": false,
+    "candidate_index": null,
+    "mutant_validation": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-12/venv/bin/python gridsearch.py AMP mnist LR",
+      "duration_seconds": null,
+      "return_code": null,
+      "status": "not-run",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "outcome": null,
+    "semantic_verification": {
+      "evidence": null,
+      "method": null,
+      "status": "not-run"
+    },
+    "status": "not-evaluated"
+  }
+}
