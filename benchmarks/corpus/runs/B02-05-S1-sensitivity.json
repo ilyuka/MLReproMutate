@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "analysis_kind": "secondary-compatibility-sensitivity",
+  "sensitivity_policy": "S1",
+  "case_id": "B02-05",
+  "generated_at_utc": "2026-08-24T17:50:43Z",
+  "primary_case_identity": {
+    "repository": "EthanJamesLew/AutoKoopman",
+    "revision": "3808e0f061983388e69df06cc5ceda097773603f",
+    "operator": "random-seed",
+    "target": "benchmarks/trainingCurve.py",
+    "candidate_index": 1,
+    "candidate_evidence": "np.random.seed(1234) -> np.random.seed(1235)",
+    "workflow_command": "python benchmarks/trainingCurve.py",
+    "workflow_kind": "documented-experiment",
+    "workflow_reference": "benchmarks/trainingCurve.py",
+    "oracle_kind": "completion-only",
+    "primary_report": "benchmarks/corpus/runs/B02-05-autokoopman-seed.json"
+  },
+  "primary_outcome_statement": "The primary strict outcome remains canonical and is not modified by this secondary S1 result.",
+  "execution_policy": {
+    "clone_checkout_venv_timeout_seconds": 300.0,
+    "setup_install_timeout_seconds": 900.0,
+    "baseline_validation_timeout_seconds": 300.0,
+    "mutant_validation_timeout_seconds": 300.0,
+    "semantic_verification_timeout_seconds": 300.0,
+    "maximum_error_directed_corrections": 2,
+    "candidate_execution_isolation": "All candidate-controlled commands executed through benchmarks/corpus/b02_isolation.py using bubblewrap."
+  },
+  "fresh_work_directory": "/home/ilya/.cache/mlrepromutate/b02/B02-05-S1-gjXAgVD7",
+  "revision_verification": {
+    "expected_revision": "3808e0f061983388e69df06cc5ceda097773603f",
+    "actual_head_before_baseline": "3808e0f061983388e69df06cc5ceda097773603f",
+    "actual_head_after_baseline": "3808e0f061983388e69df06cc5ceda097773603f",
+    "matches_frozen_revision": true,
+    "frozen_candidate_reconfirmed": "benchmarks/trainingCurve.py:13 contains np.random.seed(1234)",
+    "target_diff_empty": true,
+    "repository_status_clean": true
+  },
+  "setup_result": {
+    "status": "passed",
+    "reference": "README.md installation section; fixed-revision source equivalent of pip install autokoopman",
+    "command": "/home/ilya/.cache/mlrepromutate/b02/B02-05-S1-gjXAgVD7/venv/bin/pip install .",
+    "timeout_seconds": 900.0,
+    "duration_seconds": 55.16207466600463,
+    "timed_out": false,
+    "return_code": 0,
+    "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-05-S1-gjXAgVD7/B02-05/stages/setup-install/stdout.log",
+    "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-05-S1-gjXAgVD7/B02-05/stages/setup-install/stderr.log"
+  },
+  "baseline_attempts": [
+    {
+      "attempt": 1,
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-05-S1-gjXAgVD7/venv/bin/python benchmarks/trainingCurve.py",
+      "environment": {"MPLBACKEND": "Agg"},
+      "timeout_seconds": 300.0,
+      "duration_seconds": 2.271266485004162,
+      "timed_out": false,
+      "return_code": 1,
+      "status": "failed",
+      "terminal_error": "The Bayesian tuner raised ModuleNotFoundError: No module named 'GPyOpt'.",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-05-S1-gjXAgVD7/B02-05/stages/baseline-1/stdout.log",
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-05-S1-gjXAgVD7/B02-05/stages/baseline-1/stderr.log"
+    },
+    {
+      "attempt": 2,
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-05-S1-gjXAgVD7/venv/bin/python benchmarks/trainingCurve.py",
+      "environment": {"MPLBACKEND": "Agg"},
+      "timeout_seconds": 300.0,
+      "duration_seconds": 2.2716229840007145,
+      "timed_out": false,
+      "return_code": 1,
+      "status": "failed",
+      "terminal_error": "GPyOpt imported far enough to expose its directly required missing runtime dependency, then raised ModuleNotFoundError: No module named 'GPy'.",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-05-S1-gjXAgVD7/B02-05/stages/baseline-2/stdout.log",
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-05-S1-gjXAgVD7/B02-05/stages/baseline-2/stderr.log"
+    },
+    {
+      "attempt": 3,
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-05-S1-gjXAgVD7/venv/bin/python benchmarks/trainingCurve.py",
+      "environment": {"MPLBACKEND": "Agg"},
+      "timeout_seconds": 300.0,
+      "duration_seconds": 2.420265348002431,
+      "timed_out": false,
+      "return_code": 1,
+      "status": "failed",
+      "terminal_error": "After both permitted corrections, legacy GPyOpt failed while importing pkg_resources: ModuleNotFoundError: No module named 'pkg_resources'. No third packaging correction was permitted.",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-05-S1-gjXAgVD7/B02-05/stages/baseline-3-final/stdout.log",
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-05-S1-gjXAgVD7/B02-05/stages/baseline-3-final/stderr.log"
+    }
+  ],
+  "corrections_used": [
+    {
+      "order": 1,
+      "kind": "missing-runtime-dependency",
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-05-S1-gjXAgVD7/venv/bin/pip install GPyOpt",
+      "timeout_seconds": 900.0,
+      "duration_seconds": 3.2209967319940915,
+      "timed_out": false,
+      "return_code": 0,
+      "resolved_version": "GPyOpt 1.2.6",
+      "observed_error_motivation": "Baseline attempt 1 failed because the selected Bayesian tuner imports GPyOpt and it was absent. Installing the available GPyOpt release directly addressed that runtime error without editing candidate source.",
+      "preserves_workflow_semantics": true,
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-05-S1-gjXAgVD7/B02-05/stages/correction-1-gpyopt/stdout.log",
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-05-S1-gjXAgVD7/B02-05/stages/correction-1-gpyopt/stderr.log"
+    },
+    {
+      "order": 2,
+      "kind": "compatible-upstream-dependency-version",
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-05-S1-gjXAgVD7/venv/bin/pip install GPy",
+      "timeout_seconds": 900.0,
+      "duration_seconds": 2.468702868995024,
+      "timed_out": false,
+      "return_code": 0,
+      "resolved_version": "GPy 1.14.2 (CPython 3.12 manylinux wheel)",
+      "observed_error_motivation": "Baseline attempt 2 failed because GPyOpt directly imports GPy and it was absent. The available GPy 1.14.2 wheel avoided the repository-pinned GPy 1.10.0 source build that primary evidence showed required unavailable Python.h.",
+      "preserves_workflow_semantics": true,
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-05-S1-gjXAgVD7/B02-05/stages/correction-2-gpy/stdout.log",
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-05-S1-gjXAgVD7/B02-05/stages/correction-2-gpy/stderr.log"
+    }
+  ],
+  "corrections_used_count": 2,
+  "final_baseline_result": {
+    "status": "failed",
+    "return_code": 1,
+    "oracle_kind": "completion-only",
+    "terminal_reason": "corrections-exhausted",
+    "reason": "The unchanged documented experiment failed after both error-directed S1 corrections because legacy GPyOpt imports unavailable pkg_resources. No third packaging correction, dependency archaeology, source edit, workflow change, or timeout increase was permitted."
+  },
+  "mutation_result": {
+    "status": "not-evaluated",
+    "applied": false,
+    "candidate_index": 1,
+    "source_change": "np.random.seed(1234) -> np.random.seed(1235)",
+    "validation_command": "python benchmarks/trainingCurve.py",
+    "oracle_outcome": null,
+    "reason": "The S1 baseline did not pass; the baseline-first rule prohibits mutation evaluation.",
+    "source_restored": "not-required",
+    "target_diff_empty": true
+  },
+  "semantic_verification": {
+    "status": "not-run",
+    "reason": "Mutation was not applied or evaluated because the corrected S1 baseline failed."
+  },
+  "final_sensitivity_result": "corrections-exhausted",
+  "terminal_reason": "baseline-failed-after-two-error-directed-corrections",
+  "primary_strict_outcome_remains_canonical": true
+}
