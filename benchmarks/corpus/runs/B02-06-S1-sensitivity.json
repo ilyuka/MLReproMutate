@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "analysis_kind": "secondary-compatibility-sensitivity",
+  "sensitivity_policy": "S1",
+  "case_id": "B02-06",
+  "generated_at_utc": "2026-08-24T17:23:03Z",
+  "primary_case_identity": {
+    "repository": "DistrictDataLabs/yellowbrick",
+    "revision": "f7a8e950bd31452ea2f5d402a1c5d519cd163fd5",
+    "operator": "random-seed",
+    "target": "tests/test_utils/test_kneed.py",
+    "candidate_index": 1,
+    "candidate_evidence": "np.random.seed(23) -> np.random.seed(24)",
+    "workflow_command": "make test",
+    "workflow_kind": "upstream-test",
+    "workflow_reference": "Makefile; tests/test_utils/test_kneed.py",
+    "oracle_kind": "assertion",
+    "primary_report": "benchmarks/corpus/runs/B02-06-yellowbrick-seed.json"
+  },
+  "primary_outcome_statement": "The primary strict outcome remains canonical and is not modified by this secondary S1 result.",
+  "execution_policy": {
+    "clone_checkout_venv_timeout_seconds": 300.0,
+    "setup_install_timeout_seconds": 900.0,
+    "baseline_validation_timeout_seconds": 300.0,
+    "mutant_validation_timeout_seconds": 300.0,
+    "semantic_verification_timeout_seconds": 300.0,
+    "maximum_error_directed_corrections": 2,
+    "interpreter_fallback_used": false,
+    "candidate_execution_isolation": "All candidate-controlled commands executed through benchmarks/corpus/b02_isolation.py using bubblewrap."
+  },
+  "fresh_work_directory": "/home/ilya/.cache/mlrepromutate/b02/B02-06-S1-ue3kLgrk",
+  "revision_verification": {
+    "expected_revision": "f7a8e950bd31452ea2f5d402a1c5d519cd163fd5",
+    "actual_head_before_baseline": "f7a8e950bd31452ea2f5d402a1c5d519cd163fd5",
+    "actual_head_after_baseline": "f7a8e950bd31452ea2f5d402a1c5d519cd163fd5",
+    "matches_frozen_revision": true,
+    "frozen_candidate_reconfirmed": "tests/test_utils/test_kneed.py:152 contains np.random.seed(23)",
+    "target_diff_empty": true
+  },
+  "setup_result": {
+    "status": "passed-after-s1-correction-1",
+    "reference": "CONTRIBUTING.md development setup; .github/workflows/ci.yml",
+    "documented_command": "/home/ilya/.cache/mlrepromutate/b02/B02-06-S1-ue3kLgrk/venv/bin/python -m pip install -r tests/requirements.txt",
+    "documented_attempt": {
+      "timeout_seconds": 900.0,
+      "timed_out": false,
+      "return_code": 1,
+      "duration_seconds": 6.66624686,
+      "terminal_error": "Matplotlib 3.4.2 could not prepare its wheel on Python 3.12 because versioneer calls the removed configparser.SafeConfigParser API."
+    },
+    "resolved_environment": {
+      "python": "3.12.3",
+      "setuptools": "80.10.2",
+      "matplotlib": "3.11.1",
+      "numpy": "2.5.2",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.0",
+      "pytest": "9.1.1"
+    }
+  },
+  "baseline_attempts": [
+    {
+      "attempt": 1,
+      "command": "env MPLBACKEND=Agg PATH=/home/ilya/.cache/mlrepromutate/b02/B02-06-S1-ue3kLgrk/venv/bin:/usr/bin:/bin make test",
+      "timeout_seconds": 300.0,
+      "timed_out": false,
+      "return_code": 2,
+      "duration_seconds": 7.821693655,
+      "status": "failed",
+      "terminal_error": "Collection failed with 69 errors because the frozen revision imports distutils.version.LooseVersion and distutils was unavailable on Python 3.12."
+    },
+    {
+      "attempt": 2,
+      "command": "env MPLBACKEND=Agg PATH=/home/ilya/.cache/mlrepromutate/b02/B02-06-S1-ue3kLgrk/venv/bin:/usr/bin:/bin make test",
+      "timeout_seconds": 300.0,
+      "timed_out": false,
+      "return_code": 2,
+      "duration_seconds": 235.4,
+      "status": "failed",
+      "summary": "407 failed, 712 passed, 25 skipped, 17 xfailed, 61 warnings in 235.40s",
+      "terminal_error": "After collection was restored, the unchanged full upstream workflow failed hundreds of assertions under the compatible-current dependency environment. Both S1 corrections had been consumed, so no further dependency archaeology or correction was permitted."
+    }
+  ],
+  "corrections_used": [
+    {
+      "order": 1,
+      "kind": "compatible-upstream-dependency-versions",
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-06-S1-ue3kLgrk/venv/bin/python -m pip install -e . pytest pytest-cov pytest-flakes pytest-spec coverage nltk pandas umap-learn",
+      "timeout_seconds": 900.0,
+      "timed_out": false,
+      "return_code": 0,
+      "duration_seconds": 36.453620915,
+      "observed_error_motivation": "The documented pinned Matplotlib 3.4.2 setup failed on Python 3.12 through its removed SafeConfigParser API; the correction selected Python-3.12-compatible releases of the same project and test dependency set.",
+      "preserves_workflow_semantics": true
+    },
+    {
+      "order": 2,
+      "kind": "packaging-runtime-compatibility-shim",
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-06-S1-ue3kLgrk/venv/bin/python -m pip install 'setuptools<81'",
+      "timeout_seconds": 900.0,
+      "timed_out": false,
+      "return_code": 0,
+      "duration_seconds": 1.640480504,
+      "resolved_version": "setuptools 80.10.2",
+      "observed_error_motivation": "Baseline attempt 1 directly failed because the frozen revision imports distutils, removed from Python 3.12; Setuptools supplies the compatible distutils shim without editing repository imports.",
+      "preserves_workflow_semantics": true
+    }
+  ],
+  "corrections_used_count": 2,
+  "final_baseline_result": {
+    "status": "failed",
+    "return_code": 2,
+    "oracle_kind": "assertion",
+    "terminal_reason": "corrections-exhausted",
+    "reason": "The unchanged full make test workflow completed within its frozen timeout but failed 407 tests after the two error-directed S1 corrections. No third correction, dependency hunting, test weakening, interpreter switch, or source edit was permitted."
+  },
+  "mutation_result": {
+    "status": "not-evaluated",
+    "applied": false,
+    "candidate_index": 1,
+    "source_change": "np.random.seed(23) -> np.random.seed(24)",
+    "validation_command": "make test",
+    "oracle_outcome": null,
+    "reason": "The S1 baseline did not pass; the baseline-first rule prohibits mutation evaluation.",
+    "source_restored": "not-required",
+    "target_diff_empty": true
+  },
+  "semantic_verification": {
+    "status": "not-run",
+    "reason": "Mutation was not applied or evaluated because the corrected S1 baseline failed."
+  },
+  "final_sensitivity_result": "corrections-exhausted",
+  "terminal_reason": "baseline-failed-after-two-error-directed-corrections",
+  "primary_strict_outcome_remains_canonical": true
+}
