@@ -1,0 +1,87 @@
+{
+  "case_id": "B02-13",
+  "execution_policy": {
+    "amendment": "D024",
+    "baseline_validation_timeout_seconds": 300.0,
+    "clone_checkout_venv_timeout_seconds": 300.0,
+    "mutant_validation_timeout_seconds": 300.0,
+    "semantic_verification_timeout_seconds": 300.0,
+    "setup_install_timeout_seconds": 900.0
+  },
+  "frozen_case": {
+    "candidate_evidence": "numpy==1.16.0 -> numpy>=1.16.0",
+    "candidate_index": 2,
+    "operator": "dependency-pin",
+    "oracle_kind": "completion-only",
+    "repository": "rcamino/multi-categorical-gans",
+    "revision": "7234d5dc41f476bb36b00cab13326fcdd5c43fcd",
+    "target": "requirements.txt",
+    "workflow_command": "python multi_categorical_gans/methods/mc_gumbel/trainer.py --data_format=sparse --noise_size=10 --batch_size=100 --num_epochs=1000 --l2_regularization=0 --learning_rate=1e-3 --generator_hidden_sizes=100,100,100 --bn_decay=0.9 --discriminator_hidden_sizes=100 --num_discriminator_steps=2 --num_generator_steps=1 --seed=123 --temperature=0.666 data/synthetic/mix_small/synthetic-train.features.npz data/synthetic/mix_small/metadata.json models/mc-gumbel/synthetic/mix_small/generator.torch models/mc-gumbel/synthetic/mix_small/discriminator.torch models/mc-gumbel/synthetic/mix_small/loss.csv",
+    "workflow_kind": "documented-experiment",
+    "workflow_reference": "multi_categorical_gans/methods/mc_gumbel/README.md; trainer.py"
+  },
+  "generated_at_utc": "2026-08-24T18:19:48Z",
+  "revision_verification": {
+    "actual_head": "7234d5dc41f476bb36b00cab13326fcdd5c43fcd",
+    "matches_frozen_revision": true
+  },
+  "schema_version": 2,
+  "screening": {
+    "baseline": {
+      "command": "python multi_categorical_gans/methods/mc_gumbel/trainer.py --data_format=sparse --noise_size=10 --batch_size=100 --num_epochs=1000 --l2_regularization=0 --learning_rate=1e-3 --generator_hidden_sizes=100,100,100 --bn_decay=0.9 --discriminator_hidden_sizes=100 --num_discriminator_steps=2 --num_generator_steps=1 --seed=123 --temperature=0.666 data/synthetic/mix_small/synthetic-train.features.npz data/synthetic/mix_small/metadata.json models/mc-gumbel/synthetic/mix_small/generator.torch models/mc-gumbel/synthetic/mix_small/discriminator.torch models/mc-gumbel/synthetic/mix_small/loss.csv",
+      "duration_seconds": null,
+      "return_code": null,
+      "status": "not-run",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "compatibility_correction": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-13/uv python install 3.7.9",
+      "duration_seconds": 0.06404068000119878,
+      "reason": "The explicitly documented Python 3.6.7 runtime had no available managed build; the single compatibility correction attempted the adjacent Python 3.7.9 runtime needed by the legacy pinned dependency set.",
+      "return_code": 2,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-13/stages/compatibility-python-provision/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-13/stages/compatibility-python-provision/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "compatibility_retry_used": true,
+    "documented_setup": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-13/uv python install 3.6.7; python -m pip install -r requirements.txt",
+      "cwd": "/home/ilya/.cache/mlrepromutate/b02/B02-13/repo",
+      "duration_seconds": 0.06424153799889609,
+      "reference": "README.md Pre-requisites",
+      "return_code": 2,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-13/stages/python-provision/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-13/stages/python-provision/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "reason": "The repository explicitly documents Python 3.6.7 and exact 2019 dependency pins. No managed Python 3.6.7 build was available in the isolated environment, so dependency installation could not begin. The single allowed obvious compatibility correction attempted Python 3.7.9, but no managed build was available for that runtime either. No further setup correction was attempted, and baseline and mutation validation were not run under the baseline-first rule.",
+    "status": "setup-failed"
+  },
+  "static_verification": {
+    "frozen_pin_present": true,
+    "selected_requirement": "numpy==1.16.0",
+    "workflow_usage": "trainer.py directly imports numpy and uses it throughout the documented MC-Gumbel training path."
+  },
+  "mutation": {
+    "applied": false,
+    "candidate_index": null,
+    "mutant_validation": {
+      "command": "python multi_categorical_gans/methods/mc_gumbel/trainer.py --data_format=sparse --noise_size=10 --batch_size=100 --num_epochs=1000 --l2_regularization=0 --learning_rate=1e-3 --generator_hidden_sizes=100,100,100 --bn_decay=0.9 --discriminator_hidden_sizes=100 --num_discriminator_steps=2 --num_generator_steps=1 --seed=123 --temperature=0.666 data/synthetic/mix_small/synthetic-train.features.npz data/synthetic/mix_small/metadata.json models/mc-gumbel/synthetic/mix_small/generator.torch models/mc-gumbel/synthetic/mix_small/discriminator.torch models/mc-gumbel/synthetic/mix_small/loss.csv",
+      "duration_seconds": null,
+      "return_code": null,
+      "status": "not-run",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "outcome": null,
+    "semantic_verification": {
+      "evidence": null,
+      "method": null,
+      "status": "not-run"
+    },
+    "status": "not-evaluated"
+  }
+}
