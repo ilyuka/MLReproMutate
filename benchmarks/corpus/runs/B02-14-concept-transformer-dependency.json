@@ -1,0 +1,112 @@
+{
+  "case_id": "B02-14",
+  "execution_policy": {
+    "amendment": "D024",
+    "baseline_validation_timeout_seconds": 300.0,
+    "clone_checkout_venv_timeout_seconds": 300.0,
+    "mutant_validation_timeout_seconds": 300.0,
+    "semantic_verification_timeout_seconds": 300.0,
+    "setup_install_timeout_seconds": 900.0
+  },
+  "frozen_case": {
+    "candidate_evidence": "torch==1.10.0 -> torch>=1.10.0",
+    "candidate_index": 1,
+    "operator": "dependency-pin",
+    "oracle_kind": "assertion",
+    "repository": "IBM/concept_transformer",
+    "revision": "84c9c30108a6249e017d580c4120ea54af0064f7",
+    "target": "requirements.txt",
+    "workflow_command": "pytest tests/test_ctc.py",
+    "workflow_kind": "upstream-test",
+    "workflow_reference": "tests/test_ctc.py"
+  },
+  "generated_at_utc": "2026-08-24T18:44:07Z",
+  "revision_verification": {
+    "actual_head": "84c9c30108a6249e017d580c4120ea54af0064f7",
+    "matches_frozen_revision": true
+  },
+  "schema_version": 2,
+  "screening": {
+    "baseline": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-14/baseline39-venv/bin/pytest tests/test_ctc.py",
+      "duration_seconds": 141.7171238719966,
+      "return_code": 0,
+      "status": "passed",
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-14/stages/baseline/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-14/stages/baseline/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "compatibility_correction": {
+      "reason": "The documented exact requirements could not resolve torch==1.10.0 on the available Python 3.12 runtime because no compatible wheel exists; the single compatibility correction selected Python 3.9.21 for the unchanged documented dependency set.",
+      "python_version": "3.9.21",
+      "provision_duration_seconds": 2.518741219995718,
+      "return_code": 0,
+      "timed_out": false
+    },
+    "compatibility_retry_used": true,
+    "documented_setup": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-14/baseline-venv/bin/python -m pip install -r requirements.txt",
+      "cwd": "/home/ilya/.cache/mlrepromutate/b02/B02-14/repo",
+      "duration_seconds": 0.565298782006721,
+      "reference": "README.md Requirements",
+      "return_code": 1,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-14/stages/baseline-install-initial/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-14/stages/baseline-install-initial/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "compatibility_setup_retry": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-14/baseline39-venv/bin/python -m pip install -r requirements.txt",
+      "duration_seconds": 223.66547125500074,
+      "return_code": 0,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-14/stages/baseline-install-compatibility/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-14/stages/baseline-install-compatibility/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "reason": null,
+    "status": "eligible"
+  },
+  "static_verification": {
+    "candidate_count": 12,
+    "frozen_pin_present": true,
+    "selected_requirement": "torch==1.10.0",
+    "selected_requirement_after_mutation": "torch>=1.10.0",
+    "workflow_usage": "tests/test_ctc.py directly imports torch, constructs torch tensors, executes both model paths, and asserts output shapes."
+  },
+  "mutation": {
+    "applied": true,
+    "candidate_index": 1,
+    "mutant_setup": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-14/mutant39-venv/bin/python -m pip install -r requirements.txt",
+      "duration_seconds": 499.4200578569944,
+      "return_code": 0,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-14/stages/mutant-install/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-14/stages/mutant-install/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "mutant_validation": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-14/mutant39-venv/bin/pytest tests/test_ctc.py",
+      "duration_seconds": 143.7876185519999,
+      "return_code": 0,
+      "status": "passed",
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-14/stages/mutant/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-14/stages/mutant/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "outcome": "equivalent",
+    "semantic_verification": {
+      "baseline_evidence_log": "/home/ilya/.cache/mlrepromutate/b02/B02-14/stages/semantic-baseline-torch/stdout.log",
+      "baseline_resolved_version": "1.10.0",
+      "evidence": "Fresh baseline and mutant environments both resolved torch to version 1.10.0.",
+      "method": "Compared `python -m pip show torch` in the independently resolved baseline and mutant environments.",
+      "mutant_evidence_log": "/home/ilya/.cache/mlrepromutate/b02/B02-14/stages/semantic-mutant-torch/stdout.log",
+      "mutant_resolved_version": "1.10.0",
+      "status": "confirmed-equivalent"
+    },
+    "status": "evaluated"
+  }
+}
