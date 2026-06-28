@@ -1,0 +1,87 @@
+{
+  "case_id": "B02-16",
+  "execution_policy": {
+    "amendment": "D024",
+    "baseline_validation_timeout_seconds": 300.0,
+    "clone_checkout_venv_timeout_seconds": 300.0,
+    "mutant_validation_timeout_seconds": 300.0,
+    "semantic_verification_timeout_seconds": 300.0,
+    "setup_install_timeout_seconds": 900.0
+  },
+  "frozen_case": {
+    "candidate_evidence": "Keras==2.3.1 -> Keras>=2.3.1",
+    "candidate_index": 2,
+    "operator": "dependency-pin",
+    "oracle_kind": "completion-only",
+    "repository": "GestureGeneration/Speech_driven_gesture_generation_with_autoencoder",
+    "revision": "59e8ebdb0f6e87b0e81268046c99a4d6c9bf62a8",
+    "target": "requirements.txt",
+    "workflow_command": "python train.py MODEL_NAME EPOCHS DATA_DIR N_INPUT ENCODE DIM",
+    "workflow_kind": "documented-experiment",
+    "workflow_reference": "README.md Initial setup and Learn speech-driven gesture generation model; train.py"
+  },
+  "generated_at_utc": "2026-08-24T18:51:10Z",
+  "revision_verification": {
+    "actual_head": "59e8ebdb0f6e87b0e81268046c99a4d6c9bf62a8",
+    "matches_frozen_revision": true
+  },
+  "schema_version": 2,
+  "screening": {
+    "baseline": {
+      "command": "python train.py MODEL_NAME EPOCHS DATA_DIR N_INPUT ENCODE DIM",
+      "duration_seconds": null,
+      "return_code": null,
+      "status": "not-run",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "compatibility_correction": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-16/baseline-venv/bin/uv python install 3.7.9",
+      "duration_seconds": 0.06410105700342683,
+      "reason": "TensorFlow 1.15.2 has no distribution for the available Python 3.12 interpreter, so the single allowed compatibility correction attempted to provision an era-compatible Python 3.7.9 runtime while retaining the documented dependency pins.",
+      "return_code": 2,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-16/stages/compatibility-python37-provision/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-16/stages/compatibility-python37-provision/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "compatibility_retry_used": true,
+    "documented_setup": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-16/baseline-venv/bin/python -m pip install tensorflow==1.15.2",
+      "cwd": "/home/ilya/.cache/mlrepromutate/b02/B02-16/repo",
+      "duration_seconds": 0.6153983240001253,
+      "reference": "README.md Initial setup (CPU route)",
+      "return_code": 1,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-16/stages/baseline-tensorflow-install-documented/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-16/stages/baseline-tensorflow-install-documented/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "reason": "The documented CPU TensorFlow 1.15.2 installation failed because that release has no distribution for the available Python 3.12 interpreter. The single allowed compatibility correction attempted to provision Python 3.7.9, an era-compatible Python 3 runtime, but no managed build was available. No further setup correction was attempted, and baseline and mutation validation were not run under the baseline-first rule.",
+    "status": "setup-failed"
+  },
+  "static_verification": {
+    "frozen_pin_present": true,
+    "selected_requirement": "Keras==2.3.1",
+    "workflow_usage": "train.py directly imports Keras models, layers, and optimizers and constructs and trains a Keras model in the documented workflow."
+  },
+  "mutation": {
+    "applied": false,
+    "candidate_index": null,
+    "mutant_validation": {
+      "command": "python train.py MODEL_NAME EPOCHS DATA_DIR N_INPUT ENCODE DIM",
+      "duration_seconds": null,
+      "return_code": null,
+      "status": "not-run",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "outcome": null,
+    "semantic_verification": {
+      "evidence": null,
+      "method": null,
+      "status": "not-run"
+    },
+    "status": "not-evaluated"
+  }
+}
