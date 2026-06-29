@@ -1,0 +1,110 @@
+{
+  "case_id": "B02-20",
+  "execution_policy": {
+    "amendment": "D024",
+    "baseline_validation_timeout_seconds": 300.0,
+    "clone_checkout_venv_timeout_seconds": 300.0,
+    "maximum_compatibility_corrections": 1,
+    "mutant_validation_timeout_seconds": 300.0,
+    "semantic_verification_timeout_seconds": 300.0,
+    "setup_install_timeout_seconds": 900.0
+  },
+  "frozen_case": {
+    "candidate_evidence": "Jinja2==2.11.3 -> Jinja2>=2.11.3",
+    "candidate_index": 1,
+    "identity_unchanged": true,
+    "operator": "dependency-pin",
+    "oracle_kind": "completion-only",
+    "repository": "MKMaS-GUET/SSJE",
+    "revision": "177c207d4477fa06ddbd7587d18e105e29d6f1dc",
+    "target": "requirements.txt",
+    "workflow_command": "python train_triplet.py --dataset 14res --max_span_size 8",
+    "workflow_kind": "documented-experiment",
+    "workflow_reference": "README.md Get Started/Run; trainer/evaluator.py"
+  },
+  "generated_at_utc": "2026-08-25T06:00:54Z",
+  "provenance": {
+    "canonical_primary_record": true,
+    "corrective_rerun_reason": "The previous primary attempt was procedure-invalid because its one compatibility correction selected a nonexistent Miniconda installer URL and interpreted the resulting HTTP 404 as evidence that the documented historical Python runtime was unavailable.",
+    "original_report_path": "runs/B02-20-ssje-dependency.json",
+    "original_report_retained_as_audit_history_only": true,
+    "previous_primary_attempt_procedure_invalid": true,
+    "statement": "This fresh corrective rerun is the canonical primary B02-20 record; the frozen case identity is unchanged."
+  },
+  "revision_verification": {
+    "actual_head": "177c207d4477fa06ddbd7587d18e105e29d6f1dc",
+    "matches_frozen_revision": true
+  },
+  "schema_version": 2,
+  "screening": {
+    "baseline": {
+      "command": "python train_triplet.py --dataset 14res --max_span_size 8",
+      "duration_seconds": null,
+      "return_code": null,
+      "status": "not-run",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "compatibility_correction": {
+      "count": 1,
+      "exact_correction": "Provision an isolated historical runtime beneath the fresh external work directory using the verified official Miniconda3 4.7.12.1 bootstrap, then resolve an environment containing exact Python 3.6.1 and pip without changing repository dependency pins.",
+      "installer": {
+        "download_return_code": 0,
+        "expected_sha256": "bfe34e1fa28d6d75a7ad05fd02fa5472275673d5f5621b77380898dee1be15d2",
+        "install_return_code": 0,
+        "observed_sha256": "bfe34e1fa28d6d75a7ad05fd02fa5472275673d5f5621b77380898dee1be15d2",
+        "sha256_verified_before_execution": true,
+        "url": "https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh"
+      },
+      "resolver": {
+        "command": "/home/ilya/.cache/mlrepromutate/b02/B02-20-corrective-primary-3CNscBGY/miniconda/bin/conda create -y -p /home/ilya/.cache/mlrepromutate/b02/B02-20-corrective-primary-3CNscBGY/baseline-env python=3.6.1 pip",
+        "duration_seconds": 14.192214375005278,
+        "evidence": "PackagesNotFoundError: python=3.6.1 was not available from the configured official defaults channels (repo.anaconda.com/pkgs/main and pkgs/r, linux-64 and noarch) after both current_repodata.json and repodata.json solves failed.",
+        "return_code": 1,
+        "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-20-corrective-primary-3CNscBGY/B02-20/stages/correction-create-baseline-py361/stderr.log",
+        "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-20-corrective-primary-3CNscBGY/B02-20/stages/correction-create-baseline-py361/stdout.log",
+        "timed_out": false,
+        "timeout_seconds": 900.0
+      }
+    },
+    "compatibility_retry_used": true,
+    "documented_setup": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-20-corrective-primary-3CNscBGY/documented-venv/bin/python -m pip install -r requirements.txt",
+      "duration_seconds": 3.872117601997161,
+      "python_version": "3.12.3",
+      "reference": "README.md Requirements/Environment and pip install -r requirements.txt",
+      "return_code": 1,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-20-corrective-primary-3CNscBGY/B02-20/stages/documented-install/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-20-corrective-primary-3CNscBGY/B02-20/stages/documented-install/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "reason": "The documented requirements failed under host Python 3.12 while preparing numpy==1.17.4 metadata. The one allowed compatibility correction successfully downloaded, checksum-verified, and installed the specified official Miniconda bootstrap in isolation, but conda could not resolve exact python=3.6.1 from its configured official defaults channels. Per policy no alternate correction was attempted; baseline and mutation validation were not run.",
+    "status": "setup-failed"
+  },
+  "static_verification": {
+    "frozen_pin_present": true,
+    "repository_source_unchanged": true,
+    "selected_requirement": "Jinja2==2.11.3"
+  },
+  "mutation": {
+    "applied": false,
+    "candidate_index": null,
+    "mutant_validation": {
+      "command": "python train_triplet.py --dataset 14res --max_span_size 8",
+      "duration_seconds": null,
+      "return_code": null,
+      "status": "not-run",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "outcome": null,
+    "semantic_verification": {
+      "evidence": null,
+      "method": null,
+      "status": "not-run"
+    },
+    "status": "not-evaluated"
+  },
+  "work_directory": "/home/ilya/.cache/mlrepromutate/b02/B02-20-corrective-primary-3CNscBGY"
+}
