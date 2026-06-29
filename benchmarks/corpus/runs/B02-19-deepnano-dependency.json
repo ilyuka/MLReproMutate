@@ -1,0 +1,120 @@
+{
+  "case_id": "B02-19",
+  "execution_policy": {
+    "amendment": "D024",
+    "baseline_validation_timeout_seconds": 300.0,
+    "clone_checkout_venv_timeout_seconds": 300.0,
+    "mutant_validation_timeout_seconds": 300.0,
+    "semantic_verification_timeout_seconds": 300.0,
+    "setup_install_timeout_seconds": 900.0
+  },
+  "frozen_case": {
+    "candidate_evidence": "transformers==4.27.4 -> transformers>=4.27.4",
+    "candidate_index": 1,
+    "operator": "dependency-pin",
+    "oracle_kind": "completion-only",
+    "repository": "ddd9898/DeepNano",
+    "revision": "82b12d4dc04a391e0f13d20b207a4b3f9c0db651",
+    "target": "requirements.txt",
+    "workflow_command": "python predict.py --model 1 --esm2 8M",
+    "workflow_kind": "documented-validation",
+    "workflow_reference": "README.md Demo; predict.py; models/models.py"
+  },
+  "generated_at_utc": "2026-08-25T05:44:07Z",
+  "revision_verification": {
+    "actual_head": "82b12d4dc04a391e0f13d20b207a4b3f9c0db651",
+    "matches_frozen_revision": true
+  },
+  "schema_version": 2,
+  "screening": {
+    "baseline": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-19/baseline-venv/bin/python predict.py --model 1 --esm2 8M",
+      "duration_seconds": 228.74815088400646,
+      "return_code": 0,
+      "status": "passed",
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-19/stages/baseline-validation-retry/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-19/stages/baseline-validation-retry/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "compatibility_correction": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-19/baseline-venv/bin/python -m pip install numpy<2",
+      "duration_seconds": 5.574452654000197,
+      "reason": "Fresh resolution paired the documented pandas==1.3.5 with NumPy 2.0.2, causing a binary-ABI import failure. The single allowed compatibility correction constrained NumPy below 2 without changing repository source or research logic.",
+      "resolved_numpy_version": "1.26.4",
+      "return_code": 0,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-19/stages/compatibility-install-numpy-lt2/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-19/stages/compatibility-install-numpy-lt2/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "compatibility_retry_used": true,
+    "documented_setup": {
+      "checkpoint": "Upstream-linked DeepNano-seq(NAI) 8M checkpoint downloaded to output/checkpoint.",
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-19/baseline-venv/bin/python -m pip install -r requirements.txt; install upstream-recommended torch==1.13.1",
+      "python_version": "3.9.25",
+      "reference": "README.md System requirements, Setup of DeepNano, Checkpoints, and Demo",
+      "requirements_duration_seconds": 33.02776420799637,
+      "requirements_return_code": 0,
+      "torch_duration_seconds": 329.1415124080013,
+      "torch_return_code": 0
+    },
+    "initial_baseline_failure": {
+      "duration_seconds": 1.016610179998679,
+      "reason": "pandas 1.3.5 failed to import against freshly resolved NumPy 2.0.2 because of a binary-ABI mismatch.",
+      "return_code": 1,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-19/stages/baseline-validation/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-19/stages/baseline-validation/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "reason": null,
+    "status": "eligible"
+  },
+  "static_verification": {
+    "frozen_pin_present": true,
+    "mutant_diff_only_changes_selected_pin": true,
+    "selected_requirement": "transformers==4.27.4",
+    "selected_requirement_after_mutation": "transformers>=4.27.4",
+    "workflow_usage": "models/models.py, imported by predict.py, imports AutoTokenizer and AutoModel from transformers and instantiates AutoModel on the documented prediction path."
+  },
+  "mutation": {
+    "applied": true,
+    "candidate_index": 1,
+    "mutant_setup": {
+      "compatibility_correction_reapplied": "numpy<2 resolved to 1.26.4 in the independent mutant environment.",
+      "requirements_command": "/home/ilya/.cache/mlrepromutate/b02/B02-19/mutant-venv/bin/python -m pip install -r requirements.txt",
+      "requirements_duration_seconds": 35.427843135999865,
+      "requirements_return_code": 0,
+      "requirements_stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-19/stages/mutant-install-requirements/stderr.log",
+      "requirements_stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-19/stages/mutant-install-requirements/stdout.log",
+      "torch_command": "/home/ilya/.cache/mlrepromutate/b02/B02-19/mutant-venv/bin/python -m pip install torch==1.13.1",
+      "torch_duration_seconds": 39.33699717299896,
+      "torch_return_code": 0,
+      "torch_stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-19/stages/mutant-install-torch/stderr.log",
+      "torch_stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-19/stages/mutant-install-torch/stdout.log",
+      "timeout_seconds": 900.0
+    },
+    "mutant_validation": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-19/mutant-venv/bin/python predict.py --model 1 --esm2 8M",
+      "duration_seconds": 1.6669011080011842,
+      "return_code": 1,
+      "status": "failed",
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-19/stages/mutant-validation/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-19/stages/mutant-validation/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "outcome": "killed",
+    "semantic_verification": {
+      "baseline_evidence_log": "/home/ilya/.cache/mlrepromutate/b02/B02-19/stages/semantic-baseline-transformers/stdout.log",
+      "baseline_resolved_version": "4.27.4",
+      "evidence": "Independent fresh environments resolved Transformers from 4.27.4 to 4.57.6; the mutant workflow rejected the documented Torch 1.13.1 backend because Transformers 4.57.6 requires PyTorch >=2.1.",
+      "method": "Compared python -m pip show transformers in the independently resolved baseline and mutant environments and retained the mutant validation failure trace.",
+      "mutant_evidence_log": "/home/ilya/.cache/mlrepromutate/b02/B02-19/stages/semantic-mutant-transformers/stdout.log",
+      "mutant_resolved_version": "4.57.6",
+      "status": "confirmed-non-equivalent"
+    },
+    "status": "evaluated"
+  }
+}
