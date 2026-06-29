@@ -24,6 +24,9 @@ processed_case_ids = MODULE.processed_case_ids
 case_work_dir = MODULE.case_work_dir
 run_candidate_command = MODULE.run_candidate_command
 timeout_for_class = MODULE.timeout_for_class
+d025_recoverable_cases = MODULE.d025_recoverable_cases
+replace_ledger_case = MODULE.replace_ledger_case
+validate_d025_report = MODULE.validate_d025_report
 
 
 def write_jsonl(path: Path, records: list[dict]) -> None:
@@ -48,7 +51,10 @@ def small_frame() -> list[dict]:
 @pytest.fixture
 def candidate_work_dir() -> Path:
     work_root = Path("/home/ilya/.cache/mlrepromutate/b02")
-    path = Path(tempfile.mkdtemp(prefix="synthetic-harness-test-", dir=work_root))
+    try:
+        path = Path(tempfile.mkdtemp(prefix="synthetic-harness-test-", dir=work_root))
+    except OSError as exc:
+        pytest.skip(f"B02 synthetic work root is not writable: {exc}")
     try:
         yield path
     finally:
@@ -98,12 +104,13 @@ def test_b02_01_remains_pending_until_distinct_amended_rerun_report(
     assert next_unprocessed_case(frame, {"B02-02"}) == frame[0]
 
 
-def test_amended_timeout_policy_has_explicit_stage_classes() -> None:
-    assert timeout_for_class("setup-install") == 900.0
+def test_d025_timeout_policy_has_explicit_stage_classes() -> None:
+    assert timeout_for_class("setup-install") == 1800.0
     assert timeout_for_class("clone-checkout-venv") == 300.0
-    assert timeout_for_class("baseline-validation") == 300.0
-    assert timeout_for_class("mutant-validation") == 300.0
+    assert timeout_for_class("baseline-validation") == 900.0
+    assert timeout_for_class("mutant-validation") == 900.0
     assert timeout_for_class("semantic-verification") == 300.0
+    assert MODULE.D025_MAX_CORRECTIONS == 3
 
     with pytest.raises(ValueError, match="unknown B02 timeout class"):
         timeout_for_class("setup")
@@ -125,6 +132,93 @@ def test_returns_none_when_all_cases_are_processed() -> None:
         )
         is None
     )
+
+
+def test_current_normal_next_case_remains_b02_21() -> None:
+    frame = load_sampling_frame(FRAME_PATH)
+    assert (
+        next_unprocessed_case(frame, processed_case_ids(frame))["case_id"] == "B02-21"
+    )
+
+
+def test_recoverable_cases_are_setup_failures_in_frame_order_and_ignore_s1(
+    tmp_path: Path,
+) -> None:
+    frame = small_frame()
+    ledger = tmp_path / "screening.jsonl"
+    runs = tmp_path / "runs"
+    runs.mkdir()
+    records = []
+    for case, status in zip(
+        frame, ("setup-failed", "eligible", "workflow-unavailable"), strict=True
+    ):
+        records.append({**case, "screening": {"status": status}})
+    write_jsonl(ledger, records)
+    (runs / "B02-01-S1-sensitivity.json").write_text("{}\n", encoding="utf-8")
+
+    assert [
+        case["case_id"] for case in d025_recoverable_cases(frame, ledger, runs)
+    ] == ["B02-01"]
+    (runs / "B02-01-D025-recovery.json").write_text("{}\n", encoding="utf-8")
+    assert d025_recoverable_cases(frame, ledger, runs) == []
+
+
+def test_recovery_replaces_one_ledger_record_without_touching_prior_record() -> None:
+    records = [{"case_id": "B02-01", "value": "old"}, {"case_id": "B02-02"}]
+    original = json.loads(json.dumps(records))
+    updated = replace_ledger_case(
+        records, "B02-01", {"case_id": "B02-01", "value": "new"}
+    )
+    assert updated == [{"case_id": "B02-01", "value": "new"}, {"case_id": "B02-02"}]
+    assert records == original
+
+
+def d025_report(case: dict, *, symmetric: bool = True) -> dict:
+    return {
+        "d025_policy": "D025",
+        "execution_mode": "recovery",
+        "infrastructure_valid": True,
+        "frozen_case": {
+            "case_id": case["case_id"],
+            "repository": case["repository"],
+            "revision": case["revision"],
+            "operator": case["operator"],
+            "candidate_index": case.get("candidate_index"),
+            "workflow": case.get("workflow_command"),
+            "oracle_kind": case.get("oracle_kind"),
+        },
+        "compatibility_corrections": [
+            {
+                "class": "missing-runtime-test-validation-dependency",
+                "description": "install missing dependency",
+                "reason": "workflow needs it",
+                "prior_failure": "ModuleNotFoundError",
+            }
+        ],
+        "corrections_used": 1,
+        "timeout_policy_seconds": MODULE.TIMEOUT_SECONDS_BY_CLASS,
+        "prior_report_path": "benchmarks/corpus/runs/B02-01-old.json",
+        "environments": {"baseline": "/work/base", "mutant": "/work/mutant"},
+        "mutation_evaluated": True,
+        "correction_symmetry": symmetric,
+    }
+
+
+def test_d025_evaluated_report_requires_correction_symmetry() -> None:
+    case = {
+        **small_frame()[0],
+        "candidate_index": None,
+        "workflow_command": None,
+        "oracle_kind": None,
+    }
+    validate_d025_report(d025_report(case), case, recovery=True)
+    with pytest.raises(ValueError, match="symmetry"):
+        validate_d025_report(d025_report(case, symmetric=False), case, recovery=True)
+
+
+def test_existing_pre_d025_report_remains_parseable() -> None:
+    path = ROOT / "benchmarks/corpus/runs/B02-04-torchdiffeq-seed.json"
+    assert isinstance(json.loads(path.read_text(encoding="utf-8")), dict)
 
 
 @pytest.mark.parametrize(

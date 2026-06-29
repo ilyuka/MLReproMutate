@@ -1072,3 +1072,30 @@ the host resolver symlink target was absent inside bubblewrap. It produced no
 valid empirical observation and does not satisfy the required rerun. Repair and
 validate the infrastructure, then execute B02-01 fresh; do not execute B02-03
 first.
+
+---
+
+## D025 implementation state after B02-20
+
+D025 is the final B02 policy for normal primary cases beginning at B02-21 and
+targeted fresh recovery of earlier canonical setup failures. Its ceilings are
+300 seconds clone/checkout/base provisioning, 1800 setup/install, 900 baseline
+validation, 900 mutant validation, and 300 semantic verification, with at most
+three concrete-failure-directed compatibility corrections.
+
+The normal sequence remains frozen and its next case is B02-21. Already
+evaluated cases remain canonical. Specialized-hardware workflow-unavailable
+B02-09 is not an environment recovery candidate. S1 reports remain sensitivity
+history only. Recovery preserves old reports, replaces one canonical screening
+line, uses a fresh unique work directory, and records
+`<case>-D025-recovery.json`; infrastructure-invalid attempts do not change
+canonical evidence.
+
+User-facing commands:
+
+    python benchmarks/corpus/b02_harness.py recoverable
+    python benchmarks/corpus/b02_unattended.py --recover B02-07
+    python benchmarks/corpus/b02_unattended.py
+
+Current next normal execution remains B02-21. No case was executed while
+implementing the D025 harness support.

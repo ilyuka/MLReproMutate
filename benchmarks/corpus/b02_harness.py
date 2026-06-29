@@ -7,6 +7,7 @@ import re
 import subprocess
 import sys
 import time
+import uuid
 from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
@@ -20,16 +21,25 @@ DEFAULT_RUNS = CORPUS_ROOT / "runs"
 DEFAULT_TAIL_LINES = 40
 MAX_TAIL_BYTES = 16 * 1024
 
-# Prospective B02 execution amendment adopted before B02-03. Keep these classes
-# separate even where they currently share a value so later reports identify the
-# resource being bounded rather than relying on one ambiguous common timeout.
+# Final D025 B02 execution policy, adopted after B02-20 and before B02-21.
+# Keep stage classes separate even where they share a value so reports identify
+# the bounded resource explicitly.
+D025_POLICY_ID = "D025"
+D025_MAX_CORRECTIONS = 3
+D025_CORRECTION_CLASSES = {
+    "historical-runtime-provisioning",
+    "non-target-dependency-adjustment",
+    "missing-runtime-test-validation-dependency",
+    "environment-normalization",
+}
 TIMEOUT_SECONDS_BY_CLASS = {
-    "setup-install": 900.0,
+    "setup-install": 1800.0,
     "clone-checkout-venv": 300.0,
-    "baseline-validation": 300.0,
-    "mutant-validation": 300.0,
+    "baseline-validation": 900.0,
+    "mutant-validation": 900.0,
     "semantic-verification": 300.0,
 }
+D025_RECOVERY_SUFFIX = "-D025-recovery.json"
 
 # B02-01 was censored solely by the superseded setup ceiling. Its original
 # report remains immutable; this distinct report name is the completion marker
@@ -191,6 +201,151 @@ def next_unprocessed_case(
     return None
 
 
+def ledger_records(path: Path = DEFAULT_LEDGER) -> list[dict[str, Any]]:
+    """Load the canonical screening ledger and reject duplicate B02 cases."""
+
+    records = _load_jsonl(path)
+    seen: set[str] = set()
+    for index, record in enumerate(records, start=1):
+        case_id = record.get("case_id")
+        if not isinstance(case_id, str) or not case_id.startswith("B02-"):
+            continue
+        case_id = _case_id(record, f"{path}:{index}")
+        if case_id in seen:
+            raise ValueError(f"screening ledger contains duplicate B02 case: {case_id}")
+        seen.add(case_id)
+    return records
+
+
+def d025_recoverable_cases(
+    frame: Iterable[dict[str, Any]],
+    ledger_path: Path = DEFAULT_LEDGER,
+    runs_path: Path = DEFAULT_RUNS,
+) -> list[dict[str, Any]]:
+    """Return old canonical setup failures eligible for one D025 recovery."""
+
+    records = ledger_records(ledger_path)
+    by_id = {
+        record["case_id"]: record
+        for record in records
+        if isinstance(record.get("case_id"), str)
+        and CASE_ID_RE.fullmatch(record["case_id"])
+    }
+    recoverable: list[dict[str, Any]] = []
+    for case in frame:
+        case_id = case["case_id"]
+        canonical = by_id.get(case_id)
+        if canonical is None:
+            continue
+        if canonical.get("screening", {}).get("status") != "setup-failed":
+            continue
+        if (runs_path / f"{case_id}{D025_RECOVERY_SUFFIX}").exists():
+            continue
+        recoverable.append(case)
+    return recoverable
+
+
+def recovery_work_dir(case_id: str, work_root: Path | None = None) -> Path:
+    """Allocate a fresh, unique directory for a targeted D025 recovery."""
+
+    root = case_work_dir(case_id, work_root) / "D025-recoveries"
+    path = root / uuid.uuid4().hex
+    path.mkdir(parents=True, exist_ok=False)
+    return path
+
+
+def replace_ledger_case(
+    records: list[dict[str, Any]], case_id: str, replacement: dict[str, Any]
+) -> list[dict[str, Any]]:
+    """Replace exactly one canonical B02 record without changing ledger order."""
+
+    positions = [
+        i for i, record in enumerate(records) if record.get("case_id") == case_id
+    ]
+    if len(positions) != 1:
+        raise ValueError(f"expected exactly one canonical ledger record for {case_id}")
+    if replacement.get("case_id") != case_id:
+        raise ValueError("replacement case_id does not match target case")
+    updated = list(records)
+    updated[positions[0]] = replacement
+    return updated
+
+
+def validate_d025_report(
+    report: dict[str, Any], case: dict[str, Any], *, recovery: bool
+) -> None:
+    """Validate additive D025 provenance without changing legacy report schemas."""
+
+    if report.get("d025_policy") != D025_POLICY_ID:
+        raise ValueError("D025 report must identify d025_policy='D025'")
+    expected_mode = "recovery" if recovery else "primary"
+    if report.get("execution_mode") != expected_mode:
+        raise ValueError(f"D025 report execution_mode must be {expected_mode!r}")
+    if report.get("infrastructure_valid") is not True:
+        raise ValueError("infrastructure-invalid attempts cannot be canonical")
+    frozen = report.get("frozen_case")
+    if not isinstance(frozen, dict):
+        raise TypeError("D025 report requires frozen_case provenance")
+    frozen_fields = {
+        "case_id": "case_id",
+        "repository": "repository",
+        "revision": "revision",
+        "operator": "operator",
+        "candidate_index": "candidate_index",
+        "workflow": "workflow_command",
+        "oracle_kind": "oracle_kind",
+    }
+    for field, frame_field in frozen_fields.items():
+        if frozen.get(field) != case.get(frame_field):
+            raise ValueError(f"D025 report frozen_case.{field} does not match frame")
+    corrections = report.get("compatibility_corrections")
+    if not isinstance(corrections, list) or not all(
+        isinstance(item, dict) for item in corrections
+    ):
+        raise ValueError(
+            "D025 report requires an ordered compatibility_corrections list"
+        )
+    if report.get("corrections_used") != len(corrections):
+        raise ValueError("D025 corrections_used must match correction descriptions")
+    if len(corrections) > D025_MAX_CORRECTIONS:
+        raise ValueError("D025 correction budget exceeded")
+    for correction in corrections:
+        if correction.get("class") not in D025_CORRECTION_CLASSES:
+            raise ValueError("D025 correction uses a forbidden correction class")
+        if not all(
+            isinstance(correction.get(key), str) and correction[key]
+            for key in ("description", "reason", "prior_failure")
+        ):
+            raise ValueError(
+                "every D025 correction must describe its concrete prior failure"
+            )
+    if report.get("timeout_policy_seconds") != TIMEOUT_SECONDS_BY_CLASS:
+        raise ValueError("D025 report timeout policy does not match frozen constants")
+    if recovery:
+        prior = report.get("prior_report_path")
+        if not isinstance(prior, str) or not prior.startswith(
+            "benchmarks/corpus/runs/"
+        ):
+            raise ValueError("D025 recovery requires a canonical prior_report_path")
+    elif report.get("prior_report_path") is not None:
+        raise ValueError("normal D025 primary report must have prior_report_path=null")
+    mutation_evaluated = report.get("mutation_evaluated") is True
+    environments = report.get("environments")
+    if (
+        not isinstance(environments, dict)
+        or not all(
+            isinstance(environments.get(name), str) and environments[name]
+            for name in ("baseline", "mutant")
+        )
+        or environments["baseline"] == environments["mutant"]
+    ):
+        raise ValueError(
+            "D025 report requires independent baseline/mutant environments"
+        )
+    if mutation_evaluated and report.get("correction_symmetry") is not True:
+        raise ValueError("evaluated D025 mutation requires correction symmetry")
+
+
 def b02_work_root() -> Path:
     """Return the fixed persistent candidate work root."""
 
@@ -325,6 +480,15 @@ def build_parser() -> argparse.ArgumentParser:
     next_parser.add_argument("--screening-ledger", type=Path, default=DEFAULT_LEDGER)
     next_parser.add_argument("--runs-dir", type=Path, default=DEFAULT_RUNS)
 
+    recoverable_parser = subparsers.add_parser("recoverable")
+    recoverable_parser.add_argument(
+        "--sampling-frame", type=Path, default=DEFAULT_FRAME
+    )
+    recoverable_parser.add_argument(
+        "--screening-ledger", type=Path, default=DEFAULT_LEDGER
+    )
+    recoverable_parser.add_argument("--runs-dir", type=Path, default=DEFAULT_RUNS)
+
     status_parser = subparsers.add_parser("status")
     status_parser.add_argument("case_id")
     status_parser.add_argument("--sampling-frame", type=Path, default=DEFAULT_FRAME)
@@ -361,6 +525,11 @@ def main(argv: list[str] | None = None) -> None:
         processed = processed_case_ids(frame, args.screening_ledger, args.runs_dir)
         next_case = next_unprocessed_case(frame, processed)
         print(json.dumps(next_case, ensure_ascii=False, sort_keys=True))
+        return
+
+    if args.action == "recoverable":
+        for case in d025_recoverable_cases(frame, args.screening_ledger, args.runs_dir):
+            print(case["case_id"])
         return
 
     _require_frame_case(frame, args.case_id)

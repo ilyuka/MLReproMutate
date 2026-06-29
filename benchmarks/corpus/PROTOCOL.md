@@ -270,8 +270,9 @@ prospectively collected under protocol version 2.
 All new primary corpus observations collected after this protocol revision use
 schema version 2 and protocol version `2.0`.
 
-The four primary mutation classes, the baseline-first rule, the fixed-SHA rule,
-and the one-compatibility-correction rule remain unchanged after calibration.
+The four primary mutation classes, the baseline-first rule, and the fixed-SHA
+rule remain unchanged after calibration. D025 supersedes the historical
+one-compatibility-correction rule for its declared scope.
 The B02 stage-specific timeout amendment below supersedes the original common
 300-second B02 bound prospectively from B02-03 onward and for the required
 B02-01 amended-policy rerun.
@@ -317,6 +318,41 @@ executions and must not be broadened after observing runtime.
 Workflows requiring unavailable proprietary data, credentials, interactive
 input, or unsupported specialized hardware are excluded rather than manually
 rewritten.
+
+## D025 final B02 compatibility-recovery policy
+
+D025 applies prospectively to normal primary execution beginning at B02-21 and
+to explicit fresh recovery of earlier canonical setup-failed B02 cases. Cases
+that already reached mutation evaluation remain canonical and are not rerun.
+Historical D024 and S1 reports remain unchanged audit/sensitivity history; S1
+is never silently promoted to a D025 primary result.
+
+Final ceilings are 300 seconds for clone/checkout/base provisioning, 1800 for
+setup/install, 900 each for baseline and mutant validation, and 300 for semantic
+verification. After documented/native setup, at most three intentional
+compatibility corrections may be made. Each must respond to a concrete prior
+setup or baseline failure. Allowed corrections are documented historical
+runtime provisioning (including public archival channels), a compatible
+version/range for a non-target dependency after a demonstrated packaging,
+interpreter, ABI, or runtime incompatibility, installation of a concretely
+missing runtime/test/validation dependency, and environment-only
+path/cache/HOME/XDG/locale normalization without research-semantic changes.
+
+Source compatibility patches; candidate, workflow, or oracle changes; skipped
+validation; timeout increases; outcome-directed corrections; target dependency
+constraints that undo the mutation; and CPU substitution for a genuinely
+specialized-hardware-only workflow are forbidden. When mutation is evaluated,
+independently provisioned baseline and mutant environments receive equivalent
+corrections. Infrastructure-invalid attempts consume no corrections and create
+no canonical empirical report or ledger change.
+
+A targeted recovery uses a fresh unique work directory and preserves every
+prior report. A valid report is named `<case>-D025-recovery.json` and replaces
+exactly that case's existing screening ledger line; it never appends a duplicate.
+If bounded recovery remains setup-failed, that result becomes canonical. New
+D025 reports add policy/mode, prior-report, corrections, timeout, frozen-case,
+independent-environment, infrastructure, and symmetry provenance. Canonical
+report paths use `benchmarks/corpus/runs/<filename>.json`.
 
 ## Reporting
 

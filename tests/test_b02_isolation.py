@@ -19,7 +19,10 @@ WORK_ROOT = Path("/home/ilya/.cache/mlrepromutate/b02")
 
 @pytest.fixture
 def synthetic_work_dir() -> Path:
-    path = Path(tempfile.mkdtemp(prefix="synthetic-isolation-test-", dir=WORK_ROOT))
+    try:
+        path = Path(tempfile.mkdtemp(prefix="synthetic-isolation-test-", dir=WORK_ROOT))
+    except OSError as exc:
+        pytest.skip(f"B02 synthetic work root is not writable: {exc}")
     try:
         yield path
     finally:
