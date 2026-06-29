@@ -1,0 +1,88 @@
+{
+  "case_id": "B02-20",
+  "execution_policy": {
+    "amendment": "D024",
+    "baseline_validation_timeout_seconds": 300.0,
+    "clone_checkout_venv_timeout_seconds": 300.0,
+    "mutant_validation_timeout_seconds": 300.0,
+    "semantic_verification_timeout_seconds": 300.0,
+    "setup_install_timeout_seconds": 900.0
+  },
+  "frozen_case": {
+    "candidate_evidence": "Jinja2==2.11.3 -> Jinja2>=2.11.3",
+    "candidate_index": 1,
+    "operator": "dependency-pin",
+    "oracle_kind": "completion-only",
+    "repository": "MKMaS-GUET/SSJE",
+    "revision": "177c207d4477fa06ddbd7587d18e105e29d6f1dc",
+    "target": "requirements.txt",
+    "workflow_command": "python train_triplet.py --dataset 14res --max_span_size 8",
+    "workflow_kind": "documented-experiment",
+    "workflow_reference": "README.md Get Started/Run; trainer/evaluator.py"
+  },
+  "generated_at_utc": "2026-08-25T05:52:17Z",
+  "revision_verification": {
+    "actual_head": "177c207d4477fa06ddbd7587d18e105e29d6f1dc",
+    "matches_frozen_revision": true
+  },
+  "schema_version": 2,
+  "screening": {
+    "baseline": {
+      "command": "python train_triplet.py --dataset 14res --max_span_size 8",
+      "duration_seconds": null,
+      "return_code": null,
+      "status": "not-run",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "compatibility_correction": {
+      "command": "/usr/bin/curl -fL -o Miniconda3-py36_4.9.2-Linux-x86_64.sh https://repo.anaconda.com/miniconda/Miniconda3-py36_4.9.2-Linux-x86_64.sh",
+      "duration_seconds": 0.31492443999741226,
+      "reason": "The documented Python 3.6.1 runtime was unavailable, so the single allowed compatibility correction attempted to provision an official Python 3.6 Miniconda environment while retaining the unchanged documented dependency pins.",
+      "return_code": 22,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-20/stages/compatibility-download-python36/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-20/stages/compatibility-download-python36/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "compatibility_retry_used": true,
+    "documented_setup": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-20/baseline-venv/bin/python -m pip install -r requirements.txt",
+      "cwd": "/home/ilya/.cache/mlrepromutate/b02/B02-20/repo",
+      "duration_seconds": 3.6710550269999658,
+      "python_version": "3.12.3",
+      "reference": "README.md Requirements/Environment and pip install -r requirements.txt",
+      "return_code": 1,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-20/stages/baseline-install-requirements/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-20/stages/baseline-install-requirements/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "reason": "The repository documents Python 3.6.1 and exact legacy dependency pins. The documented requirements install under the available Python 3.12 runtime failed while preparing numpy==1.17.4 metadata because its legacy build is incompatible with that interpreter. The single allowed obvious compatibility correction attempted to provision an official Python 3.6 Miniconda environment, but the distribution artifact was unavailable (HTTP 404). No further setup correction was attempted, and baseline and mutation validation were not run under the baseline-first rule.",
+    "status": "setup-failed"
+  },
+  "static_verification": {
+    "frozen_pin_present": true,
+    "selected_requirement": "Jinja2==2.11.3",
+    "workflow_usage": "trainer/evaluator.py, imported on the documented train_triplet.py training/evaluation path, directly imports jinja2 and constructs jinja2.Template instances for evaluation output."
+  },
+  "mutation": {
+    "applied": false,
+    "candidate_index": null,
+    "mutant_validation": {
+      "command": "python train_triplet.py --dataset 14res --max_span_size 8",
+      "duration_seconds": null,
+      "return_code": null,
+      "status": "not-run",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "outcome": null,
+    "semantic_verification": {
+      "evidence": null,
+      "method": null,
+      "status": "not-run"
+    },
+    "status": "not-evaluated"
+  }
+}
