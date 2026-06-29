@@ -1,0 +1,95 @@
+{
+  "case_id": "B02-21",
+  "compatibility_corrections": [
+    {
+      "class": "historical-runtime-provisioning",
+      "description": "Provisioned the upstream-CI-documented Python 3.7 runtime independently in baseline-conda and mutant-conda using the public Miniconda3-py37_23.1.0-1 Linux archive.",
+      "prior_failure": "Native documented setup under host Python 3.12 failed while building ConfigSpace<0.5; its extension compilation could not find Python.h.",
+      "reason": "The frozen upstream Travis configuration explicitly supports Python 3.6 and 3.7, and the observed legacy ConfigSpace build failure demonstrated incompatibility with the available native runtime/build environment."
+    },
+    {
+      "class": "missing-runtime-test-validation-dependency",
+      "description": "Installed torch 1.13.1 in both independent Python 3.7 environments.",
+      "prior_failure": "The first baseline validation stopped in mindware.components.meta_learning.algorithm_recomendation.ranknet_advisor_torch with ModuleNotFoundError: No module named 'torch'.",
+      "reason": "The selected validation workflow concretely demonstrated that torch was a missing runtime dependency on the target's import path."
+    },
+    {
+      "class": "non-target-dependency-adjustment",
+      "description": "Adjusted the non-target scikit-optimize dependency symmetrically from resolved 0.10.2 to the compatible pre-0.10 range, resolving 0.9.0.",
+      "prior_failure": "The second baseline validation failed because scikit-optimize 0.10.2 imported the Python 3.8+ stdlib module importlib.metadata under the documented Python 3.7 runtime.",
+      "reason": "This was a demonstrated interpreter incompatibility in a non-target dependency; the frozen data-split candidate and its dependencies were unchanged."
+    }
+  ],
+  "correction_symmetry": true,
+  "corrections_used": 3,
+  "d025_policy": "D025",
+  "environments": {
+    "baseline": "/home/ilya/.cache/mlrepromutate/b02/B02-21/baseline-conda",
+    "mutant": "/home/ilya/.cache/mlrepromutate/b02/B02-21/mutant-conda"
+  },
+  "execution_mode": "primary",
+  "frozen_case": {
+    "candidate_evidence": "train_test_split(X, y, test_size=0.33, random_state=1, stratify=y) -> train_test_split(X, y, test_size=0.33, random_state=1, stratify=None)",
+    "candidate_index": 1,
+    "case_id": "B02-21",
+    "operator": "data-split",
+    "oracle_kind": "completion-only",
+    "repository": "thomas-young-2013/mindware",
+    "revision": "002ec06bf139b14bc059e0f0438501b31d9ed16a",
+    "target": "examples/ci_examples/example_bagging.py",
+    "workflow": "bash ci_scripts/unittests.sh",
+    "workflow_kind": "ci",
+    "workflow_reference": ".travis.yml; ci_scripts/unittests.sh; examples/ci_examples/example_bagging.py"
+  },
+  "generated_at_utc": "2026-08-25T06:39:29Z",
+  "infrastructure_valid": true,
+  "mutation": {
+    "applied": false,
+    "candidate_index": null,
+    "outcome": null,
+    "semantic_verification": {
+      "evidence": null,
+      "method": null,
+      "status": "not-run"
+    },
+    "status": "not-evaluated"
+  },
+  "mutation_evaluated": false,
+  "prior_report_path": null,
+  "revision_verification": {
+    "actual_head": "002ec06bf139b14bc059e0f0438501b31d9ed16a",
+    "matches_frozen_revision": true
+  },
+  "schema_version": 2,
+  "screening": {
+    "baseline": {
+      "command": "bash ci_scripts/unittests.sh",
+      "duration_seconds": 4.1711010729995905,
+      "return_code": 1,
+      "status": "failed",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "documented_setup": {
+      "command": "python -m pip install pep8 codecov mypy flake8 pytest-cov -r requirements/main.txt .[all]",
+      "native_duration_seconds": 43.80651518100058,
+      "native_return_code": 1,
+      "reference": ".travis.yml install; requirements/main.txt; setup.py"
+    },
+    "final_failure": "After all three bounded corrections, the unchanged baseline workflow failed before executing the frozen split because MindWare imported openbox.core.mf_batch_advisor, which is absent from the resolved OpenBox 0.9.0 package.",
+    "status": "setup-failed"
+  },
+  "source_verification": {
+    "baseline_repository_clean": true,
+    "frozen_candidate_present": true,
+    "mutant_repository_clean": true,
+    "mutation_not_applied_under_baseline_first_rule": true
+  },
+  "timeout_policy_seconds": {
+    "baseline-validation": 900.0,
+    "clone-checkout-venv": 300.0,
+    "mutant-validation": 900.0,
+    "semantic-verification": 300.0,
+    "setup-install": 1800.0
+  }
+}
