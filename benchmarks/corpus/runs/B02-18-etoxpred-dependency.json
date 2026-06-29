@@ -1,0 +1,88 @@
+{
+  "case_id": "B02-18",
+  "execution_policy": {
+    "amendment": "D024",
+    "baseline_validation_timeout_seconds": 300.0,
+    "clone_checkout_venv_timeout_seconds": 300.0,
+    "mutant_validation_timeout_seconds": 300.0,
+    "semantic_verification_timeout_seconds": 300.0,
+    "setup_install_timeout_seconds": 900.0
+  },
+  "frozen_case": {
+    "candidate_evidence": "pandas==1.0 -> pandas>=1.0",
+    "candidate_index": 1,
+    "operator": "dependency-pin",
+    "oracle_kind": "completion-only",
+    "repository": "pulimeng/eToxPred",
+    "revision": "deff5be7d5e9951dc0e82e0e63dafc89c74fe883",
+    "target": "requirements.txt",
+    "workflow_command": "python etoxpred_predict.py --datafile tcm600_nr.smi --modelfile etoxpred_best_model.joblib --outputfile results.csv",
+    "workflow_kind": "documented-validation",
+    "workflow_reference": "README.md Usage; etoxpred_predict.py"
+  },
+  "generated_at_utc": "2026-08-24T19:01:17Z",
+  "revision_verification": {
+    "actual_head": "deff5be7d5e9951dc0e82e0e63dafc89c74fe883",
+    "matches_frozen_revision": true
+  },
+  "schema_version": 2,
+  "screening": {
+    "baseline": {
+      "command": "python etoxpred_predict.py --datafile tcm600_nr.smi --modelfile etoxpred_best_model.joblib --outputfile results.csv",
+      "duration_seconds": null,
+      "return_code": null,
+      "status": "not-run",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "compatibility_correction": {
+      "command": "/home/ilya/.cache/mlrepromutate/b02/B02-18/baseline-venv/bin/python -m pip install -r requirements.txt",
+      "duration_seconds": 51.32434374700097,
+      "python_version": "3.12.3",
+      "reason": "The documented Python 3.7 runtime was unavailable, so the single allowed compatibility correction used the available Python 3.12 runtime while retaining the unchanged documented dependency pins.",
+      "return_code": 1,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-18/stages/baseline-install-requirements/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-18/stages/baseline-install-requirements/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "compatibility_retry_used": true,
+    "documented_setup": {
+      "command": "python3.7 -m venv /home/ilya/.cache/mlrepromutate/b02/B02-18/documented-venv",
+      "cwd": "/home/ilya/.cache/mlrepromutate/b02/B02-18",
+      "duration_seconds": 0.0038524019983015023,
+      "reference": "README.md Create virtual python3.7 env; Install below requirements",
+      "return_code": 1,
+      "stderr_log": "/home/ilya/.cache/mlrepromutate/b02/B02-18/stages/documented-python37-venv/stderr.log",
+      "stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-18/stages/documented-python37-venv/stdout.log",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "reason": "The repository explicitly documents Python 3.7, but that runtime was unavailable in the isolated environment. The single allowed obvious compatibility correction used the available Python 3.12 runtime while retaining all documented dependency pins; pandas==1.0 then failed during legacy numpy build-dependency metadata generation because distutils.msvccompiler was unavailable. No further setup correction was attempted, and baseline and mutation validation were not run under the baseline-first rule.",
+    "status": "setup-failed"
+  },
+  "static_verification": {
+    "frozen_pin_present": true,
+    "selected_requirement": "pandas==1.0",
+    "workflow_usage": "etoxpred_predict.py directly imports pandas, reads the documented input with pandas.read_csv, constructs a pandas DataFrame, and writes the documented output with DataFrame.to_csv."
+  },
+  "mutation": {
+    "applied": false,
+    "candidate_index": null,
+    "mutant_validation": {
+      "command": "python etoxpred_predict.py --datafile tcm600_nr.smi --modelfile etoxpred_best_model.joblib --outputfile results.csv",
+      "duration_seconds": null,
+      "return_code": null,
+      "status": "not-run",
+      "timed_out": false,
+      "timeout_seconds": 300.0
+    },
+    "outcome": null,
+    "semantic_verification": {
+      "evidence": null,
+      "method": null,
+      "status": "not-run"
+    },
+    "status": "not-evaluated"
+  }
+}
