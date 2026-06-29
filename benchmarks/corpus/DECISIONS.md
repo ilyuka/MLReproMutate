@@ -612,3 +612,28 @@ S1 must not:
 - search arbitrary fixes after two corrections.
 
 Primary strict results remain canonical and are reported separately from S1 results.
+
+### B02-20 corrective primary rerun
+
+The first B02-20 primary execution is retained as audit history but is
+procedure-invalid for primary inference.
+
+Its single compatibility correction attempted to provision the repository's
+documented Python 3.6.1 runtime via a Miniconda distribution artifact that
+returned HTTP 404. Subsequent verification established that a valid official
+Linux x86_64 Miniconda bootstrap remains available in the Anaconda archive.
+
+Therefore the observed 404 reflected an incorrectly selected provisioning
+artifact rather than evidence that the documented historical runtime was
+unavailable.
+
+B02-20 will receive one fresh corrective primary rerun with:
+- identical frozen repository revision;
+- identical dependency mutation candidate;
+- identical workflow and oracle;
+- identical 900-second setup and 300-second validation limits;
+- the same maximum of one error-directed compatibility correction.
+
+The previous B02-20 report is preserved unchanged for audit history. The
+corrective rerun, if methodologically valid, becomes the canonical primary
+B02-20 record. This correction does not alter the execution policy or sample.
