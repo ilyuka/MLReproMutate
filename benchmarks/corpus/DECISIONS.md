@@ -637,3 +637,136 @@ B02-20 will receive one fresh corrective primary rerun with:
 The previous B02-20 report is preserved unchanged for audit history. The
 corrective rerun, if methodologically valid, becomes the canonical primary
 B02-20 record. This correction does not alter the execution policy or sample.
+
+## D025 — B02 bounded compatibility-recovery execution policy
+
+D025 was adopted after completion of B02-01 through B02-20 and before any
+execution of B02-21 through B02-29.
+
+### Trigger
+
+After reconciliation of the prospectively amended B02-01 execution, only
+5 of the first 20 frozen B02 cases reached mutation evaluation. Fourteen were
+setup-failed and one was workflow-unavailable.
+
+This amendment is motivated by the high PRE-MUTATION non-evaluability rate,
+which substantially limits the usable empirical denominator.
+
+The amendment is not motivated by whether observed mutations were KILLED,
+SURVIVED, or equivalent. Repository selection, frozen revisions, mutation
+candidates, workflows, and validation oracles remain unchanged.
+
+The complete B02 sample of 29 cases was frozen before these executions.
+
+### Scope
+
+D025 becomes the final B02 execution policy for:
+
+1. all not-yet-executed B02 cases beginning with B02-21; and
+2. fresh recovery executions of previously non-evaluable B02 cases.
+
+Cases that already reached mutation evaluation under an earlier stricter
+policy remain valid and are not rerun because they already satisfy a strict
+subset of D025.
+
+Previous strict, amended, corrective, and S1 reports are preserved as audit
+history. Existing S1 sensitivity results do not automatically become canonical
+D025 primary results.
+
+### Time limits
+
+- clone / checkout / base environment provisioning: 300 seconds
+- setup / dependency installation: 1800 seconds
+- baseline validation: 900 seconds
+- mutant validation: 900 seconds
+- semantic-verification subprocess: 300 seconds
+
+### Bounded compatibility recovery
+
+After the documented/native setup is attempted, at most THREE error-directed
+compatibility corrections may be applied.
+
+A correction may only respond to a concrete observed setup or baseline
+failure. Corrections must not be chosen using mutation outcome information.
+
+Permitted correction classes are:
+
+1. Historical runtime provisioning when supported by repository documentation,
+   CI configuration, package metadata, or other frozen upstream evidence.
+   Publicly archived interpreter distributions and package channels may be used
+   to obtain that documented runtime.
+
+2. A compatible version or version range for a NON-TARGET dependency when a
+   concrete packaging, interpreter, ABI, or runtime incompatibility is observed.
+
+3. Installation of a missing runtime, test, or validation dependency when its
+   absence is demonstrated by the selected workflow failure.
+
+4. Environment-only normalization such as cache, path, HOME, XDG, locale, or
+   equivalent execution-environment configuration that does not alter research
+   semantics.
+
+Each intentional environment/dependency adaptation after an observed failure
+counts as one correction. No more than three corrections are allowed.
+
+Historical-runtime provisioning may use an appropriate public archival channel
+as part of that single runtime-provisioning correction when needed to obtain
+the exact documented interpreter.
+
+### Symmetry
+
+Any compatibility correction required for an evaluated case must be applied
+equivalently to the independently provisioned baseline and mutant environments.
+
+The mutation itself remains the only intended baseline-versus-mutant
+difference.
+
+### Forbidden adaptations
+
+D025 does NOT permit:
+
+- repository source patches for compatibility;
+- changing the frozen mutation candidate;
+- changing the selected workflow;
+- changing the oracle;
+- skipping tests or validation steps;
+- weakening assertions;
+- substituting a different experiment;
+- increasing timeouts beyond D025;
+- outcome-directed setup changes;
+- constraining the TARGET dependency in a way that cancels or weakens the
+  frozen mutation;
+- CPU substitution for a workflow that genuinely requires unavailable
+  specialized hardware.
+
+A genuinely unavailable required GPU or other specialized resource remains
+workflow-unavailable.
+
+### Infrastructure failures
+
+System suspend, DNS failure, transient network interruption, broken outer
+sandboxing, or equivalent infrastructure failures are not empirical outcomes
+and do not consume a compatibility correction.
+
+Such attempts are retained as infrastructure-invalid audit history and may be
+rerun fresh.
+
+### Canonicalization of recovery runs
+
+A valid D025 recovery execution of a previously non-evaluable case supersedes
+the earlier non-evaluable record as the canonical B02 record.
+
+The previous report must remain unchanged as audit history.
+
+The existing case line in screening.jsonl is replaced; a duplicate case line
+must never be appended.
+
+If a D025 recovery remains non-evaluable after the bounded recovery budget,
+that D025 result becomes the canonical final primary classification.
+
+### Analysis
+
+The final mutation-detection analysis uses canonical D025-compatible results.
+
+Earlier strict executability remains reportable separately as a descriptive
+sensitivity result on environment/setup fragility.
