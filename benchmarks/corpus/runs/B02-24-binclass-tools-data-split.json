@@ -1,0 +1,79 @@
+{
+  "case_id": "B02-24",
+  "compatibility_corrections": [],
+  "correction_symmetry": true,
+  "corrections_used": 0,
+  "d025_policy": "D025",
+  "environments": {
+    "baseline": "/home/ilya/.cache/mlrepromutate/b02/B02-24/baseline-venv",
+    "mutant": "/home/ilya/.cache/mlrepromutate/b02/B02-24/mutant-venv"
+  },
+  "execution_mode": "primary",
+  "frozen_case": {
+    "candidate_evidence": "train_test_split(X, y, test_size=0.2, stratify=y, random_state=123) -> train_test_split(X, y, test_size=0.2, stratify=None, random_state=123)",
+    "candidate_index": 1,
+    "case_id": "B02-24",
+    "operator": "data-split",
+    "oracle_kind": "assertion",
+    "repository": "lucazav/binclass-tools",
+    "revision": "d45de9e2fcec86104e837e837f8ec5f32b4a8d4b",
+    "target": "test/test_1.py",
+    "workflow": "python test/test_1.py",
+    "workflow_kind": "upstream-test",
+    "workflow_reference": "test/test_1.py"
+  },
+  "generated_at_utc": "2026-08-25T08:01:22Z",
+  "infrastructure_valid": true,
+  "mutation": {
+    "applied": false,
+    "candidate_index": null,
+    "outcome": null,
+    "semantic_verification": {
+      "evidence": null,
+      "method": null,
+      "status": "not-run"
+    },
+    "status": "not-evaluated"
+  },
+  "mutation_evaluated": false,
+  "prior_report_path": null,
+  "revision_verification": {
+    "actual_head": "d45de9e2fcec86104e837e837f8ec5f32b4a8d4b",
+    "matches_frozen_revision": true
+  },
+  "schema_version": 2,
+  "screening": {
+    "baseline": {
+      "command": "python test/test_1.py",
+      "duration_seconds": 1.569502080004895,
+      "return_code": 1,
+      "status": "failed",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "documented_setup": {
+      "baseline_command": "pip install .",
+      "baseline_duration_seconds": 3.0185469559946796,
+      "baseline_return_code": 0,
+      "mutant_command": "pip install .",
+      "mutant_duration_seconds": 7.275540909002302,
+      "mutant_return_code": 0,
+      "reference": "README.md Quick Start, Requirements and Installation"
+    },
+    "final_failure": "The unchanged frozen baseline workflow failed because bctools.curve_ROC_plot returned the source-defined (figure, area) tuple while test/test_1.py compared that tuple directly with a float, raising TypeError before the frozen train_test_split result could satisfy the complete upstream workflow. This intrinsic source/test mismatch is not remediable by a permitted D025 environment correction.",
+    "status": "setup-failed"
+  },
+  "source_verification": {
+    "baseline_tracked_source_unchanged": true,
+    "frozen_candidate_present": true,
+    "mutant_tracked_source_unchanged": true,
+    "mutation_not_applied_under_baseline_first_rule": true
+  },
+  "timeout_policy_seconds": {
+    "baseline-validation": 900.0,
+    "clone-checkout-venv": 300.0,
+    "mutant-validation": 900.0,
+    "semantic-verification": 300.0,
+    "setup-install": 1800.0
+  }
+}
