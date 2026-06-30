@@ -134,11 +134,16 @@ def test_returns_none_when_all_cases_are_processed() -> None:
     )
 
 
-def test_current_normal_next_case_remains_b02_21() -> None:
+def test_next_unprocessed_case_respects_processed_prefix() -> None:
     frame = load_sampling_frame(FRAME_PATH)
-    assert (
-        next_unprocessed_case(frame, processed_case_ids(frame))["case_id"] == "B02-21"
-    )
+
+    # Reconstruct the historical D025 boundary explicitly instead of depending
+    # on the live screening ledger, which advances as empirical cases complete.
+    case_ids = [row["case_id"] for row in frame]
+    boundary = case_ids.index("B02-21")
+    processed = set(case_ids[:boundary])
+
+    assert next_unprocessed_case(frame, processed)["case_id"] == "B02-21"
 
 
 def test_recoverable_cases_are_setup_failures_in_frame_order_and_ignore_s1(

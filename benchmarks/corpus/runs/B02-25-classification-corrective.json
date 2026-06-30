@@ -1,0 +1,108 @@
+{
+  "case_id": "B02-25",
+  "classification_correction": {
+    "canonical_classification": "workflow-unavailable",
+    "decision": "D026",
+    "previous_classification": "setup-failed",
+    "previous_report": "benchmarks/corpus/runs/B02-25-nguyenssci2021-data-split.json",
+    "reason": "The completion-only baseline returned exit code 0, so its oracle passed. Internal Hyperopt trial failures nevertheless prevented execution from reaching the frozen train_test_split target. The previous setup-failed classification therefore conflated oracle failure with target non-execution.",
+    "target_execution_status": "not-exercised"
+  },
+  "compatibility_corrections": [
+    {
+      "class": "missing-runtime-test-validation-dependency",
+      "description": "Installed imbalanced-learn independently in the baseline and mutant environments.",
+      "prior_failure": "The native unchanged baseline workflow failed immediately with ModuleNotFoundError: No module named 'imblearn'.",
+      "reason": "The frozen upstream test imports imblearn, and the upstream README objective example explicitly identifies imbalanced-learn as the package to install when that import is missing."
+    },
+    {
+      "class": "non-target-dependency-adjustment",
+      "description": "Constrained the non-target NumPy dependency to numpy<2 independently in the baseline and mutant environments.",
+      "prior_failure": "After installing imbalanced-learn, the unchanged baseline failed in BanditOpt.HyperoptConverter because current NumPy removed np.product.",
+      "reason": "The demonstrated runtime incompatibility was caused by NumPy 2.x ecosystem drift; NumPy is not the mutation target and the repository declares only the lower bound numpy>=1.20.2."
+    },
+    {
+      "class": "non-target-dependency-adjustment",
+      "description": "Constrained the non-target SciPy dependency to scipy<1.17 independently in the baseline and mutant environments.",
+      "prior_failure": "After the NumPy adjustment, SciPy 1.18.1 required NumPy >=2.0 and failed during sklearn import against NumPy 1.26.4.",
+      "reason": "The concretely demonstrated dependency/runtime incompatibility required a SciPy range compatible with NumPy 1.26.4 and Python 3.12; SciPy is not the mutation target and the repository declares only scipy>=1.5.1."
+    }
+  ],
+  "correction_symmetry": true,
+  "corrections_used": 3,
+  "d025_policy": "D025",
+  "environments": {
+    "baseline": "/home/ilya/.cache/mlrepromutate/b02/B02-25/baseline-venv",
+    "mutant": "/home/ilya/.cache/mlrepromutate/b02/B02-25/mutant-venv"
+  },
+  "execution_mode": "primary",
+  "frozen_case": {
+    "candidate_evidence": "train_test_split(X, y, test_size=0.2, stratify=y) -> train_test_split(X, y, test_size=0.2, stratify=None)",
+    "candidate_index": 1,
+    "case_id": "B02-25",
+    "operator": "data-split",
+    "oracle_kind": "completion-only",
+    "repository": "ECOLE-ITN/NguyenSSCI2021",
+    "revision": "563c3048d13ce3b0327913b5d493211dc1cbfe7d",
+    "target": "test/test.py",
+    "workflow": "python test/test.py",
+    "workflow_kind": "upstream-test",
+    "workflow_reference": "test/test.py"
+  },
+  "generated_at_utc": "2026-08-25T08:09:12Z",
+  "infrastructure_valid": true,
+  "mutation": {
+    "applied": false,
+    "candidate_index": null,
+    "outcome": null,
+    "semantic_verification": {
+      "evidence": null,
+      "method": null,
+      "status": "not-run"
+    },
+    "status": "not-evaluated"
+  },
+  "mutation_evaluated": false,
+  "prior_report_path": null,
+  "revision_verification": {
+    "actual_head": "563c3048d13ce3b0327913b5d493211dc1cbfe7d",
+    "matches_frozen_revision": true
+  },
+  "schema_version": 2,
+  "screening": {
+    "baseline": {
+      "command": "python test/test.py",
+      "duration_seconds": 1.5193586539971875,
+      "return_code": 0,
+      "status": "passed",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "documented_setup": {
+      "baseline_command": "pip install .",
+      "baseline_duration_seconds": 2.7686688480025623,
+      "baseline_return_code": 0,
+      "mutant_command": "pip install .",
+      "mutant_duration_seconds": 2.768952697995701,
+      "mutant_return_code": 0,
+      "reference": "readme.md Installation; requirements.txt; setup.py"
+    },
+    "final_failure": "After all three bounded corrections, the unchanged workflow returned exit status zero but every Hyperopt trial failed with 'numpy.random.mtrand.RandomState' object has no attribute 'integers' before obj_func ran. The frozen train_test_split target was therefore not exercised, so the baseline is invalid under the workflow-exercises-target rule and the mutation was not applied or evaluated.",
+    "reason": "The documented setup completed and the unchanged completion-only baseline workflow returned exit code 0. Three D025 compatibility corrections had been applied from concrete prior failures. However, every Hyperopt trial failed before obj_func executed because RandomState lacked integers, so the frozen train_test_split target was never exercised. Under D026, the baseline oracle is therefore recorded as passed while the case is workflow-unavailable for mutation evaluation due to target-not-exercised. The mutation was not applied.",
+    "status": "workflow-unavailable"
+  },
+  "source_verification": {
+    "baseline_frozen_candidate_present": true,
+    "baseline_target_source_unchanged": true,
+    "mutant_frozen_candidate_present": true,
+    "mutant_target_source_unchanged": true,
+    "mutation_not_applied_under_baseline_first_rule": true
+  },
+  "timeout_policy_seconds": {
+    "baseline-validation": 900.0,
+    "clone-checkout-venv": 300.0,
+    "mutant-validation": 900.0,
+    "semantic-verification": 300.0,
+    "setup-install": 1800.0
+  }
+}
