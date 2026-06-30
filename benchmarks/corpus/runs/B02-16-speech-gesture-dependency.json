@@ -20,7 +20,7 @@
     "workflow_kind": "documented-experiment",
     "workflow_reference": "README.md Initial setup and Learn speech-driven gesture generation model; train.py"
   },
-  "generated_at_utc": "2026-08-24T18:51:10Z",
+  "generated_at_utc": "2026-06-24T18:51:10Z",
   "revision_verification": {
     "actual_head": "59e8ebdb0f6e87b0e81268046c99a4d6c9bf62a8",
     "matches_frozen_revision": true

@@ -20,7 +20,7 @@
     "workflow_kind": "documented-example",
     "workflow_reference": "tslearn documentation example gallery"
   },
-  "generated_at_utc": "2026-08-24T12:57:42.864676+00:00",
+  "generated_at_utc": "2026-06-24T12:57:42.864676+00:00",
   "original_attempt": {
     "ledger_record_immutable": true,
     "report_path": "runs/B02-01-tslearn-seed.json",

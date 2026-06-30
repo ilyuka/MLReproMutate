@@ -20,7 +20,7 @@
     "workflow_kind": "documented-experiment",
     "workflow_reference": "README.md Installing/Running the benchmark; gridsearch.py"
   },
-  "generated_at_utc": "2026-08-24T18:16:46Z",
+  "generated_at_utc": "2026-06-24T18:16:46Z",
   "revision_verification": {
     "actual_head": "95feb4683acc421b9fe970b10249e3deec98d7a8",
     "matches_frozen_revision": true

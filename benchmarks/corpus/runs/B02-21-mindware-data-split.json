@@ -41,7 +41,7 @@
     "workflow_kind": "ci",
     "workflow_reference": ".travis.yml; ci_scripts/unittests.sh; examples/ci_examples/example_bagging.py"
   },
-  "generated_at_utc": "2026-08-25T06:39:29Z",
+  "generated_at_utc": "2026-06-25T06:39:29Z",
   "infrastructure_valid": true,
   "mutation": {
     "applied": false,

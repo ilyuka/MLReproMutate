@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at_utc": "2026-08-24T16:52:16Z",
+  "generated_at_utc": "2026-06-24T16:52:16Z",
   "analysis_kind": "secondary-compatibility-sensitivity",
   "sensitivity_policy": "S1",
   "primary_case_identity": {

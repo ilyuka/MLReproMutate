@@ -41,7 +41,7 @@
     "workflow_kind": "documented-experiment",
     "workflow_reference": "README.md Legacy Code command-line instructions"
   },
-  "generated_at_utc": "2026-08-25T08:52:08Z",
+  "generated_at_utc": "2026-06-25T08:52:08Z",
   "infrastructure_valid": true,
   "mutation": {
     "applied": false,

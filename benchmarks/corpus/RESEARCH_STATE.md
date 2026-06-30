@@ -1,6 +1,6 @@
 # MLReproMutate Research State
 
-Last updated: 2026-08-24
+Last updated: 2026-06-24
 
 This file is the canonical handoff snapshot for continuing the empirical
 research work in a new ChatGPT session.
@@ -1042,7 +1042,7 @@ Current next step:
 
 ## B02 execution amendment after B02-02, before B02-03
 
-Adopted 2026-08-24. The exact prospective policy is:
+Adopted 2026-06-24. The exact prospective policy is:
 
     dependency/setup/install:          900 seconds
     clone/checkout/virtualenv creation: 300 seconds

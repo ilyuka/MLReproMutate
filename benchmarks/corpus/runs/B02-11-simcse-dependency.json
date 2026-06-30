@@ -20,7 +20,7 @@
     "workflow_kind": "documented-validation",
     "workflow_reference": "README.md Requirements/Evaluation; evaluation.py"
   },
-  "generated_at_utc": "2026-08-24T18:10:14Z",
+  "generated_at_utc": "2026-06-24T18:10:14Z",
   "revision_verification": {
     "actual_head": "49fa580a853752ede55b8c76d9debf748e214d3f",
     "matches_frozen_revision": true

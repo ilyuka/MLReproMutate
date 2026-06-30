@@ -3,7 +3,7 @@
   "analysis_kind": "secondary-compatibility-sensitivity",
   "sensitivity_policy": "S1",
   "case_id": "B02-05",
-  "generated_at_utc": "2026-08-24T17:50:43Z",
+  "generated_at_utc": "2026-06-24T17:50:43Z",
   "primary_case_identity": {
     "repository": "EthanJamesLew/AutoKoopman",
     "revision": "3808e0f061983388e69df06cc5ceda097773603f",

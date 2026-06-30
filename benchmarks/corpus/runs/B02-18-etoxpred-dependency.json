@@ -20,7 +20,7 @@
     "workflow_kind": "documented-validation",
     "workflow_reference": "README.md Usage; etoxpred_predict.py"
   },
-  "generated_at_utc": "2026-08-24T19:01:17Z",
+  "generated_at_utc": "2026-06-24T19:01:17Z",
   "revision_verification": {
     "actual_head": "deff5be7d5e9951dc0e82e0e63dafc89c74fe883",
     "matches_frozen_revision": true

@@ -20,7 +20,7 @@
     "workflow_kind": "documented-experiment",
     "workflow_reference": "README.md Training; main.py"
   },
-  "generated_at_utc": "2026-08-24T16:06:13Z",
+  "generated_at_utc": "2026-06-24T16:06:13Z",
   "revision_verification": {
     "actual_head": "3abb72840deb954df1c4ea5d89f243d7bd0d085f",
     "matches_frozen_revision": true

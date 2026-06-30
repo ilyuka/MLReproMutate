@@ -22,7 +22,7 @@
     "workflow_kind": "documented-example",
     "workflow_reference": "README.md; examples/quickstart.py"
   },
-  "generated_at_utc": "2026-08-25T08:38:45Z",
+  "generated_at_utc": "2026-06-25T08:38:45Z",
   "infrastructure_valid": true,
   "mutation": {
     "applied": true,

@@ -3,7 +3,7 @@
   "analysis_kind": "secondary-compatibility-sensitivity",
   "sensitivity_policy": "S1",
   "case_id": "B02-03",
-  "generated_at_utc": "2026-08-24T17:40:21Z",
+  "generated_at_utc": "2026-06-24T17:40:21Z",
   "primary_case_identity": {
     "repository": "braindecode/braindecode",
     "revision": "eb3ddee6b72b07ff7457f9273cff179400b925c5",

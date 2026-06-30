@@ -41,7 +41,7 @@
     "workflow_kind": "upstream-test",
     "workflow_reference": "svp/tests/test_svp.py"
   },
-  "generated_at_utc": "2026-08-25T07:53:49Z",
+  "generated_at_utc": "2026-06-25T07:53:49Z",
   "infrastructure_valid": true,
   "mutation": {
     "applied": false,

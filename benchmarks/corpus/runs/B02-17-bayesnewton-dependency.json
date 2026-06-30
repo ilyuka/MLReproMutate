@@ -20,7 +20,7 @@
     "workflow_kind": "upstream-test",
     "workflow_reference": "README.md Step-by-step setup and Run tests; tests/"
   },
-  "generated_at_utc": "2026-08-24T18:55:57Z",
+  "generated_at_utc": "2026-06-24T18:55:57Z",
   "revision_verification": {
     "actual_head": "f72ae9a6ca69f9cce8e62135c9f78dda4825b4df",
     "matches_frozen_revision": true

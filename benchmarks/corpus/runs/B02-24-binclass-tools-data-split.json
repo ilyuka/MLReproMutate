@@ -22,7 +22,7 @@
     "workflow_kind": "upstream-test",
     "workflow_reference": "test/test_1.py"
   },
-  "generated_at_utc": "2026-08-25T08:01:22Z",
+  "generated_at_utc": "2026-06-25T08:01:22Z",
   "infrastructure_valid": true,
   "mutation": {
     "applied": false,

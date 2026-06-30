@@ -20,7 +20,7 @@
     "workflow_kind": "upstream-test",
     "workflow_reference": ".github/workflows/python-package.yml; test/test_rrcf.py"
   },
-  "generated_at_utc": "2026-08-24T15:34:02Z",
+  "generated_at_utc": "2026-06-24T15:34:02Z",
   "revision_verification": {
     "actual_head": "1795a1b4dd39a3ffb196be7e251b177b3d1ab489",
     "matches_frozen_revision": true

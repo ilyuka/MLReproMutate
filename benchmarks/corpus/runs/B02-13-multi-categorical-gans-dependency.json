@@ -20,7 +20,7 @@
     "workflow_kind": "documented-experiment",
     "workflow_reference": "multi_categorical_gans/methods/mc_gumbel/README.md; trainer.py"
   },
-  "generated_at_utc": "2026-08-24T18:19:48Z",
+  "generated_at_utc": "2026-06-24T18:19:48Z",
   "revision_verification": {
     "actual_head": "7234d5dc41f476bb36b00cab13326fcdd5c43fcd",
     "matches_frozen_revision": true

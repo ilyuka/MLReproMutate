@@ -34,7 +34,7 @@
     "workflow_kind": "documented-example",
     "workflow_reference": "examples/learn_physics.py"
   },
-  "generated_at_utc": "2026-08-24T13:48:07+00:00",
+  "generated_at_utc": "2026-06-24T13:48:07+00:00",
   "mutations": [
     {
       "candidate_metadata": {

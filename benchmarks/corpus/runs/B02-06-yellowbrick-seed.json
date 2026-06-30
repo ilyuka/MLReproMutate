@@ -2,7 +2,7 @@
   "case_id": "B02-06",
   "execution_policy": {"amendment": "D024", "baseline_validation_timeout_seconds": 300.0, "clone_checkout_venv_timeout_seconds": 300.0, "mutant_validation_timeout_seconds": 300.0, "semantic_verification_timeout_seconds": 300.0, "setup_install_timeout_seconds": 900.0},
   "frozen_case": {"candidate_evidence": "np.random.seed(23) -> np.random.seed(24)", "candidate_index": 1, "operator": "random-seed", "oracle_kind": "assertion", "repository": "DistrictDataLabs/yellowbrick", "revision": "f7a8e950bd31452ea2f5d402a1c5d519cd163fd5", "target": "tests/test_utils/test_kneed.py", "workflow_command": "make test", "workflow_kind": "upstream-test", "workflow_reference": "Makefile; tests/test_utils/test_kneed.py"},
-  "generated_at_utc": "2026-08-24T15:28:28Z",
+  "generated_at_utc": "2026-06-24T15:28:28Z",
   "revision_verification": {"actual_head": "f7a8e950bd31452ea2f5d402a1c5d519cd163fd5", "matches_frozen_revision": true},
   "schema_version": 2,
   "screening": {

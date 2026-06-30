@@ -20,7 +20,7 @@
     "workflow_kind": "documented-experiment",
     "workflow_reference": "README.md Instructions; paper_scripts/main.sh; run.py"
   },
-  "generated_at_utc": "2026-08-24T15:46:24Z",
+  "generated_at_utc": "2026-06-24T15:46:24Z",
   "revision_verification": {
     "actual_head": "447d2ce8177004203f42d1da87d7f93a2e31ad52",
     "matches_frozen_revision": true

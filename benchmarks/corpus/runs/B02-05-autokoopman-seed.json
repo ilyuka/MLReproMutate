@@ -20,7 +20,7 @@
     "workflow_kind": "documented-experiment",
     "workflow_reference": "benchmarks/trainingCurve.py"
   },
-  "generated_at_utc": "2026-08-24T15:22:37Z",
+  "generated_at_utc": "2026-06-24T15:22:37Z",
   "revision_verification": {
     "actual_head": "3808e0f061983388e69df06cc5ceda097773603f",
     "matches_frozen_revision": true

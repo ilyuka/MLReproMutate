@@ -20,7 +20,7 @@
     "workflow_kind": "documented-example",
     "workflow_reference": "README.md Running the code; swd.py"
   },
-  "generated_at_utc": "2026-08-24T18:48:11Z",
+  "generated_at_utc": "2026-06-24T18:48:11Z",
   "revision_verification": {
     "actual_head": "58acb020f6d22fb7b0f3b7bddbdc1d4c2e46566a",
     "matches_frozen_revision": true

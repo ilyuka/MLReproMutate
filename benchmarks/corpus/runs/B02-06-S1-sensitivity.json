@@ -3,7 +3,7 @@
   "analysis_kind": "secondary-compatibility-sensitivity",
   "sensitivity_policy": "S1",
   "case_id": "B02-06",
-  "generated_at_utc": "2026-08-24T17:23:03Z",
+  "generated_at_utc": "2026-06-24T17:23:03Z",
   "primary_case_identity": {
     "repository": "DistrictDataLabs/yellowbrick",
     "revision": "f7a8e950bd31452ea2f5d402a1c5d519cd163fd5",

@@ -282,7 +282,7 @@ observed kill/survival outcomes.
 
 ## B02 prospective stage-specific timeout amendment
 
-Adopted on 2026-08-24 after B02-02 and before any B02-03 execution, the B02
+Adopted on 2026-06-24 after B02-02 and before any B02-03 execution, the B02
 resource ceilings are:
 
     dependency/setup/install:          900 seconds

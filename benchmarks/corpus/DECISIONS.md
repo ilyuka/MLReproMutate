@@ -522,7 +522,7 @@ any B02 repository.
 
 Decision date:
 
-    2026-08-24, after B02-02 and before any B02-03 execution
+    2026-06-24, after B02-02 and before any B02-03 execution
 
 Decision:
 
@@ -563,7 +563,7 @@ FROZEN PROSPECTIVELY BEFORE B02-03.
 
 Decision date:
 
-    2026-08-24, after B02-08 and before subsequent B02 execution
+    2026-06-24, after B02-08 and before subsequent B02 execution
 
 Decision:
 

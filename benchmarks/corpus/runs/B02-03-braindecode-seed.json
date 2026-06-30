@@ -20,7 +20,7 @@
     "workflow_kind": "documented-example",
     "workflow_reference": "Braindecode example gallery"
   },
-  "generated_at_utc": "2026-08-24T13:21:07+00:00",
+  "generated_at_utc": "2026-06-24T13:21:07+00:00",
   "revision_verification": {
     "actual_head": "eb3ddee6b72b07ff7457f9273cff179400b925c5",
     "matches_frozen_revision": true

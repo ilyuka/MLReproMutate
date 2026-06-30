@@ -20,7 +20,7 @@
     "workflow_kind": "documented-experiment",
     "workflow_reference": "README.md Get Started/Run; trainer/evaluator.py"
   },
-  "generated_at_utc": "2026-08-25T05:52:17Z",
+  "generated_at_utc": "2026-06-25T05:52:17Z",
   "revision_verification": {
     "actual_head": "177c207d4477fa06ddbd7587d18e105e29d6f1dc",
     "matches_frozen_revision": true
