@@ -770,3 +770,32 @@ The final mutation-detection analysis uses canonical D025-compatible results.
 
 Earlier strict executability remains reportable separately as a descriptive
 sensitivity result on environment/setup fragility.
+
+## D026 — Target-execution classification clarification
+
+D026 was adopted after B02-25 and before execution of B02-26.
+
+B02-25 exposed a classification case not explicitly represented by the
+existing execution bookkeeping: the selected completion-only workflow returned
+exit code 0, but internal trial failures prevented execution from reaching the
+frozen mutation target.
+
+This clarification does not change the frozen workflow oracle.
+
+For a completion-only workflow:
+
+- process return code 0 remains a passed baseline oracle;
+- process return code nonzero remains a failed baseline oracle.
+
+However, mutation evaluation additionally requires evidence that execution
+reached the frozen mutation target. If the baseline workflow satisfies its
+declared oracle but the frozen target is not exercised, the mutation is not
+applied and the case is classified as workflow-unavailable for mutation
+evaluation, with the reason recorded as target-not-exercised.
+
+Such a case must not be classified as setup-failed merely because internal
+errors were swallowed by the selected workflow.
+
+This clarification changes no repository, revision, candidate, workflow,
+oracle, timeout, or D025 compatibility-correction budget and is independent of
+mutation outcome.
