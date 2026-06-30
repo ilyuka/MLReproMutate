@@ -1,0 +1,99 @@
+{
+  "case_id": "B02-27",
+  "compatibility_corrections": [
+    {
+      "class": "missing-runtime-test-validation-dependency",
+      "description": "Installed setuptools 84.0.0 in both independent virtual environments before retrying the documented setup.py install command.",
+      "prior_failure": "The native documented setup failed immediately in both environments with ModuleNotFoundError: No module named 'setuptools'.",
+      "reason": "The documented setup.py command concretely required setuptools, which was absent from both fresh virtual environments."
+    },
+    {
+      "class": "missing-runtime-test-validation-dependency",
+      "description": "Installed the runtime dependency set declared by setup.py (NumPy, SciPy, DEAP, and scikit-learn) symmetrically in both environments.",
+      "prior_failure": "The first unchanged baseline validation failed while importing evolutionary_search with ModuleNotFoundError: No module named 'numpy'.",
+      "reason": "The selected workflow concretely demonstrated that the documented setup.py install had not provisioned the package's declared runtime dependencies."
+    },
+    {
+      "class": "non-target-dependency-adjustment",
+      "description": "Attempted to adjust the non-target scikit-learn dependency symmetrically from resolved 1.9.0 to the compatible declared-minimum-era release 0.24.2.",
+      "prior_failure": "The second unchanged baseline validation failed because scikit-learn 1.9.0 no longer exported the private symbol sklearn.model_selection._search._check_param_grid imported by the frozen source.",
+      "reason": "This was a demonstrated runtime API incompatibility in a non-target dependency; scikit-learn 0.24.2 satisfies the frozen setup.py constraint scikit-learn>=0.24.0."
+    }
+  ],
+  "correction_symmetry": true,
+  "corrections_used": 3,
+  "d025_policy": "D025",
+  "environments": {
+    "baseline": "/home/ilya/.cache/mlrepromutate/b02/B02-27/baseline-venv",
+    "mutant": "/home/ilya/.cache/mlrepromutate/b02/B02-27/mutant-venv"
+  },
+  "execution_mode": "primary",
+  "frozen_case": {
+    "candidate_evidence": "StratifiedKFold(n_splits=4) -> StratifiedKFold(n_splits=5)",
+    "candidate_index": 1,
+    "case_id": "B02-27",
+    "operator": "cv-fold-count",
+    "oracle_kind": "assertion",
+    "repository": "rsteca/sklearn-deap",
+    "revision": "3ec2df4ec319dbf7a18b98a43ea30ef10f97bb90",
+    "target": "test.py",
+    "workflow": "python test.py",
+    "workflow_kind": "upstream-test",
+    "workflow_reference": "test.py::TestEvolutionarySearch.test_cv -> readme()"
+  },
+  "generated_at_utc": "2026-08-25T08:45:55Z",
+  "infrastructure_valid": true,
+  "mutation": {
+    "applied": false,
+    "candidate_index": null,
+    "outcome": null,
+    "semantic_verification": {
+      "evidence": null,
+      "method": null,
+      "status": "not-run"
+    },
+    "status": "not-evaluated"
+  },
+  "mutation_evaluated": false,
+  "prior_report_path": null,
+  "revision_verification": {
+    "baseline_head": "3ec2df4ec319dbf7a18b98a43ea30ef10f97bb90",
+    "matches_frozen_revision": true,
+    "mutant_head": "3ec2df4ec319dbf7a18b98a43ea30ef10f97bb90"
+  },
+  "schema_version": 2,
+  "screening": {
+    "baseline": {
+      "command": "python test.py",
+      "duration_seconds": 0.8184210290055489,
+      "return_code": 1,
+      "status": "failed",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "documented_setup": {
+      "baseline_command": "python setup.py install",
+      "baseline_native_duration_seconds": 0.015782378999574576,
+      "baseline_native_return_code": 1,
+      "mutant_command": "python setup.py install",
+      "mutant_native_duration_seconds": 0.015841906002606265,
+      "mutant_native_return_code": 1,
+      "reference": "README.md Install; setup.py"
+    },
+    "final_failure": "After all three bounded corrections, the symmetric scikit-learn 0.24.2 adjustment failed during wheel-requirements preparation under Python 3.12 with ModuleNotFoundError: No module named 'pkg_resources'. The correction budget was exhausted before a valid baseline could be established.",
+    "status": "setup-failed"
+  },
+  "source_verification": {
+    "baseline_repository_clean": true,
+    "frozen_candidate_present": true,
+    "mutant_repository_clean": true,
+    "mutation_not_applied_under_baseline_first_rule": true
+  },
+  "timeout_policy_seconds": {
+    "baseline-validation": 900.0,
+    "clone-checkout-venv": 300.0,
+    "mutant-validation": 900.0,
+    "semantic-verification": 300.0,
+    "setup-install": 1800.0
+  }
+}
