@@ -1,0 +1,95 @@
+{
+  "case_id": "B02-23",
+  "compatibility_corrections": [
+    {
+      "class": "environment-normalization",
+      "description": "Set PYTHONPATH to each corresponding unchanged source checkout for baseline and mutant validation.",
+      "prior_failure": "The native baseline failed during test collection because the built wheel omitted svp/version.txt, causing svp/__init__.py to raise FileNotFoundError.",
+      "reason": "Importing the unchanged checkout is an environment-only path normalization that supplies the package data present at the frozen revision without patching source or changing workflow semantics."
+    },
+    {
+      "class": "environment-normalization",
+      "description": "Prepended each corresponding environment bin directory to PATH for baseline and mutant validation.",
+      "prior_failure": "After source-path normalization, candidate extension loading failed with RuntimeError: Ninja is required even though the documented Ninja dependency was installed, because the clean isolation PATH did not expose its executable.",
+      "reason": "Exposing the already-installed environment executable is an environment-only PATH normalization and does not change candidate source, dependencies, workflow, or research semantics."
+    },
+    {
+      "class": "historical-runtime-provisioning",
+      "description": "Provisioned the upstream-CI-supported Python 3.9 runtime independently in baseline-conda and mutant-conda using the public Miniconda3-py39_24.1.2-0 Linux archive, then repeated the documented setup symmetrically.",
+      "prior_failure": "With Ninja exposed, native extension compilation under host Python 3.12 failed because Python.h was unavailable.",
+      "reason": "The frozen upstream GitHub Actions workflow explicitly tests Python 3.7, 3.8, and 3.9 and states that the contemporary PyTorch stack did not support Python 3.10; the demonstrated header/build failure justified provisioning a documented historical runtime."
+    }
+  ],
+  "correction_symmetry": true,
+  "corrections_used": 3,
+  "d025_policy": "D025",
+  "environments": {
+    "baseline": "/home/ilya/.cache/mlrepromutate/b02/B02-23/baseline-conda",
+    "mutant": "/home/ilya/.cache/mlrepromutate/b02/B02-23/mutant-conda"
+  },
+  "execution_mode": "primary",
+  "frozen_case": {
+    "candidate_evidence": "train_test_split(X, y, test_size=0.5, random_state=2021, stratify=y) -> train_test_split(X, y, test_size=0.5, random_state=2021, stratify=None)",
+    "candidate_index": 1,
+    "case_id": "B02-23",
+    "operator": "data-split",
+    "oracle_kind": "completion-only",
+    "repository": "tfmortie/setvaluedprediction",
+    "revision": "8c6343dd9c04801e9c887979b32adf760ff784df",
+    "target": "svp/tests/test_svp.py",
+    "workflow": "pytest svp/tests/test_svp.py::test_digits_sk",
+    "workflow_kind": "upstream-test",
+    "workflow_reference": "svp/tests/test_svp.py"
+  },
+  "generated_at_utc": "2026-08-25T07:53:49Z",
+  "infrastructure_valid": true,
+  "mutation": {
+    "applied": false,
+    "candidate_index": null,
+    "outcome": null,
+    "semantic_verification": {
+      "evidence": null,
+      "method": null,
+      "status": "not-run"
+    },
+    "status": "not-evaluated"
+  },
+  "mutation_evaluated": false,
+  "prior_report_path": null,
+  "revision_verification": {
+    "actual_head": "8c6343dd9c04801e9c887979b32adf760ff784df",
+    "matches_frozen_revision": true
+  },
+  "schema_version": 2,
+  "screening": {
+    "baseline": {
+      "command": "pytest svp/tests/test_svp.py::test_digits_sk",
+      "duration_seconds": 19.70501515700016,
+      "return_code": 4,
+      "status": "failed",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "documented_setup": {
+      "command": "pip install . -r requirements.txt pytest",
+      "native_duration_seconds": 703.4411395489951,
+      "native_return_code": 0,
+      "reference": "README.md Installation; .github/workflows/build.yml"
+    },
+    "final_failure": "After all three bounded corrections, the unchanged baseline workflow still failed during test collection because svp.multiclass imported the removed private scikit-learn symbol sklearn.utils._message_with_time. The frozen split was not executed.",
+    "status": "setup-failed"
+  },
+  "source_verification": {
+    "baseline_repository_clean": true,
+    "frozen_candidate_present": true,
+    "mutant_repository_clean": true,
+    "mutation_not_applied_under_baseline_first_rule": true
+  },
+  "timeout_policy_seconds": {
+    "baseline-validation": 900.0,
+    "clone-checkout-venv": 300.0,
+    "mutant-validation": 900.0,
+    "semantic-verification": 300.0,
+    "setup-install": 1800.0
+  }
+}
