@@ -1,0 +1,95 @@
+{
+  "case_id": "B02-22",
+  "compatibility_corrections": [
+    {
+      "class": "missing-runtime-test-validation-dependency",
+      "description": "Installed pytest 9.1.1 in both independent virtual environments.",
+      "prior_failure": "The first baseline validation stopped immediately with No module named pytest.",
+      "reason": "The frozen workflow is an upstream pytest test, and its execution concretely demonstrated that pytest was a missing validation dependency omitted from requirements.txt."
+    },
+    {
+      "class": "missing-runtime-test-validation-dependency",
+      "description": "Installed pandas 3.0.5 in both independent virtual environments.",
+      "prior_failure": "After pytest was installed, the baseline test stopped at its direct import pandas as pd with ModuleNotFoundError: No module named 'pandas'.",
+      "reason": "The selected upstream test concretely demonstrated that pandas was a missing runtime dependency omitted from requirements.txt."
+    },
+    {
+      "class": "non-target-dependency-adjustment",
+      "description": "Adjusted the non-target pandas dependency symmetrically from resolved 3.0.5 to the compatible pre-3 range, resolving 2.3.3.",
+      "prior_failure": "With pandas 3.0.5, the baseline failed during preprocessing because assignment of encoded values to OpenML categorical columns raised TypeError: Invalid value for dtype 'category'.",
+      "reason": "The failure demonstrated a runtime incompatibility between the repository's preprocessing operations and pandas 3; pandas is not the frozen data-split mutation target."
+    }
+  ],
+  "correction_symmetry": true,
+  "corrections_used": 3,
+  "d025_policy": "D025",
+  "environments": {
+    "baseline": "/home/ilya/.cache/mlrepromutate/b02/B02-22/baseline-venv",
+    "mutant": "/home/ilya/.cache/mlrepromutate/b02/B02-22/mutant-venv"
+  },
+  "execution_mode": "primary",
+  "frozen_case": {
+    "candidate_evidence": "train_test_split(data, label, train_size=0.2, random_state=random_seed, stratify=label) -> train_test_split(data, label, train_size=0.2, random_state=random_seed, stratify=None)",
+    "candidate_index": 1,
+    "case_id": "B02-22",
+    "operator": "data-split",
+    "oracle_kind": "completion-only",
+    "repository": "Alcoholrithm/PTaRL",
+    "revision": "2845a6cc9ee376453d1693a996374c42bd984f2a",
+    "target": "test/test_mlp_adults.py",
+    "workflow": "pytest test/test_mlp_adults.py",
+    "workflow_kind": "upstream-test",
+    "workflow_reference": "test/test_mlp_adults.py"
+  },
+  "generated_at_utc": "2026-08-25T07:05:00Z",
+  "infrastructure_valid": true,
+  "mutation": {
+    "applied": false,
+    "candidate_index": null,
+    "outcome": null,
+    "semantic_verification": {
+      "evidence": null,
+      "method": null,
+      "status": "not-run"
+    },
+    "status": "not-evaluated"
+  },
+  "mutation_evaluated": false,
+  "prior_report_path": null,
+  "revision_verification": {
+    "actual_head": "2845a6cc9ee376453d1693a996374c42bd984f2a",
+    "matches_frozen_revision": true
+  },
+  "schema_version": 2,
+  "screening": {
+    "baseline": {
+      "command": "pytest test/test_mlp_adults.py",
+      "duration_seconds": 31.154143050996936,
+      "return_code": 1,
+      "status": "failed",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "documented_setup": {
+      "command": "pip install -r requirements.txt",
+      "native_duration_seconds": 1015.6173663640002,
+      "native_return_code": 0,
+      "reference": "README.md Getting Started; requirements.txt"
+    },
+    "final_failure": "After all three bounded corrections, the unchanged baseline workflow failed while reloading its first-phase Lightning checkpoint because current PyTorch defaulted torch.load to weights_only=True and rejected the serialized DataLoader global with _pickle.UnpicklingError.",
+    "status": "setup-failed"
+  },
+  "source_verification": {
+    "baseline_repository_clean": true,
+    "frozen_candidate_present": true,
+    "mutant_repository_clean": true,
+    "mutation_not_applied_under_baseline_first_rule": true
+  },
+  "timeout_policy_seconds": {
+    "baseline-validation": 900.0,
+    "clone-checkout-venv": 300.0,
+    "mutant-validation": 900.0,
+    "semantic-verification": 300.0,
+    "setup-install": 1800.0
+  }
+}
