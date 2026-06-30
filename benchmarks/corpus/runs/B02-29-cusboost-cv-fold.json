@@ -1,0 +1,89 @@
+{
+  "case_id": "B02-29",
+  "compatibility_corrections": [
+    {
+      "class": "missing-runtime-test-validation-dependency",
+      "description": "Installed the experiment's directly imported runtime stack (NumPy, SciPy, pandas, scikit-learn, matplotlib, and imbalanced-learn) in both independent virtual environments.",
+      "prior_failure": "The native documented workflow failed with ModuleNotFoundError: No module named 'numpy'.",
+      "reason": "The selected workflow concretely demonstrated that its imported numerical and ML runtime dependencies were absent, and the repository provides no separate installation command."
+    },
+    {
+      "class": "non-target-dependency-adjustment",
+      "description": "Attempted to install scipy<1.10 in both independent virtual environments, selecting the last range that still provided the repository's imported scipy.interp API.",
+      "prior_failure": "After the runtime stack was installed, the workflow failed with ImportError because SciPy 1.18.1 no longer exports interp from its top-level namespace.",
+      "reason": "The failure demonstrated a concrete non-target dependency API incompatibility; SciPy is not the frozen mutation target."
+    }
+  ],
+  "correction_symmetry": true,
+  "corrections_used": 2,
+  "d025_policy": "D025",
+  "environments": {
+    "baseline": "/home/ilya/.cache/mlrepromutate/b02/B02-29/baseline/.venv",
+    "mutant": "/home/ilya/.cache/mlrepromutate/b02/B02-29/mutant/.venv"
+  },
+  "execution_mode": "primary",
+  "frozen_case": {
+    "candidate_evidence": "StratifiedKFold(n_splits=5, shuffle=True) -> StratifiedKFold(n_splits=6, shuffle=True)",
+    "candidate_index": 1,
+    "case_id": "B02-29",
+    "operator": "cv-fold-count",
+    "oracle_kind": "completion-only",
+    "repository": "farshidrayhancv/CUSBoost",
+    "revision": "6b489e099bdb83e2089b2f7f105b72ea9b5becad",
+    "target": "run.py",
+    "workflow": "python run.py",
+    "workflow_kind": "documented-experiment",
+    "workflow_reference": "README.md: CUSBoost code can be run as-is; bundled sample dataset"
+  },
+  "generated_at_utc": "2026-08-25T08:58:58Z",
+  "infrastructure_valid": true,
+  "mutation": {
+    "applied": false,
+    "candidate_index": null,
+    "outcome": null,
+    "semantic_verification": {
+      "evidence": null,
+      "method": null,
+      "status": "not-run"
+    },
+    "status": "not-evaluated"
+  },
+  "mutation_evaluated": false,
+  "prior_report_path": null,
+  "revision_verification": {
+    "baseline_head": "6b489e099bdb83e2089b2f7f105b72ea9b5becad",
+    "matches_frozen_revision": true,
+    "mutant_head": "6b489e099bdb83e2089b2f7f105b72ea9b5becad"
+  },
+  "schema_version": 2,
+  "screening": {
+    "baseline": {
+      "command": "python run.py",
+      "duration_seconds": 0.9173269770035404,
+      "return_code": 1,
+      "status": "failed",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "documented_setup": {
+      "baseline_command": null,
+      "mutant_command": null,
+      "reference": "README.md: CUSBoost code can be run as-is; bundled sample dataset"
+    },
+    "final_failure": "The scipy<1.10 adjustment resolved to SciPy 1.9.3, for which no Python 3.12 wheel was available; its source metadata build failed because no Fortran compiler was available. The repository documents no historical Python runtime, system package installation is forbidden, and source compatibility patches are forbidden, so no further D025 correction was methodologically available.",
+    "status": "setup-failed"
+  },
+  "source_verification": {
+    "baseline_tracked_source_clean": true,
+    "frozen_candidate_present": true,
+    "mutant_tracked_source_clean": true,
+    "mutation_not_applied_under_baseline_first_rule": true
+  },
+  "timeout_policy_seconds": {
+    "baseline-validation": 900.0,
+    "clone-checkout-venv": 300.0,
+    "mutant-validation": 900.0,
+    "semantic-verification": 300.0,
+    "setup-install": 1800.0
+  }
+}
