@@ -1,0 +1,101 @@
+{
+  "case_id": "B02-28",
+  "compatibility_corrections": [
+    {
+      "class": "missing-runtime-test-validation-dependency",
+      "description": "Preinstalled NumPy 2.5.2 in both independent virtual environments before retrying the documented package installation.",
+      "prior_failure": "The native documented setup failed identically in both environments while preparing scikit-multiflow 0.5.3 because its build requested that NumPy be installed first.",
+      "reason": "The scikit-multiflow build concretely identified NumPy as a missing build/runtime prerequisite that had to be present before installing the documented package set."
+    },
+    {
+      "class": "environment-normalization",
+      "description": "Retried the scikit-multiflow installation with pip build isolation disabled in both environments so the preinstalled NumPy prerequisite was visible to its build.",
+      "prior_failure": "After NumPy was preinstalled, pip's isolated build environment still failed with the same instruction to install NumPy first because the isolated environment could not see the environment-level prerequisite.",
+      "reason": "Disabling pip build isolation was an environment-only packaging normalization directed by the demonstrated isolation failure and did not alter repository source or research semantics."
+    },
+    {
+      "class": "missing-runtime-test-validation-dependency",
+      "description": "Installed setuptools 84.0.0 in both independent virtual environments before retrying the normalized setup.",
+      "prior_failure": "The no-build-isolation retry failed identically in both environments with ModuleNotFoundError: No module named 'setuptools'.",
+      "reason": "The selected documented setup concretely demonstrated that setuptools was a missing package-build dependency."
+    }
+  ],
+  "correction_symmetry": true,
+  "corrections_used": 3,
+  "d025_policy": "D025",
+  "environments": {
+    "baseline": "/home/ilya/.cache/mlrepromutate/b02/B02-28/baseline-venv",
+    "mutant": "/home/ilya/.cache/mlrepromutate/b02/B02-28/mutant-venv"
+  },
+  "execution_mode": "primary",
+  "frozen_case": {
+    "candidate_evidence": "StratifiedKFold(n_splits=2, shuffle=True) -> StratifiedKFold(n_splits=3, shuffle=True)",
+    "candidate_index": 1,
+    "case_id": "B02-28",
+    "operator": "cv-fold-count",
+    "oracle_kind": "completion-only",
+    "repository": "ogozuacik/d3-discriminative-drift-detector-concept-drift",
+    "revision": "de9dbc748b17b3f95c8328930d4d6035084047fd",
+    "target": "D3.py",
+    "workflow": "python D3.py elec.csv 100 0.1 0.7",
+    "workflow_kind": "documented-experiment",
+    "workflow_reference": "README.md Legacy Code command-line instructions"
+  },
+  "generated_at_utc": "2026-08-25T08:52:08Z",
+  "infrastructure_valid": true,
+  "mutation": {
+    "applied": false,
+    "candidate_index": null,
+    "outcome": null,
+    "semantic_verification": {
+      "evidence": null,
+      "method": null,
+      "status": "not-run"
+    },
+    "status": "not-evaluated"
+  },
+  "mutation_evaluated": false,
+  "prior_report_path": null,
+  "revision_verification": {
+    "baseline_head": "de9dbc748b17b3f95c8328930d4d6035084047fd",
+    "matches_frozen_revision": true,
+    "mutant_head": "de9dbc748b17b3f95c8328930d4d6035084047fd"
+  },
+  "schema_version": 2,
+  "screening": {
+    "baseline": {
+      "command": "python D3.py elec.csv 100 0.1 0.7",
+      "duration_seconds": null,
+      "return_code": null,
+      "status": "not-run",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "documented_setup": {
+      "baseline_command": "pip install scikit-multiflow scikit-learn pandas numpy matplotlib",
+      "baseline_native_duration_seconds": 2.8694783140017535,
+      "baseline_native_return_code": 1,
+      "dataset_reference": "README.md Legacy Code; linked concept-drift-datasets-scikit-multiflow repository real-world/elec.csv",
+      "mutant_command": "pip install scikit-multiflow scikit-learn pandas numpy matplotlib",
+      "mutant_native_duration_seconds": 2.3679878399998415,
+      "mutant_native_return_code": 1,
+      "reference": "README.md Legacy Code"
+    },
+    "final_failure": "After all three bounded D025 corrections, scikit-multiflow 0.5.3 still could not be installed in either environment: its metadata build imported numpy.distutils, which is absent from resolved NumPy 2.5.2. The correction budget was exhausted before a valid baseline could be established.",
+    "status": "setup-failed"
+  },
+  "source_verification": {
+    "baseline_tracked_source_clean": true,
+    "frozen_candidate_present": true,
+    "mutant_tracked_source_clean": true,
+    "mutation_not_applied_under_baseline_first_rule": true,
+    "untracked_documented_dataset": "elec.csv"
+  },
+  "timeout_policy_seconds": {
+    "baseline-validation": 900.0,
+    "clone-checkout-venv": 300.0,
+    "mutant-validation": 900.0,
+    "semantic-verification": 300.0,
+    "setup-install": 1800.0
+  }
+}
