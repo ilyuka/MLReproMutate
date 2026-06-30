@@ -1,0 +1,91 @@
+{
+  "case_id": "B02-26",
+  "compatibility_corrections": [],
+  "correction_symmetry": true,
+  "corrections_used": 0,
+  "d025_policy": "D025",
+  "environments": {
+    "baseline": "/home/ilya/.cache/mlrepromutate/b02/B02-26/baseline-venv-valid",
+    "mutant": "/home/ilya/.cache/mlrepromutate/b02/B02-26/mutant-venv"
+  },
+  "execution_mode": "primary",
+  "frozen_case": {
+    "candidate_evidence": "train_test_split(df, test_size=0.3, random_state=0, stratify=df[TARGET]) -> train_test_split(df, test_size=0.3, random_state=0, stratify=None)",
+    "candidate_index": 1,
+    "case_id": "B02-26",
+    "operator": "data-split",
+    "oracle_kind": "completion-only",
+    "repository": "tungtokyo1108/PolicySynth",
+    "revision": "cbf144ab0fdb4fd569fc1b1bb587d67373a76e5c",
+    "target": "examples/quickstart.py",
+    "workflow": "python examples/quickstart.py",
+    "workflow_kind": "documented-example",
+    "workflow_reference": "README.md; examples/quickstart.py"
+  },
+  "generated_at_utc": "2026-08-25T08:38:45Z",
+  "infrastructure_valid": true,
+  "mutation": {
+    "applied": true,
+    "candidate_index": 1,
+    "outcome": "survived",
+    "semantic_verification": {
+      "evidence": "The stratified and unstratified training-index SHA-256 digests differed; their training memberships had a symmetric difference of 2,970 rows. Holdout class counts changed from No=1,552 and Yes=561 to No=1,560 and Yes=553.",
+      "method": "Inside the semantic-verification sandbox, loaded the bundled Telco sample and compared train_test_split with the frozen baseline stratify expression against stratify=None using the same test_size and random_state.",
+      "status": "confirmed-non-equivalent"
+    },
+    "status": "evaluated"
+  },
+  "mutation_evaluated": true,
+  "prior_report_path": null,
+  "revision_verification": {
+    "baseline_head": "cbf144ab0fdb4fd569fc1b1bb587d67373a76e5c",
+    "matches_frozen_revision": true,
+    "mutant_head": "cbf144ab0fdb4fd569fc1b1bb587d67373a76e5c"
+  },
+  "schema_version": 2,
+  "screening": {
+    "baseline": {
+      "command": "python examples/quickstart.py",
+      "duration_seconds": 20.961461638995388,
+      "return_code": 0,
+      "status": "passed",
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "documented_setup": {
+      "baseline_command": "pip install -e .",
+      "baseline_duration_seconds": 619.8668309179993,
+      "baseline_return_code": 0,
+      "mutant_command": "pip install -e .",
+      "mutant_duration_seconds": 363.5636112639986,
+      "mutant_return_code": 0,
+      "reference": "README.md Install; examples/quickstart.py"
+    },
+    "status": "eligible"
+  },
+  "source_verification": {
+    "baseline_repository_clean": true,
+    "frozen_candidate_present": true,
+    "mutant_diff_only_frozen_candidate": true,
+    "mutation_applied_exactly_once": true
+  },
+  "timeout_policy_seconds": {
+    "baseline-validation": 900.0,
+    "clone-checkout-venv": 300.0,
+    "mutant-validation": 900.0,
+    "semantic-verification": 300.0,
+    "setup-install": 1800.0
+  },
+  "validation": {
+    "baseline_stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-26/stages/baseline/stdout.log",
+    "mutant": {
+      "command": "python examples/quickstart.py",
+      "duration_seconds": 19.004721924997284,
+      "return_code": 0,
+      "timed_out": false,
+      "timeout_seconds": 900.0
+    },
+    "mutant_stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-26/stages/mutant/stdout.log",
+    "semantic_verification_stdout_log": "/home/ilya/.cache/mlrepromutate/b02/B02-26/stages/semantic-verification/stdout.log"
+  }
+}
