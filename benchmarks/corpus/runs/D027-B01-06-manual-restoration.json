@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "protocol": "D027",
+  "analysis_kind": "secondary-manual-historical-environment-restoration",
+  "case_id": "B01-06",
+  "generated_at_utc": "2026-07-26T07:48:25Z",
+  "frozen_case": {
+    "repository": "KoheiObata/DMM",
+    "revision": "3e2c421f5d45d3ce05b673dc473c855d80bf2da7",
+    "operator": "dependency-pin",
+    "target_file": "requirements.txt",
+    "candidate_index": null,
+    "candidate": null,
+    "candidate_evidence": null,
+    "workflow_command": "python experiment_synthetic.py",
+    "workflow_kind": "documented-experiment",
+    "workflow_reference": "README.md",
+    "oracle": {
+      "kind": "completion-only",
+      "acceptance_rule": "The unchanged documented experiment must complete with process exit status zero within the applicable validation ceiling.",
+      "provenance": "The schema-version-1 canonical record predates the oracle_kind field; its recorded baseline evidence and eligibility reason define successful completion as the workflow acceptance condition."
+    },
+    "research_reference": "https://doi.org/10.1145/3589334.3645461"
+  },
+  "canonical_history": {
+    "status": "setup-failed",
+    "preserved": true,
+    "screening_jsonl_modified": false,
+    "baseline_duration_seconds": 474.06,
+    "compatibility_retry_used": false,
+    "reason": "The documented synthetic experiment completed successfully in 474.06 seconds, exceeding the frozen corpus default validation timeout of 300 seconds. No repository-specific timeout had been predeclared, so the baseline was ineligible and mutation was not evaluated.",
+    "mutation_status": "not-evaluated",
+    "mutation_candidate_index": null
+  },
+  "historical_evidence_consulted": [
+    {
+      "source": "benchmarks/corpus/screening.jsonl and tag corpus-b01-calibration",
+      "finding": "The canonical B01-06 record fixes repository, revision, operator, workflow, historical duration/failure, and mutation.status=not-evaluated, but records candidate_index=null and no mutation report."
+    },
+    {
+      "source": "benchmarks/corpus/RESEARCH_STATE.md",
+      "finding": "B01-06 is preserved as setup-failed because the documented workflow took approximately 474 seconds against the historical 300-second ceiling; mutation was not evaluated."
+    },
+    {
+      "source": "reachable MLReproMutate Git history, including commit 7f950062a735ae4c9a7a26e009bdf31eccc74ab5",
+      "finding": "The B01-06 screening commit adds only the canonical screening line and does not identify a dependency candidate."
+    },
+    {
+      "source": "unreachable/dangling MLReproMutate Git commits",
+      "finding": "Searches for B01-06 and KoheiObata/DMM found historical screening/state copies but no recorded dependency candidate or B01-06 mutation report."
+    },
+    {
+      "source": "KoheiObata/DMM at frozen revision 3e2c421f5d45d3ce05b673dc473c855d80bf2da7",
+      "finding": "README.md documents Python 3.8, pip install -r requirements.txt, and python experiment_synthetic.py. requirements.txt contains multiple supported exact dependency pins, so the source alone cannot identify which pin was frozen for B01-06."
+    },
+    {
+      "source": "existing D027 manual-restoration reports, especially D027-B01-07-manual-restoration.json",
+      "finding": "Established D027 provenance treats an unrecorded dependency-pin candidate as an identity limit and prohibits selecting a post-hoc candidate."
+    }
+  ],
+  "identity_recovery": {
+    "status": "failed",
+    "terminal_reason": "frozen-candidate-not-recorded",
+    "exact_candidate_recovered": false,
+    "target_file_recovered": true,
+    "workflow_recovered": true,
+    "oracle_recovered": true,
+    "historical_primary_failure_recovered": true,
+    "reason": "The exact frozen dependency mutation candidate cannot be recovered from canonical evidence. requirements.txt contains multiple exact pins eligible for package==version -> package>=version, and selecting any one now would infer or substitute a post-hoc candidate in violation of D027."
+  },
+  "chronology": [
+    {
+      "index": 1,
+      "event": "identity-audit",
+      "result": "repository, revision, operator, target file, workflow, oracle, and canonical failure recovered"
+    },
+    {
+      "index": 2,
+      "event": "candidate-audit",
+      "result": "failed: canonical record has candidate_index=null, no B01-06 run report exists, and Git-history evidence does not identify the candidate"
+    },
+    {
+      "index": 3,
+      "event": "protocol-stop",
+      "result": "candidate execution and restoration were not started because exact frozen empirical identity is a prerequisite"
+    }
+  ],
+  "restoration": {
+    "status": "not-restored",
+    "terminal_reason": "frozen-candidate-not-recorded",
+    "correction_budget": 8,
+    "corrections_used": 0,
+    "corrections": [],
+    "historically_plausible_environment": {
+      "documented_python": "3.8",
+      "documented_install_command": "pip install -r requirements.txt",
+      "recipe_frozen": false,
+      "reason": "Upstream evidence identifies a plausible starting environment, but D027 execution cannot begin without the exact frozen candidate."
+    },
+    "tentative_baseline": {
+      "status": "not-run",
+      "return_code": null
+    },
+    "independent_baseline_reproduction": {
+      "status": "not-run",
+      "return_code": null,
+      "reason": "No restoration recipe was eligible to be tested or frozen after the identity prerequisite failed."
+    },
+    "frozen_restoration_recipe": null
+  },
+  "environment_symmetry": {
+    "status": "not-applicable",
+    "baseline_environment_created": false,
+    "mutant_environment_created": false,
+    "same_recipe": null,
+    "reason": "Mutation evaluation was prohibited before environments were provisioned."
+  },
+  "mutation": {
+    "applied": false,
+    "exact_mutation": null,
+    "status": "not-run",
+    "outcome": null,
+    "reason": "The exact frozen dependency-pin mutation is not recorded and may not be inferred or substituted."
+  },
+  "target_execution_evidence": {
+    "status": "not-run",
+    "target_exercised": null,
+    "reason": "Baseline and mutant workflows were not executed after the frozen-identity failure."
+  },
+  "semantic_verification": {
+    "status": "not-run",
+    "dependency_resolution_changed": null,
+    "baseline_resolved_version": null,
+    "mutant_resolved_version": null,
+    "reason": "No protocol-valid mutation pair exists."
+  },
+  "d027_classification": {
+    "restoration": "not-restored",
+    "terminal_reason": "frozen-candidate-not-recorded",
+    "mutation_outcome": null,
+    "semantic_status": "not-run",
+    "primary_result_rewritten": false
+  },
+  "primary_history_confirmation": "The canonical B01-06 screening.jsonl record remains unchanged; D027 is recorded only in this separate restoration-layer report."
+}

@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "protocol": "D027",
+  "analysis_kind": "secondary-manual-historical-environment-restoration",
+  "case_id": "B01-07",
+  "generated_at_utc": "2026-07-26T06:58:54Z",
+  "frozen_case": {
+    "repository": "sigeisler/robustness_of_gnns_at_scale",
+    "revision": "d28a9a20794d221bb25657db2c7caa2b53d1032f",
+    "operator": "dependency-pin",
+    "workflow_command": "python -m pytest tests",
+    "workflow_kind": "upstream-test",
+    "research_reference": "https://arxiv.org/abs/2110.14038",
+    "candidate_index": null,
+    "candidate_evidence": null
+  },
+  "canonical_history": {
+    "status": "setup-failed",
+    "preserved": true,
+    "screening_jsonl_modified": false,
+    "baseline_duration_seconds": 1.07,
+    "compatibility_retry_used": true,
+    "reason": "After the canonical compatibility retry using typeguard==2.11.1, pytest collection failed because torch_sparse and torch_geometric were unavailable."
+  },
+  "identity_recovery": {
+    "status": "failed",
+    "terminal_reason": "frozen-candidate-not-recorded",
+    "evidence": [
+      "Canonical screening record has mutation.candidate_index=null.",
+      "No B01-07 mutation run report exists.",
+      "Current RESEARCH_STATE records only 'Mutation not evaluated'.",
+      "Reachable Git history did not contain a B01-07 dependency candidate.",
+      "Unreachable/dangling Git commits inspected did not contain a B01-07 dependency candidate.",
+      "requirements.txt contains multiple supported exact dependency pins, so selecting one now would create a post-hoc candidate."
+    ]
+  },
+  "historical_environment_evidence": {
+    "python": "3.7.6",
+    "pytorch": "1.8.1",
+    "cpu_setup_documented": true,
+    "documented_test_workflow": "pytest tests",
+    "missing_dependency_evidence": [
+      "torch_sparse",
+      "torch_geometric"
+    ],
+    "notes": "Upstream documentation and setup/CI provide evidence for a plausible historical environment, including a CPU-only PyTorch route and PyG installation. Environment restoration was intentionally not executed because no protocol-valid frozen mutation candidate could be recovered."
+  },
+  "restoration": {
+    "status": "not-attempted",
+    "terminal_reason": "frozen-candidate-not-recorded",
+    "corrections_used": 0,
+    "baseline": {
+      "status": "not-run",
+      "return_code": null
+    }
+  },
+  "mutation": {
+    "applied": false,
+    "status": "not-run",
+    "outcome": null,
+    "semantic_status": "not-run"
+  },
+  "d027_classification": {
+    "restoration": "not-attempted",
+    "terminal_reason": "frozen-candidate-not-recorded",
+    "mutation_outcome": null,
+    "semantic_status": "not-run",
+    "primary_result_rewritten": false
+  }
+}

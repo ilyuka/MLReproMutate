@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "protocol": "D027",
+  "analysis_kind": "secondary-manual-historical-environment-restoration",
+  "case_id": "B01-02",
+  "generated_at_utc": "2026-07-26T06:52:06Z",
+  "frozen_case": {
+    "repository": "scikit-learn-contrib/imbalanced-learn",
+    "revision": "8504e95f0160f61d1b617ca66f779646d2ee609e",
+    "operator": "data-split",
+    "target": "examples/ensemble/plot_comparison_ensemble_classifier.py",
+    "mutation": "stratify=y -> stratify=None",
+    "workflow_command": "python examples/ensemble/plot_comparison_ensemble_classifier.py",
+    "workflow_kind": "documented-example",
+    "research_reference": "https://jmlr.org/papers/v18/16-365.html"
+  },
+  "canonical_history": {
+    "status": "setup-failed",
+    "preserved": true,
+    "screening_jsonl_modified": false,
+    "reason": "The documented example could not complete because the required Zenodo benchmark archive was unreachable during the canonical run."
+  },
+  "restoration": {
+    "status": "restored",
+    "corrections_used": 1,
+    "corrections": [
+      {
+        "index": 1,
+        "class": "provenance-preserving-resource-provisioning",
+        "action": "Provision the exact official Zenodo benchmark archive used by imblearn.datasets.fetch_datasets into the scikit-learn data cache.",
+        "result": "successful",
+        "resource": {
+          "zenodo_record": "61452",
+          "filename": "benchmark-imbalanced-learn.tar.gz",
+          "md5": "c0fe871756c0062ac3f3cb783d70659f",
+          "sha256": "877acbc0f9e40b05e930b8db502a9871737fe61cc3e356b5af055dc125578f6a"
+        }
+      }
+    ],
+    "environment_normalizations": [
+      {
+        "class": "matplotlib-headless-normalization",
+        "action": "MPLBACKEND=Agg",
+        "substantive_correction": false
+      }
+    ],
+    "resolved_environment": {
+      "python": "3.12.3",
+      "numpy": "2.5.2",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.0",
+      "imbalanced-learn": "0.15.dev0",
+      "matplotlib": "3.11.1",
+      "seaborn": "0.13.2"
+    },
+    "tentative_baseline": {
+      "return_code": 0,
+      "status": "pass"
+    },
+    "independent_baseline_reproduction": {
+      "return_code": 0,
+      "status": "pass",
+      "target_exercised": true,
+      "stdout_sha256": "b476154f19e7d32f9f236106e6c56d2e4231f3910d7de98a9417eed44066c204"
+    }
+  },
+  "final_pair": {
+    "valid": true,
+    "environment_symmetry": true,
+    "resource_symmetry": true,
+    "only_intended_source_difference": true,
+    "baseline": {
+      "return_code": 0,
+      "target_exercised": true,
+      "stdout_sha256": "2a91933f7e4183158f3e4e08816e901aae2a6d0616ca520303af8073b80b2b69"
+    },
+    "mutant": {
+      "return_code": 0,
+      "target_exercised": true,
+      "stdout_sha256": "259a86d4ea95aab4d71774ca51af8dddd7fb58930a203e905330e413189403e9"
+    }
+  },
+  "semantic_verification": {
+    "status": "confirmed-non-equivalent",
+    "method": "compare exact train/test index sets under frozen and mutated stratify arguments",
+    "baseline_train_sha256": "11d5fbb7c65618c0e2fdfbf37fea743e44700ce7df01622b119e97ad3af822dc",
+    "baseline_test_sha256": "5d410dfcee1390a04e97768c7d104fa9d86c367d598a8d57014c9d95a469c40b",
+    "mutant_train_sha256": "80c64e148936f364c5013d56d83f9e99c2e5899d0907a12d61bdc9ab366c1976",
+    "mutant_test_sha256": "9a32d07137eb4a4fd7d7876eabe12f3fccba8fb637a59470bcf3c6db43a49be9",
+    "test_symmetric_difference": 2436,
+    "baseline_test_class_counts": {
+      "-1": 1452,
+      "1": 157
+    },
+    "mutant_test_class_counts": {
+      "-1": 1433,
+      "1": 176
+    },
+    "splits_identical": false
+  },
+  "mutation": {
+    "applied": true,
+    "outcome": "SURVIVED",
+    "semantic_status": "confirmed-non-equivalent"
+  },
+  "d027_classification": {
+    "restoration": "restored",
+    "mutation_outcome": "SURVIVED",
+    "semantic_status": "confirmed-non-equivalent",
+    "primary_result_rewritten": false
+  }
+}
