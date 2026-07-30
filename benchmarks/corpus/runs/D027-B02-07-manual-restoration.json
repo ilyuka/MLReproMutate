@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "analysis_kind": "D027-manual-restoration-sensitivity",
+  "case_id": "B02-07",
+  "generated_at_utc": "2026-07-25T15:00:20.604470+00:00",
+  "canonical_primary_result": {
+    "policy": "D025",
+    "status": "setup-failed",
+    "unchanged": true,
+    "report": "benchmarks/corpus/runs/B02-07-rrcf-seed.json"
+  },
+  "frozen_case": {
+    "repository": "kLabUM/rrcf",
+    "revision": "1795a1b4dd39a3ffb196be7e251b177b3d1ab489",
+    "operator": "random-seed",
+    "target": "test/test_rrcf.py",
+    "candidate_index": 1,
+    "mutation": "np.random.seed(0) -> np.random.seed(1)",
+    "workflow_kind": "upstream-test",
+    "workflow_command": "pytest",
+    "oracle_kind": "assertion"
+  },
+  "restoration": {
+    "status": "restored",
+    "corrections_used": 2,
+    "correction_budget": 8,
+    "corrections": [
+      {
+        "order": 1,
+        "origin": "canonical-D025",
+        "kind": "missing-build-runtime-dependency",
+        "action": "install setuptools",
+        "motivation": "Frozen revision imports pkg_resources; initial baseline collection failed because pkg_resources was absent."
+      },
+      {
+        "order": 2,
+        "origin": "D027",
+        "kind": "compatible-upstream-dependency-version",
+        "action": "setuptools<81",
+        "resolved_version": "80.10.2",
+        "motivation": "Current setuptools no longer provided pkg_resources; compatible setuptools<81 restores the historically provided module."
+      }
+    ],
+    "resolved_environment": {
+      "python": "3.12.3",
+      "pip": "26.2.1",
+      "packages": {
+        "flake8": "7.3.0",
+        "iniconfig": "2.3.0",
+        "mccabe": "0.7.0",
+        "numpy": "2.5.2",
+        "packaging": "26.3",
+        "pluggy": "1.6.0",
+        "pycodestyle": "2.14.0",
+        "pyflakes": "3.4.0",
+        "Pygments": "2.21.0",
+        "pytest": "9.1.1",
+        "setuptools": "80.10.2"
+      },
+      "pip_check": "passed"
+    },
+    "tentative_baseline": {
+      "return_code": 0,
+      "summary": "16 passed, 1 warning in 0.22s"
+    },
+    "fresh_independent_reproduction": {
+      "return_code": 0,
+      "duration_seconds": 0.37,
+      "summary": "16 passed, 1 warning in 0.23s",
+      "target_unmutated": true,
+      "recipe_frozen_after_success": true
+    }
+  },
+  "final_experiment": {
+    "independent_fresh_checkouts": true,
+    "independent_fresh_environments": true,
+    "baseline_revision_matches_frozen": true,
+    "mutant_revision_matches_frozen": true,
+    "environment_symmetry": {
+      "reference_vs_baseline_diff_return_code": 0,
+      "reference_vs_mutant_diff_return_code": 0,
+      "baseline_vs_mutant_diff_return_code": 0
+    },
+    "pre_mutation_target_symmetry": true,
+    "mutation_application": {
+      "applied": true,
+      "only_tracked_mutant_change": "test/test_rrcf.py",
+      "exact_diff": "np.random.seed(0) -> np.random.seed(1)",
+      "diff_check_return_code": 0
+    },
+    "baseline": {
+      "return_code": 0,
+      "duration_seconds": 0.378,
+      "summary": "16 passed, 1 warning in 0.23s"
+    },
+    "mutant": {
+      "return_code": 0,
+      "duration_seconds": 0.379,
+      "summary": "16 passed, 1 warning in 0.23s"
+    },
+    "outcome": "SURVIVED"
+  },
+  "semantic_verification": {
+    "status": "confirmed-non-equivalent",
+    "method": "Replay the frozen module-level NumPy generation and shuffled-index prefix under seeds 0 and 1.",
+    "seed_0": {
+      "x_sha256": "7ae07dc030dfdaf3295956aa9c343449dfa0ddf64d74443dcf854bdcf4d42e14",
+      "indexes": [
+        44,
+        29,
+        9,
+        61,
+        74
+      ]
+    },
+    "seed_1": {
+      "x_sha256": "ec8e3fc1cb059b9e8ce621ba2f5d539d8c7980ca5d71a8185b1e9e1eb3ef96d5",
+      "indexes": [
+        46,
+        35,
+        6,
+        10,
+        60
+      ]
+    },
+    "same_X": false,
+    "same_indexes": false
+  },
+  "d027_result": {
+    "status": "evaluated",
+    "outcome": "SURVIVED",
+    "semantic_status": "confirmed-non-equivalent",
+    "canonical_primary_record_modified": false,
+    "screening_jsonl_modified": false
+  }
+}

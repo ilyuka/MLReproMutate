@@ -1,0 +1,330 @@
+{
+  "schema_version": 1,
+  "protocol": "D027",
+  "analysis_kind": "secondary-manual-historical-environment-restoration",
+  "case_id": "B02-06",
+  "generated_at_utc": "2026-07-26T07:39:35.393825Z",
+  "frozen_case": {
+    "repository": "DistrictDataLabs/yellowbrick",
+    "revision": "f7a8e950bd31452ea2f5d402a1c5d519cd163fd5",
+    "operator": "random-seed",
+    "target": "tests/test_utils/test_kneed.py",
+    "candidate_index": 1,
+    "candidate_evidence": "np.random.seed(23) -> np.random.seed(24)",
+    "workflow_command": "make test",
+    "workflow_kind": "upstream-test",
+    "workflow_reference": "Makefile; tests/test_utils/test_kneed.py",
+    "oracle_kind": "assertion",
+    "research_reference": "https://doi.org/10.21105/joss.01075"
+  },
+  "canonical_history": {
+    "status": "setup-failed",
+    "preserved": true,
+    "screening_jsonl_modified": false,
+    "canonical_report": "benchmarks/corpus/runs/B02-06-yellowbrick-seed.json",
+    "s1_report": "benchmarks/corpus/runs/B02-06-S1-sensitivity.json",
+    "canonical_failure_summary": "The primary Python 3.12 setup could not use the documented Matplotlib 3.4.2 test stack; the compatibility retry then failed because the frozen revision imports distutils.",
+    "s1_summary": "S1 restored collection on Python 3.12 but the full unchanged workflow failed 407 tests under a current-compatible dependency stack."
+  },
+  "restoration": {
+    "status": "not-restored",
+    "terminal_reason": "intrinsic-baseline-oracle-mismatch",
+    "corrections_used": 3,
+    "correction_budget": 8,
+    "unused_corrections": 5,
+    "infrastructure_events": [
+      {
+        "stage": "historical-runtime-provisioning",
+        "event": "conda-not-installed",
+        "classification": "infrastructure-tooling-unavailable",
+        "consumes_correction_budget": false,
+        "mutation_applied": false
+      },
+      {
+        "stage": "uv-venv-provisioning",
+        "event": "initial uv venv contained no pip",
+        "classification": "runtime-provisioning-detail",
+        "consumes_correction_budget": false,
+        "mutation_applied": false
+      },
+      {
+        "stage": "shell-wrapper",
+        "event": "env option ordering caused RC=127 before setup",
+        "classification": "local-wrapper-error",
+        "consumes_correction_budget": false,
+        "mutation_applied": false
+      }
+    ],
+    "corrections": [
+      {
+        "index": 1,
+        "class": "historical-runtime-provisioning",
+        "action": "Restore the repository's documented CI-era Python 3.9 runtime and install the exact frozen tests/requirements.txt stack.",
+        "evidence": "Frozen GitHub Actions CI explicitly tested Python 3.8 and 3.9 and installed tests/requirements.txt before running make test.",
+        "resolved_environment": {
+          "python": "3.9.25",
+          "matplotlib": "3.4.2",
+          "numpy": "1.22.0",
+          "scipy": "1.8.0",
+          "scikit-learn": "1.0.2",
+          "pytest": "6.2.4",
+          "freetype": "2.6.1",
+          "freetype_build_type": "local"
+        },
+        "result": {
+          "setup_status": "passed",
+          "nltk_provisioning": "passed",
+          "full_baseline_return_code": 2,
+          "full_baseline_summary": {
+            "failed": 3,
+            "passed": 1304,
+            "skipped": 39,
+            "xfailed": 9,
+            "xpassed": 2,
+            "duration_seconds": 326.16
+          },
+          "failure_class": "image-comparison-only",
+          "failure_rms": 0.024
+        },
+        "preserves_workflow_semantics": true
+      },
+      {
+        "index": 2,
+        "class": "alternate-documented-historical-runtime",
+        "action": "Repeat the exact frozen dependency stack under Python 3.8, the other Python minor version explicitly present in frozen CI.",
+        "resolved_environment": {
+          "python": "3.8.20",
+          "matplotlib": "3.4.2",
+          "numpy": "1.22.0",
+          "scipy": "1.8.0",
+          "scikit-learn": "1.0.2",
+          "pytest": "6.2.4",
+          "freetype": "2.6.1",
+          "freetype_build_type": "local"
+        },
+        "result": {
+          "setup_status": "passed",
+          "nltk_provisioning": "passed",
+          "full_baseline_return_code": 2,
+          "full_baseline_summary": {
+            "failed": 38,
+            "passed": 1283,
+            "skipped": 25,
+            "xfailed": 9,
+            "xpassed": 2,
+            "duration_seconds": 366.58
+          },
+          "conclusion": "Python 3.8 substantially worsened the unchanged baseline relative to Python 3.9 and was rejected."
+        },
+        "preserves_workflow_semantics": true
+      },
+      {
+        "index": 3,
+        "class": "historical-transitive-dependency-resolution",
+        "action": "Use Python 3.9.17 and resolve the complete dependency closure with an upper publication cutoff equal to the frozen revision date, 2023-07-05.",
+        "resolved_environment": {
+          "python": "3.9.17",
+          "matplotlib": "3.4.2",
+          "numpy": "1.22.0",
+          "scipy": "1.8.0",
+          "scikit-learn": "1.0.2",
+          "kiwisolver": "1.4.4",
+          "Pillow": "10.0.0",
+          "pyparsing": "3.1.0",
+          "python-dateutil": "2.8.2",
+          "packaging": "23.1",
+          "pytest": "6.2.4",
+          "pytest-spec": "3.2.0",
+          "freetype": "2.6.1",
+          "freetype_build_type": "local"
+        },
+        "result": {
+          "diagnostic_only": true,
+          "diagnostic_tests": [
+            "tests/test_features/test_pca.py::TestPCA::test_single",
+            "tests/test_features/test_projection.py::TestProjectionVisualizer::test_continuous_plot",
+            "tests/test_features/test_projection.py::TestProjectionVisualizer::test_colorbar_false"
+          ],
+          "return_code": 1,
+          "failed": 3,
+          "failure_rms": 0.024,
+          "full_baseline_not_run_after_failed_diagnostic": true,
+          "conclusion": "Date-bounding the transitive dependency closure did not change any of the three image-comparison failures."
+        },
+        "preserves_workflow_semantics": true
+      }
+    ],
+    "environment_normalizations": [
+      {
+        "class": "headless-rendering",
+        "action": "MPLBACKEND=Agg",
+        "substantive_correction": false
+      },
+      {
+        "class": "proxy-environment-normalization",
+        "substantive_correction": false
+      }
+    ],
+    "best_baseline": {
+      "runtime": "Python 3.9",
+      "command": "make test",
+      "return_code": 2,
+      "timed_out": false,
+      "status": "failed",
+      "summary": {
+        "failed": 3,
+        "passed": 1304,
+        "skipped": 39,
+        "xfailed": 9,
+        "xpassed": 2,
+        "warnings": 67,
+        "duration_seconds": 326.16
+      },
+      "failed_tests": [
+        "tests/test_features/test_pca.py::TestPCA::test_single",
+        "tests/test_features/test_projection.py::TestProjectionVisualizer::test_continuous_plot",
+        "tests/test_features/test_projection.py::TestProjectionVisualizer::test_colorbar_false"
+      ],
+      "failure_class": "image-comparison-only",
+      "rms_each": 0.024,
+      "target_test_failed": false,
+      "frozen_target_test_exercised": true,
+      "frozen_target_test_result": "passed",
+      "maximum_resident_set_kbytes": 1594308,
+      "swaps": 0
+    },
+    "oracle_forensics": {
+      "actual_render_reproducibility": {
+        "conclusion": "The three actual PNGs generated by the Python 3.9 modern-transitive environment and the date-bounded 2023 environment were bit-for-bit identical.",
+        "images": [
+          {
+            "path": "tests/actual_images/test_features/test_pca/test_single.png",
+            "sha256": "22eccda9299a4f61c089eb35a03e7e105f742c018fd97a6da1eeba21c4925cda",
+            "bit_identical_between_attempts": true
+          },
+          {
+            "path": "tests/actual_images/test_features/test_projection/test_continuous_plot.png",
+            "sha256": "fc70e35e51080b99ea7f526f7aa76dca1a4dac6b86441cc3a8af9b66a926a21e",
+            "bit_identical_between_attempts": true
+          },
+          {
+            "path": "tests/actual_images/test_features/test_projection/test_colorbar_false.png",
+            "sha256": "67988ff98fdb1c647f1bbc7343190dede58f01edbc958ba4854c281b7db5037c",
+            "bit_identical_between_attempts": true
+          }
+        ]
+      },
+      "frozen_baseline_images": [
+        {
+          "path": "tests/baseline_images/test_features/test_pca/test_single.png",
+          "sha256": "3aecbb9741e10dd348c1c31fd976e8c483a93e1cf32646572668df2115e81e8d",
+          "last_changed_commit": "838063ef2e5592c2285d2a30526c6248b6a666a7",
+          "last_changed_date": "2022-02-18T14:01:36+11:00"
+        },
+        {
+          "path": "tests/baseline_images/test_features/test_projection/test_continuous_plot.png",
+          "sha256": "27ae365eceba9366966909f24dcaf39d42f842b4922c2dd54c2676bb7d0492a8",
+          "last_changed_commit": "838063ef2e5592c2285d2a30526c6248b6a666a7",
+          "last_changed_date": "2022-02-18T14:01:36+11:00"
+        },
+        {
+          "path": "tests/baseline_images/test_features/test_projection/test_colorbar_false.png",
+          "sha256": "cba942a491f704e743535ce52046234326c1ccac6caf1df6f2cdcf9cab9360c8",
+          "last_changed_commit": "838063ef2e5592c2285d2a30526c6248b6a666a7",
+          "last_changed_date": "2022-02-18T14:01:36+11:00"
+        }
+      ],
+      "image_generation_era_test_stack": {
+        "commit": "838063ef2e5592c2285d2a30526c6248b6a666a7",
+        "matplotlib": "3.4.2",
+        "scipy": "1.7.0",
+        "scikit-learn": "0.24.2",
+        "numpy": "1.21.0",
+        "cycler": "0.10.0",
+        "umap-learn": "0.5.1"
+      },
+      "frozen_revision_test_stack": {
+        "revision": "f7a8e950bd31452ea2f5d402a1c5d519cd163fd5",
+        "matplotlib": "3.4.2",
+        "scipy": "1.8.0",
+        "scikit-learn": "1.0.2",
+        "numpy": "1.22.0",
+        "cycler": "0.10.0",
+        "umap-learn": "0.5.3"
+      },
+      "post_image_dependency_updates_without_oracle_regeneration": [
+        {
+          "commit": "df451619bd0a9fe2ee146ef515ca63b9224c8bc6",
+          "date": "2022-02-18T16:00:56-07:00",
+          "change": "scikit-learn==0.24.2 -> scikit-learn==1.0.0",
+          "three_relevant_baseline_images_changed": false
+        },
+        {
+          "commit": "5d548219a3104b5f862fddc3ca0a629f773525ca",
+          "date": "2022-08-07T10:45:03-04:00",
+          "change": "umap-learn==0.5.1 -> umap-learn==0.5.3",
+          "three_relevant_baseline_images_changed": false
+        },
+        {
+          "commit": "f60f8479bac0f5519d1caa2b6e61efb8a2d76a5e",
+          "date": "2022-08-07T16:18:36-06:00",
+          "change": "scipy==1.7.0 -> scipy==1.8.0",
+          "three_relevant_baseline_images_changed": false
+        },
+        {
+          "commit": "806ef9f3055b962fb869859426010aa46d7c366e",
+          "date": "2022-08-21T08:03:28-04:00",
+          "change": "numpy==1.21.0 -> numpy==1.22.0",
+          "three_relevant_baseline_images_changed": false
+        },
+        {
+          "commit": "da26d1ec33143ed9dd2fff51fde322e11702cd6f",
+          "date": "2023-02-27T07:19:20-06:00",
+          "change": "scikit-learn==1.0.0 -> scikit-learn==1.0.2",
+          "three_relevant_baseline_images_changed": false
+        }
+      ],
+      "pixel_forensics": {
+        "example_image": "tests/actual_images/test_features/test_projection/test_colorbar_false.png",
+        "changed_pixels_vs_frozen_baseline": 8,
+        "changed_fraction": 1.8181818181818182e-05,
+        "max_channel_diff": 10,
+        "mean_abs_diff": 5.795454545454546e-05,
+        "diff_bbox": [
+          99,
+          489,
+          720,
+          490
+        ]
+      },
+      "conclusion": "The remaining full-workflow failures are strongly evidenced as a stale/platform-sensitive binary image oracle mismatch rather than an unresolved Python-package compatibility failure. The three baseline PNGs predate multiple documented core dependency updates and were not regenerated when those pins changed. Further environment manipulation, tolerance changes, image replacement, or test skipping would be outcome-directed or would weaken/change the frozen oracle and is prohibited by D027."
+    },
+    "fresh_independent_reproduction": {
+      "status": "not-run",
+      "reason": "No successful tentative full baseline was obtained; therefore the D027 prerequisite for fresh independent reproduction was never reached."
+    }
+  },
+  "mutation": {
+    "applied": false,
+    "attempted": false,
+    "status": "not-run",
+    "candidate_index": 1,
+    "source_change": "np.random.seed(23) -> np.random.seed(24)",
+    "outcome": null,
+    "reason": "The unchanged frozen full-workflow baseline never returned zero. Baseline-first therefore prohibits mutation evaluation.",
+    "semantic_verification": {
+      "status": "not-run",
+      "method": null,
+      "evidence": null
+    }
+  },
+  "d027_classification": {
+    "restoration": "not-restored",
+    "terminal_reason": "intrinsic-baseline-oracle-mismatch",
+    "mutation_outcome": null,
+    "semantic_status": "not-run",
+    "primary_result_rewritten": false,
+    "screening_jsonl_modified": false,
+    "denominator_eligible": false
+  }
+}

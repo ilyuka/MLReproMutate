@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "analysis_kind": "D027-manual-restoration-sensitivity",
+  "case_id": "B02-05",
+  "generated_at_utc": "2026-07-25T17:04:59.960118+00:00",
+  "canonical_primary_result": {
+    "policy": "D024",
+    "status": "setup-failed",
+    "unchanged": true,
+    "report": "benchmarks/corpus/runs/B02-05-autokoopman-seed.json"
+  },
+  "frozen_case": {
+    "repository": "EthanJamesLew/AutoKoopman",
+    "revision": "3808e0f061983388e69df06cc5ceda097773603f",
+    "operator": "random-seed",
+    "target": "benchmarks/trainingCurve.py",
+    "candidate_index": 1,
+    "mutation": "np.random.seed(1234) -> np.random.seed(1235)",
+    "workflow_kind": "documented-experiment",
+    "workflow_command": "python benchmarks/trainingCurve.py",
+    "workflow_reference": "benchmarks/trainingCurve.py",
+    "oracle_kind": "completion-only"
+  },
+  "restoration": {
+    "status": "not-restored",
+    "corrections_used": 2,
+    "correction_budget": 8,
+    "unused_corrections": 6,
+    "corrections": [
+      {
+        "order": 1,
+        "origin": "D027",
+        "kind": "historical-runtime-environment",
+        "action": "Restore the frozen CI-described Python 3.9 environment using environment.yml.",
+        "reason": "Canonical execution lacked GPyOpt and the canonical attempt to install gpy==1.10.0 failed to build. At the frozen revision, CI explicitly used Python 3.9 and environment.yml specified gpy==1.13.1 and gpyopt==1.2.6.",
+        "result": {
+          "python": "3.9.18",
+          "GPy": "1.13.1",
+          "GPyOpt": "1.2.6",
+          "pkg_resources_import": "passed"
+        },
+        "preserves_workflow_semantics": true
+      },
+      {
+        "order": 2,
+        "origin": "D027",
+        "kind": "compatible-non-target-dependency",
+        "action": "matplotlib==3.8.4",
+        "reason": "The restored environment resolved matplotlib==3.9.4, after which importing GPy 1.13.1 failed with ImportError: cannot import name 'numpy' from 'matplotlib'. Constraining Matplotlib to 3.8.4 directly corrected that observed non-target compatibility failure.",
+        "observed_before": {
+          "matplotlib": "3.9.4",
+          "matplotlib_numpy_attribute": false,
+          "GPy_import": "failed",
+          "error": "ImportError: cannot import name 'numpy' from 'matplotlib'"
+        },
+        "observed_after": {
+          "matplotlib": "3.8.4",
+          "matplotlib_numpy_attribute": true,
+          "GPy": "1.13.1",
+          "GPy_import": "passed",
+          "GPyOpt": "1.2.6",
+          "GPyOpt_import": "passed",
+          "pip_check": "passed"
+        },
+        "preserves_workflow_semantics": true
+      }
+    ],
+    "infrastructure_events": [
+      {
+        "stage": "conda-env-update",
+        "command": "conda env update --file environment.yml --name base",
+        "duration_seconds": 2374.39,
+        "return_code": 1,
+        "classification": "infrastructure-tooling-failure",
+        "consumes_correction_budget": false,
+        "terminal_exception": "ImportError: cannot import name 'set_keys' from 'conda.cli.main_config'",
+        "note": "Conda populated the environment far enough to install the historical dependency stack but failed internally while completing/reporting the environment update."
+      }
+    ],
+    "resolved_environment": {
+      "python": "3.9.18",
+      "autokoopman": "0+untagged.1.g3808e0f",
+      "GPy": "1.13.1",
+      "GPyOpt": "1.2.6",
+      "matplotlib": "3.8.4",
+      "numpy": "1.26.4",
+      "scipy": "1.11.4",
+      "scikit-learn": "1.6.1",
+      "pysindy": "1.7.2",
+      "setuptools": "68.2.2",
+      "pip_check": "passed",
+      "pip_freeze_sha256": "3e075a1df8c002a42021e3d06add3297785a060f0126e74d62c2f6120e47c3fb"
+    },
+    "source_install": {
+      "status": "passed",
+      "command": "python -m pip install .",
+      "duration_seconds": 10.57
+    },
+    "tentative_baseline": {
+      "status": "timed-out",
+      "return_code": 124,
+      "timeout_seconds": 1800,
+      "duration_seconds": 1800.02,
+      "command": "python benchmarks/trainingCurve.py",
+      "environment": {
+        "MPLBACKEND": "Agg"
+      },
+      "oracle_kind": "completion-only",
+      "target_reached": true,
+      "stdout_evidence": [
+        "generating training data...",
+        "running tuners..."
+      ],
+      "progress_at_timeout": {
+        "BayesianOptTuner": "200/200 completed",
+        "MonteCarloTuner": "200/200 completed",
+        "GridSearchTuner": "145/200 completed"
+      },
+      "terminal_reason": "baseline-timeout"
+    },
+    "fresh_independent_reproduction": {
+      "status": "not-run",
+      "reason": "No successful tentative baseline was obtained, so the D027 fresh-independent-reproduction prerequisite was never reached."
+    },
+    "terminal_reason": "baseline-timeout"
+  },
+  "mutation_result": {
+    "status": "not-evaluated",
+    "applied": false,
+    "candidate_index": 1,
+    "source_change": "np.random.seed(1234) -> np.random.seed(1235)",
+    "oracle_outcome": null,
+    "reason": "The unchanged baseline did not complete within the frozen 1800-second D027 timeout. Baseline-first therefore prohibited mutation evaluation."
+  },
+  "semantic_verification": {
+    "status": "not-run",
+    "reason": "Mutation was not applied or evaluated."
+  },
+  "d027_result": {
+    "status": "restoration-limit",
+    "evaluated": false,
+    "outcome": null,
+    "semantic_status": "not-run",
+    "terminal_reason": "baseline-timeout",
+    "canonical_primary_result_modified": false,
+    "screening_record_modified": false
+  }
+}
