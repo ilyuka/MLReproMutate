@@ -1,0 +1,47 @@
+case_id=B02-11
+repository=princeton-nlp/SimCSE
+operator=dependency-pin
+frozen_revision=49fa580a853752ede55b8c76d9debf748e214d3f
+
+frozen_mutation:
+transformers==4.2.1
+->
+transformers>=4.2.1
+
+frozen_workflow:
+python evaluation.py --model_name_or_path princeton-nlp/sup-simcse-bert-base-uncased --pooler cls --task_set sts --mode test
+
+manual_restoration:
+python=3.8.20
+torch=1.7.1
+transformers=4.2.1
+tokenizers=0.9.4
+CUDA_VISIBLE_DEVICES=""
+model_revision=2d82fab19ac3a73a20dd20333d27eb8a52d6e97f
+
+historical compatibility rationale:
+- Python 3.12 could not install tokenizers required by transformers 4.2.1.
+- Python 3.8 permits the historical Transformers/tokenizers stack.
+- SimCSE documents torch 1.7.1 including CPU execution.
+- Old Transformers 4.2.1 cannot follow the modern Hugging Face relative resolve-cache redirect.
+- The exact checkpoint was therefore materialized locally without changing evaluation.py.
+- CUDA was hidden because torch 1.7.1 cannot execute on the host RTX 3050 sm_86, while CPU execution is documented upstream.
+
+baseline:
+restored=yes
+return_code=0
+validation_timeout_seconds=3600
+STS12=75.30
+STS13=84.67
+STS14=80.19
+STS15=85.40
+STS16=80.82
+STSBenchmark=84.26
+SICKRelatedness=80.39
+Avg=81.58
+
+mutation_evaluated=no
+
+historical_D025_status=setup-failed
+historical_D025_status_preserved=yes
+2026-07-25T20:11:59+03:00

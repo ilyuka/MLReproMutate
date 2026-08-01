@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "protocol": "D027",
+  "analysis_kind": "secondary-manual-historical-environment-restoration",
+  "case_id": "B02-18",
+  "generated_at_utc": "2026-07-25T20:46:58Z",
+  "frozen_case": {
+    "repository": "pulimeng/eToxPred",
+    "revision": "deff5be7d5e9951dc0e82e0e63dafc89c74fe883",
+    "operator": "dependency-pin",
+    "target": "requirements.txt",
+    "candidate_index": 1,
+    "candidate_evidence": "pandas==1.0 -> pandas>=1.0",
+    "workflow_command": "python etoxpred_predict.py --datafile tcm600_nr.smi --modelfile etoxpred_best_model.joblib --outputfile results.csv",
+    "workflow_kind": "documented-validation",
+    "oracle_kind": "completion-only",
+    "research_reference": "https://doi.org/10.1186/s40360-018-0282-6"
+  },
+  "canonical_history": {
+    "status": "setup-failed",
+    "preserved": true,
+    "screening_jsonl_modified": false
+  },
+  "restoration": {
+    "status": "restored",
+    "corrections_used": 1,
+    "corrections": [
+      {
+        "index": 1,
+        "class": "historical-runtime-provisioning",
+        "action": "Provision the repository-documented Python 3.7 runtime as Python 3.7.6 from the historical conda-forge cf202003 channel.",
+        "result": "successful"
+      }
+    ],
+    "environment_normalizations": [
+      {
+        "class": "proxy-environment-normalization",
+        "substantive_correction": false,
+        "action": "Unset proxy environment variables during pip resolution."
+      }
+    ],
+    "frozen_recipe": {
+      "python": "3.7.6",
+      "setup_command": "python -m pip install -r requirements.txt",
+      "model_setup_command": "tar -xzf etoxpred_best_model.tar.gz",
+      "model_sha256": "d3b98f84d882528f16039702727db9063daae6fd1f31c33aac91e8735acca961"
+    },
+    "tentative_baseline": {
+      "status": "pass",
+      "return_code": 0,
+      "resolved_pandas": "1.0.0",
+      "results_lines": 5763
+    },
+    "independent_reproduction": {
+      "status": "pass",
+      "return_code": 0,
+      "resolved_pandas": "1.0.0",
+      "results_lines": 5763,
+      "results_bytes": 637957,
+      "results_sha256": "bc72fd4766dc748d8ab8bc4b1eb102dc4fe52cc896cac36aad5cd535bcd08038",
+      "restoration_recipe_reproduced": true
+    }
+  },
+  "final_pair": {
+    "fresh_independent_environments": true,
+    "same_restoration_recipe": true,
+    "only_intended_source_difference": true,
+    "baseline": {
+      "requirement": "pandas==1.0",
+      "resolved_pandas": "1.0.0",
+      "return_code": 0,
+      "workflow_status": "pass",
+      "results_sha256": "bc72fd4766dc748d8ab8bc4b1eb102dc4fe52cc896cac36aad5cd535bcd08038"
+    },
+    "mutant": {
+      "requirement": "pandas>=1.0",
+      "resolved_pandas": "1.3.5",
+      "return_code": 0,
+      "workflow_status": "pass",
+      "results_sha256": "bc72fd4766dc748d8ab8bc4b1eb102dc4fe52cc896cac36aad5cd535bcd08038"
+    },
+    "outputs_byte_identical": true,
+    "final_pair_valid": true
+  },
+  "mutation": {
+    "applied": true,
+    "candidate_index": 1,
+    "status": "evaluated",
+    "outcome": "SURVIVED",
+    "semantic_verification": {
+      "status": "confirmed-non-equivalent",
+      "method": "resolved-distribution-version-comparison",
+      "evidence": {
+        "baseline_pandas": "1.0.0",
+        "mutant_pandas": "1.3.5"
+      }
+    }
+  },
+  "d027_classification": {
+    "restoration": "restored",
+    "mutation_outcome": "SURVIVED",
+    "semantic_status": "confirmed-non-equivalent",
+    "primary_result_rewritten": false
+  }
+}

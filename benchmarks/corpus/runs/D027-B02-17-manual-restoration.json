@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "analysis_kind": "D027-manual-restoration-sensitivity",
+  "case_id": "B02-17",
+  "generated_at_utc": "2026-07-25T15:26:43.886560+00:00",
+  "canonical_primary_result": {
+    "policy": "D024",
+    "status": "setup-failed",
+    "unchanged": true,
+    "report": "benchmarks/corpus/runs/B02-17-bayesnewton-dependency.json"
+  },
+  "frozen_case": {
+    "repository": "AaltoML/BayesNewton",
+    "revision": "f72ae9a6ca69f9cce8e62135c9f78dda4825b4df",
+    "operator": "dependency-pin",
+    "target": "requirements.txt",
+    "candidate_index": 1,
+    "mutation": "jax==0.4.14 -> jax>=0.4.14",
+    "workflow_kind": "upstream-test",
+    "workflow_command": "cd tests && pytest",
+    "oracle_kind": "assertion"
+  },
+  "restoration": {
+    "status": "not-restored",
+    "corrections_used": 7,
+    "correction_budget": 8,
+    "unused_corrections": 1,
+    "corrections": [
+      {
+        "order": 1,
+        "origin": "canonical",
+        "action": "historical Python 3.11 runtime",
+        "result": "jaxlib==0.4.14 remained unavailable from normal package index"
+      },
+      {
+        "order": 2,
+        "origin": "D027",
+        "action": "Python 3.10 runtime",
+        "reason": "compatible with frozen documented TensorFlow 2.10 test stack"
+      },
+      {
+        "order": 3,
+        "origin": "D027",
+        "action": "obtain exact jaxlib==0.4.14 from official JAX wheel archive"
+      },
+      {
+        "order": 4,
+        "origin": "D027",
+        "action": "numpy==1.23.5",
+        "reason": "JAX/JAXLIB 0.4.14 incompatible with resolved NumPy 2.x"
+      },
+      {
+        "order": 5,
+        "origin": "D027",
+        "action": "ml-dtypes==0.2.0",
+        "reason": "resolved ml-dtypes 0.6.0 required NumPy >=2"
+      },
+      {
+        "order": 6,
+        "origin": "D027",
+        "action": "setuptools<81",
+        "reason": "GPflow 2.5.2 imports pkg_resources"
+      },
+      {
+        "order": 7,
+        "origin": "D027",
+        "action": "scipy==1.12.0",
+        "reason": "JAX 0.4.14 imports scipy.linalg.tril, removed in newer SciPy"
+      }
+    ],
+    "last_baseline": {
+      "return_code": 2,
+      "duration_seconds": 15,
+      "collection_progress": "320 items collected before one collection error",
+      "failure": {
+        "type": "missing-required-test-artifact",
+        "file": "../experiments/shutters/data/train_data_0_0.pickle",
+        "additional_required_file": "../experiments/shutters/data/pred_data_0_0.pickle"
+      }
+    },
+    "artifact_provenance_check": {
+      "exact_files_in_reachable_git_history": false,
+      "any_shutters_pickle_in_reachable_git_history": false,
+      "frozen_shutters_directory_files": [
+        "shutters.py"
+      ],
+      "generator_for_required_exact_files_found": false,
+      "conclusion": "No provenance-preserving source for the exact required test artifacts was established."
+    },
+    "terminal_reason": "missing-required-test-artifact",
+    "correction_8_not_used_reason": "Creating substitute pickle files, changing/skipping the test, or substituting a different dataset would violate D027."
+  },
+  "mutation": {
+    "applied": false,
+    "attempted": false,
+    "outcome": null,
+    "semantic_status": "not-run"
+  },
+  "d027_result": {
+    "status": "not-restored",
+    "outcome": null,
+    "semantic_status": "not-run",
+    "canonical_primary_record_modified": false,
+    "screening_jsonl_modified": false
+  }
+}

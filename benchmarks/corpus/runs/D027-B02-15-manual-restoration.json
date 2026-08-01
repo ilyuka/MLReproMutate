@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "protocol": "D027",
+  "analysis_kind": "secondary-manual-historical-environment-restoration",
+  "case_id": "B02-15",
+  "generated_at_utc": "2026-07-25T20:06:03Z",
+  "frozen_case": {
+    "repository": "apple/ml-cvpr2019-swd",
+    "revision": "58acb020f6d22fb7b0f3b7bddbdc1d4c2e46566a",
+    "operator": "dependency-pin",
+    "target": "requirements.txt",
+    "candidate_index": 1,
+    "candidate_evidence": "tensorflow==1.15.2 -> tensorflow>=1.15.2",
+    "workflow_command": "python swd.py -mode adapt_swd",
+    "workflow_kind": "documented-example",
+    "oracle_kind": "completion-only",
+    "workflow_reference": "README.md Running the code; swd.py"
+  },
+  "canonical_history": {
+    "status": "setup-failed",
+    "preserved": true,
+    "screening_jsonl_modified": false,
+    "reason_summary": "Canonical execution could not provision documented Python 2.7.10; the allowed Python-3 compatibility attempt used Python 3.12, for which tensorflow==1.13.1 was unavailable."
+  },
+  "restoration": {
+    "status": "restored",
+    "recipe_reproduced": true,
+    "corrections_used": 2,
+    "corrections": [
+      {
+        "index": 1,
+        "class": "historical-runtime-provisioning",
+        "action": "Provision exact documented Python 2.7.10 using the public historical Conda pkgs/free channel.",
+        "observed_result": "Runtime provisioned successfully, but unchanged frozen requirements could not install because tensorflow==1.15.2 has no matching Python 2.7 distribution."
+      },
+      {
+        "index": 2,
+        "class": "historical-runtime-pivot",
+        "action": "Use Python 3.6.1 from conda-forge/label/cf202003 while preserving the frozen tensorflow==1.15.2 target and all other frozen requirements.",
+        "observed_result": "Unchanged requirements installed successfully and the exact frozen workflow completed successfully."
+      }
+    ],
+    "environment_normalizations": [
+      {
+        "class": "proxy-environment-normalization",
+        "substantive_correction": false,
+        "action": "Unset inherited HTTP/HTTPS/ALL proxy variables only for pip installation processes after pip 9.0.1 failed because its vendored requests lacked SOCKS support."
+      }
+    ],
+    "frozen_recipe": {
+      "python": "3.6.1",
+      "python_source": "conda-forge/label/cf202003",
+      "requirements_source": "unchanged frozen requirements.txt",
+      "target_constraint_baseline": "tensorflow==1.15.2",
+      "workflow": "python swd.py -mode adapt_swd"
+    },
+    "tentative_baseline": {
+      "work_root": "/tmp/mlrepromutate-d027/B02-15-attempt-02",
+      "setup_return_code": 0,
+      "workflow_return_code": 0,
+      "workflow_completed": true,
+      "mutation_applied": false
+    },
+    "independent_reproduction": {
+      "work_root": "/tmp/mlrepromutate-d027/B02-15-reproduction-01",
+      "fresh_environment": true,
+      "fresh_checkout": true,
+      "setup_return_code": 0,
+      "workflow_return_code": 0,
+      "workflow_completed": true,
+      "recipe_reproduced": true,
+      "mutation_applied": false
+    }
+  },
+  "final_pair": {
+    "work_root": "/tmp/mlrepromutate-d027/B02-15-final",
+    "fresh_independent_environments": true,
+    "same_restoration_recipe": true,
+    "baseline": {
+      "requirement": "tensorflow==1.15.2",
+      "resolved_tensorflow": "1.15.2",
+      "resolved_numpy": "1.14.5",
+      "setup_return_code": 0,
+      "workflow_command": "python swd.py -mode adapt_swd",
+      "workflow_return_code": 0,
+      "oracle_passed": true
+    },
+    "mutant": {
+      "requirement": "tensorflow>=1.15.2",
+      "resolved_tensorflow": "2.6.2",
+      "resolved_numpy": "1.14.5",
+      "setup_return_code": 0,
+      "workflow_command": "python swd.py -mode adapt_swd",
+      "workflow_return_code": 1,
+      "oracle_passed": false,
+      "failure_summary": "Exact frozen workflow failed while importing TensorFlow. Observed ModuleNotFoundError for numpy.core._multiarray_umath followed by TensorFlow ImportError/SystemError. The preceding missing libcudart message was explicitly emitted by TensorFlow as ignorable when no GPU is configured and was not the workflow failure classification."
+    }
+  },
+  "mutation": {
+    "applied": true,
+    "status": "evaluated",
+    "operator": "dependency-pin",
+    "before": "tensorflow==1.15.2",
+    "after": "tensorflow>=1.15.2",
+    "outcome": "KILLED",
+    "semantic_verification": {
+      "status": "confirmed-non-equivalent",
+      "method": "resolved-target-version-comparison",
+      "evidence": {
+        "baseline_tensorflow": "1.15.2",
+        "mutant_tensorflow": "2.6.2",
+        "baseline_numpy": "1.14.5",
+        "mutant_numpy": "1.14.5"
+      }
+    }
+  },
+  "d027_classification": {
+    "restoration": "restored",
+    "mutation_outcome": "KILLED",
+    "semantic_status": "confirmed-non-equivalent",
+    "primary_result_rewritten": false
+  }
+}

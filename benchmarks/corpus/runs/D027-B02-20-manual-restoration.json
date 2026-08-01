@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "protocol": "D027",
+  "analysis_kind": "secondary-manual-historical-environment-restoration",
+  "case_id": "B02-20",
+  "generated_at_utc": "2026-07-26T06:42:03Z",
+  "frozen_case": {
+    "repository": "MKMaS-GUET/SSJE",
+    "revision": "177c207d4477fa06ddbd7587d18e105e29d6f1dc",
+    "operator": "dependency-pin",
+    "target": "requirements.txt",
+    "candidate_index": 1,
+    "candidate_evidence": "Jinja2==2.11.3 -> Jinja2>=2.11.3",
+    "workflow_command": "python train_triplet.py --dataset 14res --max_span_size 8",
+    "workflow_kind": "documented-experiment",
+    "oracle_kind": "completion-only",
+    "research_reference": "https://doi.org/10.1016/j.knosys.2022.108366"
+  },
+  "canonical_history": {
+    "status": "setup-failed",
+    "preserved": true,
+    "screening_jsonl_modified": false,
+    "canonical_report": "benchmarks/corpus/runs/B02-20-corrective-primary-rerun.json",
+    "procedure_invalid_earlier_report_retained": true
+  },
+  "restoration": {
+    "status": "not-restored",
+    "terminal_reason": "baseline-timeout",
+    "corrections_used": 5,
+    "corrections": [
+      {
+        "index": 1,
+        "class": "historical-runtime-provisioning",
+        "action": "Provision exact Python 3.6.1 from conda-forge/label/cf202003.",
+        "evidence": "Canonical attempt failed because python=3.6.1 was unavailable from configured defaults channels.",
+        "result": "successful"
+      },
+      {
+        "index": 2,
+        "class": "non-target-dependency-compatibility",
+        "action": "Install murmurhash==1.0.5.",
+        "evidence": "Fresh Python 3.6.1 setup selected a newer murmurhash sdist whose isolated build required cython>=3.1, unavailable for Python 3.6.",
+        "result": "successful"
+      },
+      {
+        "index": 3,
+        "class": "non-target-dependency-compatibility",
+        "action": "Install immutables==0.14.",
+        "evidence": "Resolved immutables==0.19 imported typing.NoReturn, which is absent from exact Python 3.6.1.",
+        "result": "successful"
+      },
+      {
+        "index": 4,
+        "class": "non-target-dependency-compatibility",
+        "action": "Install click==7.1.2.",
+        "evidence": "Resolved click==8.0.4 violated installed typer==0.3.2 declared constraint click>=7.1.1,<7.2.0 and lacked click._bashcomplete.",
+        "result": "successful"
+      },
+      {
+        "index": 5,
+        "class": "provenance-preserving-resource-provisioning",
+        "action": "Provision official bert-base-uncased files at frozen-code path ./bert/base-uncased.",
+        "evidence": "Frozen workflow failed because local ./bert/base-uncased was absent; repository source expects that exact path.",
+        "result": "successful",
+        "resource": {
+          "revision": "dd4bc8b21efa05ec961e3efc4ee5e3832a3679c7",
+          "config_sha256": "7b4e5f53efbd058c67cda0aacfafb340113ea1b5797d9ce6ee411704ba21fcbc",
+          "vocab_sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3",
+          "pytorch_model_sha256": "097417381d6c7230bd9e3557456d726de6e83245ec8b24f529f60198a67b203a"
+        }
+      }
+    ],
+    "environment_normalizations": [
+      {
+        "class": "proxy-environment-normalization",
+        "substantive_correction": false
+      },
+      {
+        "class": "cpu-execution-normalization",
+        "action": "CUDA_VISIBLE_DEVICES=''",
+        "substantive_correction": false,
+        "reason": "D027 execution is CPU-only; frozen code itself selects CPU when CUDA is unavailable."
+      }
+    ],
+    "resolved_environment": {
+      "python": "3.6.1",
+      "Jinja2": "2.11.3",
+      "numpy": "1.17.4",
+      "tensorboardX": "1.6",
+      "torch": "1.4.0",
+      "tqdm": "4.55.1",
+      "transformers": "4.1.1",
+      "scikit-learn": "0.24.0",
+      "spacy": "3.0.1",
+      "murmurhash": "1.0.5",
+      "immutables": "0.14",
+      "click": "7.1.2"
+    },
+    "baseline": {
+      "command": "python train_triplet.py --dataset 14res --max_span_size 8",
+      "timeout_seconds": 1800,
+      "return_code": 124,
+      "timed_out": true,
+      "status": "timeout",
+      "progress_evidence": [
+        "Parsed 1266/1266 training examples.",
+        "Parsed 492/492 test examples.",
+        "Loaded pretrained BERT checkpoint.",
+        "Initialized TripletExtGCN.",
+        "Reached Train epoch 0."
+      ],
+      "maximum_resident_set_kbytes": 1127920,
+      "swaps": 0
+    }
+  },
+  "mutation": {
+    "applied": false,
+    "status": "not-run",
+    "outcome": null,
+    "semantic_verification": {
+      "status": "not-run",
+      "method": null,
+      "evidence": null
+    }
+  },
+  "d027_classification": {
+    "restoration": "not-restored",
+    "terminal_reason": "baseline-timeout",
+    "mutation_outcome": null,
+    "semantic_status": "not-run",
+    "primary_result_rewritten": false
+  }
+}

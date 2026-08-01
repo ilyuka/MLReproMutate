@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "protocol": "D027",
+  "analysis_kind": "secondary-manual-historical-environment-restoration",
+  "case_id": "B02-16",
+  "generated_at_utc": "2026-07-25T20:33:04Z",
+  "frozen_case": {
+    "repository": "GestureGeneration/Speech_driven_gesture_generation_with_autoencoder",
+    "revision": "59e8ebdb0f6e87b0e81268046c99a4d6c9bf62a8",
+    "operator": "dependency-pin",
+    "target": "requirements.txt",
+    "candidate_index": 2,
+    "candidate_evidence": "Keras==2.3.1 -> Keras>=2.3.1",
+    "workflow_command": "python train.py MODEL_NAME EPOCHS DATA_DIR N_INPUT ENCODE DIM",
+    "workflow_kind": "documented-experiment",
+    "oracle_kind": "completion-only"
+  },
+  "canonical_history": {
+    "status": "setup-failed",
+    "preserved": true,
+    "screening_jsonl_modified": false
+  },
+  "restoration": {
+    "status": "not-restored",
+    "terminal_reason": "host-resource-limit-before-baseline",
+    "mutation_applied": false,
+    "corrections_used": 2,
+    "corrections": [
+      {
+        "index": 1,
+        "class": "historical-runtime-provisioning",
+        "action": "Provision Python 3.6.1 historical runtime.",
+        "result": "successful"
+      },
+      {
+        "index": 2,
+        "class": "missing-preprocessing-dependency",
+        "action": "Provision SoX 14.4.2 required by upstream add_noisy_data.sh.",
+        "result": "successful"
+      }
+    ],
+    "environment_normalizations": [
+      {
+        "class": "archive-extraction-normalization",
+        "substantive_correction": false,
+        "reason": "Dropbox ZIP contained a root '/' entry rejected by command-line unzip.",
+        "action": "Safely extracted identical archive members while skipping only the root entry."
+      }
+    ],
+    "environment": {
+      "python": "3.6.1",
+      "tensorflow": "1.15.2",
+      "keras": "2.3.1",
+      "numpy": "1.17.2",
+      "scipy": "1.3.1",
+      "scikit_learn": "0.21.3",
+      "h5py": "2.10.0",
+      "librosa": "0.7.1",
+      "sox": "14.4.2",
+      "imports_passed": true
+    },
+    "dataset": {
+      "source": "official repository-linked Dropbox dataset",
+      "archive_bytes": 5092593749,
+      "archive_integrity": "pass",
+      "raw_wav_files": 1047,
+      "raw_bvh_files": 1047,
+      "prepare_data_return_code": 0,
+      "prepared_train_rows": 1914,
+      "prepared_test_rows": 45,
+      "prepared_dev_rows": 45,
+      "prepared_train_original_wav": 957,
+      "prepared_train_noisy_wav": 957,
+      "prepared_train_bvh": 957,
+      "status": "prepared-successfully"
+    },
+    "resource_audit": {
+      "host_ram_gib": 15,
+      "host_swap_gib": 8,
+      "host_available_ram_gib_at_audit": 9.7,
+      "estimated_train_steps": 459936,
+      "estimated_x_train_gib": 5.43,
+      "estimated_y_train_gib": 1.32,
+      "estimated_train_arrays_gib": 6.75,
+      "vectorization_concat_lower_bound_gib": 12.19,
+      "training_array_data_lower_bound_gib": 13.5,
+      "estimate_excludes": [
+        "Python runtime",
+        "librosa/scipy preprocessing temporaries",
+        "TensorFlow runtime",
+        "Keras model",
+        "optimizer state",
+        "additional temporary allocations"
+      ],
+      "decision": "Do not execute full upstream vectorization/training on this host because source-derived lower-bound memory requirements approach or exceed safely available physical RAM and create material OOM risk."
+    },
+    "baseline": {
+      "status": "not-run",
+      "reason": "host-resource-limit-before-baseline"
+    }
+  },
+  "mutation": {
+    "applied": false,
+    "status": "not-evaluated",
+    "outcome": null,
+    "semantic_verification": {
+      "status": "not-run",
+      "method": null,
+      "evidence": null
+    }
+  },
+  "d027_classification": {
+    "restoration": "not-restored",
+    "reason": "infrastructure-resource-limited",
+    "mutation_outcome": null,
+    "primary_result_rewritten": false
+  }
+}
