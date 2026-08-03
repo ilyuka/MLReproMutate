@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "analysis_kind": "D027-manual-restoration-sensitivity",
+  "case_id": "B02-21",
+  "generated_at_utc": "2026-07-25T16:30:55.250273+00:00",
+  "canonical_primary_result": {
+    "policy": "D025",
+    "status": "setup-failed",
+    "unchanged_by_d027": true
+  },
+  "frozen_case": {
+    "repository": "thomas-young-2013/mindware",
+    "revision": "002ec06bf139b14bc059e0f0438501b31d9ed16a",
+    "operator": "data-split",
+    "target": "examples/ci_examples/example_bagging.py",
+    "candidate_index": 1,
+    "source_before": "train_test_split(X, y, test_size=0.33, random_state=1, stratify=y)",
+    "source_after": "train_test_split(X, y, test_size=0.33, random_state=1, stratify=None)",
+    "workflow_command": "bash ci_scripts/unittests.sh",
+    "workflow_kind": "ci",
+    "oracle_kind": "completion-only",
+    "research_reference": "arXiv:2107.08861"
+  },
+  "restoration": {
+    "status": "restored",
+    "baseline_first_rule_observed": true,
+    "fresh_independent_reproduction_passed": true,
+    "recipe_frozen_before_mutation": true,
+    "corrections_used": 8,
+    "corrections_limit": 8,
+    "corrections": [
+      {
+        "order": 1,
+        "kind": "historical-runtime",
+        "change": "Python 3.12 -> Python 3.7",
+        "reason": "Frozen dependency stack, including legacy ConfigSpace, was incompatible with the available Python 3.12 runtime."
+      },
+      {
+        "order": 2,
+        "kind": "missing-dependency",
+        "change": "install torch",
+        "reason": "Observed baseline/setup import dependency requirement."
+      },
+      {
+        "order": 3,
+        "kind": "compatible-non-target-dependency",
+        "change": "install scikit-optimize==0.9.0",
+        "reason": "Observed missing/incompatible dependency requirement."
+      },
+      {
+        "order": 4,
+        "kind": "compatible-non-target-dependency",
+        "change": "OpenBox 0.9.0 -> 0.7.16",
+        "reason": "Baseline failed because required legacy openbox.core.mf_batch_advisor API was unavailable."
+      },
+      {
+        "order": 5,
+        "kind": "missing-compatible-dependency",
+        "change": "install pyrfr==0.9.0",
+        "reason": "Observed dependency requirement in restored workflow."
+      },
+      {
+        "order": 6,
+        "kind": "compatible-non-target-dependency",
+        "change": "scikit-learn 1.0.2 -> 0.23.2",
+        "reason": "Observed compatibility failure in the frozen workflow."
+      },
+      {
+        "order": 7,
+        "kind": "compatible-non-target-dependency",
+        "change": "LightGBM 4.6.0 -> 3.3.2",
+        "reason": "Observed compatibility failure in the frozen workflow."
+      },
+      {
+        "order": 8,
+        "kind": "compatible-non-target-dependency",
+        "change": "OpenBox 0.7.16 -> 0.7.14",
+        "reason": "Error-directed final compatibility adjustment required for the unchanged frozen CI workflow."
+      }
+    ],
+    "final_environment_key_versions": {
+      "python": "3.7",
+      "openbox": "0.7.14",
+      "pyrfr": "0.9.0",
+      "lightgbm": "3.3.2",
+      "scikit-learn": "0.23.2",
+      "scikit-optimize": "0.9.0",
+      "ConfigSpace": "0.4.21",
+      "torch": "1.13.1",
+      "numpy": "1.21.6",
+      "scipy": "1.7.3",
+      "pandas": "1.3.5"
+    },
+    "environment_symmetry_confirmed": true
+  },
+  "mutation_evaluation": {
+    "mutation_applied": true,
+    "exact_target_only": true,
+    "baseline_return_code": 0,
+    "mutant_return_code": 0,
+    "outcome": "SURVIVED",
+    "oracle_interpretation": "The frozen workflow uses a completion-only oracle. Internal AutoML worker exceptions occurred during search, including LinearDiscriminantAnalysis candidate failures, but the top-level CI workflow returned zero for both baseline and mutant and therefore these internal candidate failures are not workflow failures."
+  },
+  "semantic_verification": {
+    "status": "confirmed-non-equivalent",
+    "method": "Reproduce the frozen Iris train_test_split using indices with test_size=0.33 and random_state=1, comparing stratify=y against stratify=None.",
+    "baseline_train_n": 100,
+    "baseline_test_n": 50,
+    "mutant_train_n": 100,
+    "mutant_test_n": 50,
+    "same_train_indices": false,
+    "same_test_indices": false,
+    "baseline_test_class_counts": [
+      16,
+      17,
+      17
+    ],
+    "mutant_test_class_counts": [
+      17,
+      19,
+      14
+    ]
+  },
+  "source_state": {
+    "baseline_tracked_changes": [],
+    "mutant_tracked_changes": [
+      "examples/ci_examples/example_bagging.py"
+    ]
+  },
+  "final_d027_result": "SURVIVED",
+  "canonical_primary_result_remains_unchanged": true,
+  "screening_jsonl_modified": false
+}

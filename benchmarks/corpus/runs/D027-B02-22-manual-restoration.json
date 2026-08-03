@@ -1,0 +1,200 @@
+{
+  "baseline": {
+    "environment": "fresh-independent",
+    "observed_wall_seconds": 117,
+    "return_code": 0,
+    "status": "passed",
+    "stdout_sha256": "e2a02a07634b66f20ca939c7084506a07747a5955b5bbf1fd12616b18b8137dc",
+    "workflow_summary": "1 passed"
+  },
+  "canonical_primary": {
+    "policy": "D025",
+    "screening_ledger_modified_by_d027": false,
+    "status": "setup-failed"
+  },
+  "case_id": "B02-22",
+  "d027": {
+    "correction_budget": 8,
+    "corrections": [
+      {
+        "action": "Install pytest.",
+        "class": "missing-runtime-test-validation-dependency",
+        "evidence": "The frozen pytest workflow initially failed because pytest was absent.",
+        "number": 1,
+        "origin": "D025"
+      },
+      {
+        "action": "Install pandas.",
+        "class": "missing-runtime-test-validation-dependency",
+        "evidence": "The frozen upstream test directly imports pandas and failed because it was absent from requirements.",
+        "number": 2,
+        "origin": "D025"
+      },
+      {
+        "action": "Use pandas<3, resolving pandas==2.3.3.",
+        "class": "non-target-dependency-adjustment",
+        "evidence": "The baseline preprocessing was incompatible with pandas 3 categorical assignment semantics.",
+        "number": 3,
+        "origin": "D025"
+      },
+      {
+        "action": "Set TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1 for validation.",
+        "class": "environment-normalization",
+        "evidence": "The canonical baseline failed while Lightning reloaded its checkpoint because current PyTorch defaulted torch.load to weights_only=True. The restored run explicitly reported that the environment variable forced weights_only=False and the unchanged workflow passed.",
+        "number": 4,
+        "origin": "D027"
+      }
+    ],
+    "corrections_used": 4,
+    "restoration_classification": "restored"
+  },
+  "environment": {
+    "baseline_mutant_package_sets_identical": true,
+    "environment_normalization": {
+      "TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD": "1"
+    },
+    "numpy": "2.5.2",
+    "packages": [
+      "aiohappyeyeballs==2.7.1",
+      "aiohttp==3.14.3",
+      "aiosignal==1.4.0",
+      "attrs==26.1.0",
+      "cuda-bindings==13.3.1",
+      "cuda-pathfinder==1.7.0",
+      "cuda-toolkit==13.0.3.0",
+      "einops==0.8.2",
+      "filelock==3.32.4",
+      "frozenlist==1.8.0",
+      "fsspec==2026.7.0",
+      "idna==3.19",
+      "iniconfig==2.3.0",
+      "Jinja2==3.1.6",
+      "joblib==1.5.3",
+      "lightning-utilities==0.15.3",
+      "MarkupSafe==3.0.3",
+      "mpmath==1.3.0",
+      "multidict==6.7.1",
+      "narwhals==2.25.0",
+      "networkx==3.6.1",
+      "numpy==2.5.2",
+      "nvidia-cublas==13.1.1.3",
+      "nvidia-cuda-cupti==13.0.85",
+      "nvidia-cuda-nvrtc==13.0.88",
+      "nvidia-cuda-runtime==13.0.96",
+      "nvidia-cudnn-cu13==9.20.0.48",
+      "nvidia-cufft==12.0.0.61",
+      "nvidia-cufile==1.15.1.6",
+      "nvidia-curand==10.4.0.35",
+      "nvidia-cusolver==12.0.4.66",
+      "nvidia-cusparse==12.6.3.3",
+      "nvidia-cusparselt-cu13==0.8.1",
+      "nvidia-nccl-cu13==2.29.7",
+      "nvidia-nvjitlink==13.3.33",
+      "nvidia-nvshmem-cu13==3.4.5",
+      "nvidia-nvtx==13.0.85",
+      "packaging==26.3",
+      "pandas==2.3.3",
+      "pluggy==1.6.0",
+      "propcache==0.5.2",
+      "Pygments==2.21.0",
+      "pytest==9.1.1",
+      "python-dateutil==2.9.0.post0",
+      "pytorch-lightning==2.6.5",
+      "pytz==2026.3.post1",
+      "PyYAML==6.0.3",
+      "scikit-learn==1.9.0",
+      "scipy==1.18.1",
+      "setuptools==84.0.0",
+      "six==1.17.0",
+      "sympy==1.14.0",
+      "threadpoolctl==3.6.0",
+      "torch==2.13.0",
+      "torchmetrics==1.9.0",
+      "tqdm==4.70.0",
+      "triton==3.7.1",
+      "typing_extensions==4.16.0",
+      "tzdata==2026.3",
+      "yarl==1.24.5"
+    ],
+    "pandas": "2.3.3",
+    "pytest": "9.1.1",
+    "python": "3.12.3",
+    "pytorch_lightning": "2.6.5",
+    "scikit_learn": "1.9.0",
+    "torch": "2.13.0"
+  },
+  "external_artifact": {
+    "dataset": "Adult",
+    "file_count": 4,
+    "identical_across_runs": true,
+    "kind": "public-openml-cache",
+    "manifest_sha256": "979b5c6e7b5c5ba7f02b524e3fb84a5945acfb52aafecf9cda2a76cadebb2c4b",
+    "openml_data_id": 1590,
+    "provenance": "Cache populated by the successful frozen baseline through sklearn.datasets.fetch_openml(data_id=1590) and copied identically into the three independent runs."
+  },
+  "frozen_case": {
+    "baseline_candidate": "data, _, label, _ = train_test_split(data, label, train_size = 0.2, random_state=random_seed, stratify=label)",
+    "candidate_index": 1,
+    "mutant_candidate": "data, _, label, _ = train_test_split(data, label, train_size = 0.2, random_state=random_seed, stratify=None)",
+    "operator": "data-split",
+    "oracle_kind": "completion-only",
+    "repository": "Alcoholrithm/PTaRL",
+    "revision": "2845a6cc9ee376453d1693a996374c42bd984f2a",
+    "target": "test/test_mlp_adults.py",
+    "workflow": "pytest test/test_mlp_adults.py",
+    "workflow_kind": "upstream-test"
+  },
+  "generated_at_utc": "2026-07-25T13:14:11.570796+00:00",
+  "interpretation": "D027 restored the unchanged workflow using an environment-only PyTorch checkpoint-loading compatibility normalization. The exact data-split mutation changed the selected subset and its class distribution, but the same completion-only upstream workflow still passed. Therefore the mutation SURVIVED and was confirmed non-equivalent.",
+  "mutant": {
+    "environment": "fresh-independent",
+    "observed_wall_seconds": 147,
+    "return_code": 0,
+    "status": "passed",
+    "stdout_sha256": "eac4f01de3fe6f306f66e71268c3a0f7b5d4d2576fe541d761d39da8b65e2948",
+    "workflow_summary": "1 passed"
+  },
+  "mutation": {
+    "applied": true,
+    "outcome": "SURVIVED",
+    "status": "evaluated"
+  },
+  "record_kind": "d027-manual-restoration-result",
+  "restoration_reproduction": {
+    "environment": "fresh-independent",
+    "observed_wall_seconds": 117,
+    "return_code": 0,
+    "status": "passed",
+    "stdout_sha256": "f9d3bd52e8b8067c7e20d9ade30eae3a7857dea459385d6288831e27559d3399",
+    "workflow_summary": "1 passed"
+  },
+  "schema_version": 1,
+  "semantic_verification": {
+    "evidence": {
+      "baseline_class_counts": [
+        7431,
+        2337
+      ],
+      "baseline_subset_n": 9768,
+      "mutant_class_counts": [
+        7499,
+        2269
+      ],
+      "mutant_subset_n": 9768,
+      "same_selected_indices": false
+    },
+    "method": "Execute the frozen first train_test_split configuration on the same OpenML Adult labels with random_state=0 under stratify=label and stratify=None, then compare selected sample indices and class counts.",
+    "status": "confirmed-non-equivalent"
+  },
+  "source_verification": {
+    "baseline_tracked_source_clean": true,
+    "exact_candidate_mutation_only": true,
+    "mutant_only_tracked_change": "test/test_mlp_adults.py",
+    "reproduction_tracked_source_clean": true,
+    "source_diff": "--- /tmp/mlrepromutate-d027/B02-22-final/baseline/repo/test/test_mlp_adults.py\t2026-07-25 15:41:19.078046243 +0300\n+++ /tmp/mlrepromutate-d027/B02-22-final/mutant/repo/test/test_mlp_adults.py\t2026-07-25 16:08:09.188142771 +0300\n@@ -54,7 +54,7 @@\n \n     from sklearn.model_selection import train_test_split\n \n-    data, _, label, _ = train_test_split(data, label, train_size = 0.2, random_state=random_seed, stratify=label)\n+    data, _, label, _ = train_test_split(data, label, train_size = 0.2, random_state=random_seed, stratify=None)\n     \n     X_train, X_test, y_train, y_test = train_test_split(data, label, train_size = 0.8, random_state=random_seed, stratify=label)\n \n"
+  },
+  "target_execution": {
+    "evidence": "The selected upstream test directly executes the frozen first train_test_split before the downstream PTaRL training workflow. The complete workflow passed in both baseline and mutant configurations.",
+    "status": "confirmed"
+  }
+}

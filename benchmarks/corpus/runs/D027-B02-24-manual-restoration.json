@@ -1,0 +1,66 @@
+{
+  "canonical_execution_evidence": {
+    "documented_setup": {
+      "baseline_return_code": 0,
+      "command": "pip install .",
+      "mutant_return_code": 0
+    },
+    "failure": "The frozen test assigns the return value of bctools.curve_ROC_plot to area_under_ROC and passes that value directly to unittest.assertAlmostEqual against a float. The frozen implementation returns a (figure, area) tuple. The resulting tuple-versus-float operation raises TypeError.",
+    "unchanged_baseline": {
+      "return_code": 1,
+      "status": "failed"
+    }
+  },
+  "canonical_primary": {
+    "policy": "D025",
+    "screening_ledger_modified_by_d027": false,
+    "status": "setup-failed"
+  },
+  "case_id": "B02-24",
+  "d027": {
+    "correction_budget": 8,
+    "corrections_used": 0,
+    "mutation_attempted": false,
+    "restoration_classification": "not-restored",
+    "terminal_reason": "intrinsic-source-test-mismatch"
+  },
+  "frozen_case": {
+    "baseline_candidate": "train_test_split(X, y, test_size=0.2, stratify=y, random_state=123)",
+    "candidate_index": 1,
+    "mutant_candidate": "train_test_split(X, y, test_size=0.2, stratify=None, random_state=123)",
+    "operator": "data-split",
+    "oracle_kind": "assertion",
+    "repository": "lucazav/binclass-tools",
+    "revision": "d45de9e2fcec86104e837e837f8ec5f32b4a8d4b",
+    "target": "test/test_1.py",
+    "workflow": "python test/test_1.py",
+    "workflow_kind": "upstream-test"
+  },
+  "generated_at_utc": "2026-07-25T11:14:10.323991+00:00",
+  "interpretation": "B02-24 cannot be converted into a valid D027 mutation experiment under the frozen protocol. The documented setup already succeeds, while the unchanged upstream workflow has an intrinsic source/test contract mismatch. No permitted environment-only restoration can establish a passing baseline.",
+  "mutation": {
+    "applied": false,
+    "outcome": null,
+    "status": "not-evaluated"
+  },
+  "record_kind": "d027-manual-restoration-result",
+  "restoration_assessment": {
+    "forbidden_repairs_that_would_be_required": [
+      "modify curve_ROC_plot return value",
+      "modify the upstream test to unpack the tuple",
+      "replace or alter the frozen validation workflow"
+    ],
+    "permitted_environment_correction_available": false,
+    "reason": "Changing Python or non-target dependency versions cannot change the frozen repository's explicit tuple return and the frozen test's direct tuple-versus-float assertion without relying on outcome-directed or source/workflow modification."
+  },
+  "schema_version": 1,
+  "semantic_verification": {
+    "reason": "Mutation was not applied under baseline-first rule.",
+    "status": "not-run"
+  },
+  "static_frozen_source_verification": {
+    "environment_independent_mismatch": true,
+    "implementation_behavior": "The frozen curve_ROC_plot implementation returns both a plot object and the ROC area as a tuple.",
+    "test_behavior": "test/test_1.py directly assigns bc.curve_ROC_plot(...) to area_under_ROC and then calls assertAlmostEqual(area_under_ROC, float, places=3)."
+  }
+}
