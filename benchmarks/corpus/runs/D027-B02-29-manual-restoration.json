@@ -1,0 +1,168 @@
+{
+  "baseline": {
+    "command": "python run.py",
+    "environment": {
+      "MPLBACKEND": "Agg"
+    },
+    "observed_wall_seconds": 52,
+    "return_code": 0,
+    "status": "passed",
+    "stderr": {
+      "omitted_from_repository": true,
+      "reason": "Large raw execution stream omitted; compact integrity evidence retained.",
+      "original_utf8_bytes": 168305623,
+      "sha256": "4098e635aaaaf9938a62d3dd987d9e94fd8dea5d52625fa24ba2695150bfb7ed",
+      "head_excerpt": "/tmp/mlrepromutate-d027/B02-29-final-agg/baseline/env/lib/python3.7/site-packages/sklearn/linear_model/least_angle.py:30: DeprecationWarning: `np.float` is a deprecated alias for the builtin `float`. To silence this warning, use `float` by itself. Doing this will not modify any behavior and is safe. If you specifically wanted the numpy scalar type, use `np.float64` here.\nDeprecated in NumPy 1.20; for more details and guidance: https://numpy.org/devdocs/release/1.20.0-notes.html#deprecations\n  method='lar', copy_X=True, eps=np.finfo(np.float).eps,\n/tmp/mlrepromutate-d027/B02-29-final-agg/baseline/env/lib/python3.7/site-packages/sklearn/linear_model/least_angle.py:167: DeprecationWarning: `np.float` is a deprecated alias for the builtin `float`. To silence this warning, use `float` by itself. Doing this will not modify any behavior and is safe. If you specifically wanted the numpy scalar type, use `np.float64` here.\nDeprecated in NumPy 1.20; for more details and guidance: https://numpy.org/devdocs/release/1.20.0-notes.html#deprecations\n  method='lar', copy_X=True, eps=np.finfo(np.float).eps,\n/tmp/mlrepromutate-d027/B02-29-final-agg/baseline/env/lib/python3.7/site-packages/sklearn/linear_model/least_angle.py:284: DeprecationWarning: `np.float` is a deprecated alias for the builtin `float`. To silence this warning, use `float` by itself. Doing this will not modify any behavior and is safe. If you specifically wanted the numpy scalar type, use `np.float64` here.\nDeprecated in NumPy 1.20; for more details and guidance: https://numpy.org/devdocs/release/1.20.0-notes.html#deprecations\n  eps=np.finfo(np.float).eps, copy_Gram=True, verbose=0,\n/tmp/mlrepromutate-d027/B02-29-final-agg/baseline/env/lib/python3.7/site-packages/sklearn/linear_model/least_angle.py:862: DeprecationWarning: `np.float` is a deprecated alias for the builtin `float`. To silence this warning, use `float` by itself. Doing this will not modify any behavior and is safe. If you specifically wanted the numpy ",
+      "tail_excerpt": "e/1.20.0-notes.html#deprecations\n  dtype = np.float\n/tmp/mlrepromutate-d027/B02-29-final-agg/baseline/env/lib/python3.7/site-packages/sklearn/metrics/pairwise.py:56: DeprecationWarning: `np.float` is a deprecated alias for the builtin `float`. To silence this warning, use `float` by itself. Doing this will not modify any behavior and is safe. If you specifically wanted the numpy scalar type, use `np.float64` here.\nDeprecated in NumPy 1.20; for more details and guidance: https://numpy.org/devdocs/release/1.20.0-notes.html#deprecations\n  dtype = np.float\n/tmp/mlrepromutate-d027/B02-29-final-agg/baseline/env/lib/python3.7/site-packages/sklearn/metrics/pairwise.py:56: DeprecationWarning: `np.float` is a deprecated alias for the builtin `float`. To silence this warning, use `float` by itself. Doing this will not modify any behavior and is safe. If you specifically wanted the numpy scalar type, use `np.float64` here.\nDeprecated in NumPy 1.20; for more details and guidance: https://numpy.org/devdocs/release/1.20.0-notes.html#deprecations\n  dtype = np.float\n/tmp/mlrepromutate-d027/B02-29-final-agg/baseline/env/lib/python3.7/site-packages/sklearn/tree/tree.py:163: DeprecationWarning: `np.int` is a deprecated alias for the builtin `int`. To silence this warning, use `int` by itself. Doing this will not modify any behavior and is safe. When replacing `np.int`, you may wish to use e.g. `np.int64` or `np.int32` to specify the precision. If you wish to review your current use, check the release note link for additional information.\nDeprecated in NumPy 1.20; for more details and guidance: https://numpy.org/devdocs/release/1.20.0-notes.html#deprecations\n  y_encoded = np.zeros(y.shape, dtype=np.int)\nrun.py:75: DeprecationWarning: scipy.interp is deprecated and will be removed in SciPy 2.0.0, use numpy.interp instead\n  tprs.append(interp(mean_fpr, fpr, tpr))\nrun.py:110: UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.\n  plt.show()"
+    },
+    "stdout": "dataset :  pima.txt\nROC:  0.7641635220125786  Aupr:  0.6156548381576532  for depth=  2  estimators =  20\nROC:  0.7641635220125786  Aupr:  0.6156548381576532  for depth=  2  estimators =  20\nROC:  0.7641635220125786  Aupr:  0.6156548381576532  for depth=  2  estimators =  20\nROC:  0.9231390635918938  Aupr:  0.86177926566954  for depth=  12  estimators =  20\nROC:  0.9297889587700908  Aupr:  0.8713748469598148  for depth=  12  estimators =  30\nROC:  0.9297889587700908  Aupr:  0.8713748469598148  for depth=  12  estimators =  30\nploting pima.txt"
+  },
+  "bundled_input": {
+    "baseline_sha256": "af4cc48c930449faee5db0ff18a251f65234837004b5b4ebaa005e516aecdbc7",
+    "mutant_sha256": "af4cc48c930449faee5db0ff18a251f65234837004b5b4ebaa005e516aecdbc7",
+    "path": "pima.txt"
+  },
+  "canonical_primary": {
+    "policy": "D025",
+    "screening_ledger_modified_by_d027": false,
+    "status": "setup-failed"
+  },
+  "case_id": "B02-29",
+  "d027": {
+    "correction_budget": 8,
+    "corrections": [
+      {
+        "action": "Use Python 3.8 instead of project Python 3.12.",
+        "class": "historical-runtime-provisioning",
+        "evidence": "Canonical modern-runtime restoration could not install the historical SciPy stack needed by the frozen program.",
+        "number": 1
+      },
+      {
+        "action": "Use historical SciPy providing scipy.interp.",
+        "class": "non-target-dependency-compatibility",
+        "evidence": "Frozen run.py imports `from scipy import interp`; modern SciPy no longer exposed this API.",
+        "number": 2
+      },
+      {
+        "action": "Use scikit-learn==0.21.3.",
+        "class": "non-target-dependency-compatibility",
+        "evidence": "Frozen CUSBoost.py imports sklearn.ensemble.weight_boosting._samme_proba; the modern scikit-learn environment lacked that module.",
+        "number": 3
+      },
+      {
+        "action": "Pivot to Python 3.7.12.",
+        "class": "historical-runtime-provisioning",
+        "evidence": "The selected historical scikit-learn release has a usable historical binary/runtime path on Python 3.7.",
+        "number": 4
+      },
+      {
+        "action": "Set MPLBACKEND=Agg for unattended execution.",
+        "class": "environment-normalization",
+        "evidence": "The exact restored workflow opened interactive Matplotlib windows and blocked unattended completion. Agg removed only the GUI interaction requirement.",
+        "number": 5
+      }
+    ],
+    "corrections_used": 5,
+    "restoration_classification": "restored"
+  },
+  "environment": {
+    "baseline_mutant_package_sets_identical": true,
+    "environment_normalization": {
+      "MPLBACKEND": "Agg"
+    },
+    "packages": [
+      "cycler==0.11.0",
+      "fonttools==4.38.0",
+      "imbalanced-learn==0.5.0",
+      "joblib==1.3.2",
+      "kiwisolver==1.4.5",
+      "matplotlib==3.5.3",
+      "numpy==1.21.6",
+      "packaging==24.0",
+      "pandas==1.3.5",
+      "Pillow==9.5.0",
+      "pyparsing==3.1.4",
+      "python-dateutil==2.9.0.post0",
+      "pytz==2026.3.post1",
+      "scikit-learn==0.21.3",
+      "scipy==1.7.3",
+      "six==1.17.0",
+      "typing_extensions==4.7.1"
+    ],
+    "python": "3.7.12"
+  },
+  "frozen_case": {
+    "baseline_candidate": "StratifiedKFold(n_splits=5, shuffle=True)",
+    "mutant_candidate": "StratifiedKFold(n_splits=6, shuffle=True)",
+    "operator": "cv-fold-count",
+    "oracle_kind": "completion-only",
+    "repository": "farshidrayhancv/CUSBoost",
+    "revision": "6b489e099bdb83e2089b2f7f105b72ea9b5becad",
+    "target": "run.py",
+    "workflow": "python run.py"
+  },
+  "generated_at_utc": "2026-07-25T11:04:14.514266+00:00",
+  "interpretation": "After historical-environment restoration and headless-only environment normalization, both baseline and the exact cv-fold-count mutant completed successfully. Therefore the mutation SURVIVED the frozen completion-only workflow. The fold-count change was independently confirmed non-equivalent.",
+  "mutant": {
+    "command": "python run.py",
+    "environment": {
+      "MPLBACKEND": "Agg"
+    },
+    "observed_wall_seconds": 63,
+    "return_code": 0,
+    "status": "passed",
+    "stderr": {
+      "omitted_from_repository": true,
+      "reason": "Large raw execution stream omitted; compact integrity evidence retained.",
+      "original_utf8_bytes": 200683848,
+      "sha256": "c8bc4d52868ae0a9fd5e2457384c9882b3622a5a484e8c330be4bb4107a1f94b",
+      "head_excerpt": "/tmp/mlrepromutate-d027/B02-29-final-agg/mutant/env/lib/python3.7/site-packages/sklearn/linear_model/least_angle.py:30: DeprecationWarning: `np.float` is a deprecated alias for the builtin `float`. To silence this warning, use `float` by itself. Doing this will not modify any behavior and is safe. If you specifically wanted the numpy scalar type, use `np.float64` here.\nDeprecated in NumPy 1.20; for more details and guidance: https://numpy.org/devdocs/release/1.20.0-notes.html#deprecations\n  method='lar', copy_X=True, eps=np.finfo(np.float).eps,\n/tmp/mlrepromutate-d027/B02-29-final-agg/mutant/env/lib/python3.7/site-packages/sklearn/linear_model/least_angle.py:167: DeprecationWarning: `np.float` is a deprecated alias for the builtin `float`. To silence this warning, use `float` by itself. Doing this will not modify any behavior and is safe. If you specifically wanted the numpy scalar type, use `np.float64` here.\nDeprecated in NumPy 1.20; for more details and guidance: https://numpy.org/devdocs/release/1.20.0-notes.html#deprecations\n  method='lar', copy_X=True, eps=np.finfo(np.float).eps,\n/tmp/mlrepromutate-d027/B02-29-final-agg/mutant/env/lib/python3.7/site-packages/sklearn/linear_model/least_angle.py:284: DeprecationWarning: `np.float` is a deprecated alias for the builtin `float`. To silence this warning, use `float` by itself. Doing this will not modify any behavior and is safe. If you specifically wanted the numpy scalar type, use `np.float64` here.\nDeprecated in NumPy 1.20; for more details and guidance: https://numpy.org/devdocs/release/1.20.0-notes.html#deprecations\n  eps=np.finfo(np.float).eps, copy_Gram=True, verbose=0,\n/tmp/mlrepromutate-d027/B02-29-final-agg/mutant/env/lib/python3.7/site-packages/sklearn/linear_model/least_angle.py:862: DeprecationWarning: `np.float` is a deprecated alias for the builtin `float`. To silence this warning, use `float` by itself. Doing this will not modify any behavior and is safe. If you specifically wanted the numpy scalar t",
+      "tail_excerpt": "release/1.20.0-notes.html#deprecations\n  dtype = np.float\n/tmp/mlrepromutate-d027/B02-29-final-agg/mutant/env/lib/python3.7/site-packages/sklearn/metrics/pairwise.py:56: DeprecationWarning: `np.float` is a deprecated alias for the builtin `float`. To silence this warning, use `float` by itself. Doing this will not modify any behavior and is safe. If you specifically wanted the numpy scalar type, use `np.float64` here.\nDeprecated in NumPy 1.20; for more details and guidance: https://numpy.org/devdocs/release/1.20.0-notes.html#deprecations\n  dtype = np.float\n/tmp/mlrepromutate-d027/B02-29-final-agg/mutant/env/lib/python3.7/site-packages/sklearn/metrics/pairwise.py:56: DeprecationWarning: `np.float` is a deprecated alias for the builtin `float`. To silence this warning, use `float` by itself. Doing this will not modify any behavior and is safe. If you specifically wanted the numpy scalar type, use `np.float64` here.\nDeprecated in NumPy 1.20; for more details and guidance: https://numpy.org/devdocs/release/1.20.0-notes.html#deprecations\n  dtype = np.float\n/tmp/mlrepromutate-d027/B02-29-final-agg/mutant/env/lib/python3.7/site-packages/sklearn/tree/tree.py:163: DeprecationWarning: `np.int` is a deprecated alias for the builtin `int`. To silence this warning, use `int` by itself. Doing this will not modify any behavior and is safe. When replacing `np.int`, you may wish to use e.g. `np.int64` or `np.int32` to specify the precision. If you wish to review your current use, check the release note link for additional information.\nDeprecated in NumPy 1.20; for more details and guidance: https://numpy.org/devdocs/release/1.20.0-notes.html#deprecations\n  y_encoded = np.zeros(y.shape, dtype=np.int)\nrun.py:75: DeprecationWarning: scipy.interp is deprecated and will be removed in SciPy 2.0.0, use numpy.interp instead\n  tprs.append(interp(mean_fpr, fpr, tpr))\nrun.py:110: UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.\n  plt.show()"
+    },
+    "stdout": "dataset :  pima.txt\nROC:  0.7313735461325823  Aupr:  0.5610484964292778  for depth=  2  estimators =  20\nROC:  0.7641379853227243  Aupr:  0.6280941159778605  for depth=  2  estimators =  30\nROC:  0.7641379853227243  Aupr:  0.6280941159778605  for depth=  2  estimators =  30\nROC:  0.9128192423373146  Aupr:  0.8647166427730492  for depth=  12  estimators =  20\nROC:  0.9203849307764971  Aupr:  0.854201356114736  for depth=  12  estimators =  30\nROC:  0.9211504507689247  Aupr:  0.8593389884935023  for depth=  12  estimators =  40\nploting pima.txt"
+  },
+  "mutation": {
+    "applied": true,
+    "outcome": "SURVIVED",
+    "status": "evaluated"
+  },
+  "record_kind": "d027-manual-restoration-result",
+  "restoration_reproduction": {
+    "environment": "fresh-independent",
+    "return_code": 0,
+    "status": "passed"
+  },
+  "schema_version": 1,
+  "semantic_verification": {
+    "evidence": {
+      "baseline_fold_count": 5,
+      "baseline_test_sizes": [
+        20,
+        20,
+        20,
+        20,
+        20
+      ],
+      "mutant_fold_count": 6,
+      "mutant_test_sizes": [
+        17,
+        17,
+        17,
+        17,
+        17,
+        15
+      ]
+    },
+    "status": "confirmed-non-equivalent"
+  },
+  "source_verification": {
+    "baseline_tracked_source_clean": true,
+    "exact_mutation_only": true,
+    "mutant_only_tracked_change": "run.py",
+    "source_diff": "--- /tmp/mlrepromutate-d027/B02-29-final-agg/baseline/repo/run.py\t2026-07-25 13:22:58.911385249 +0300\n+++ /tmp/mlrepromutate-d027/B02-29-final-agg/mutant/repo/run.py\t2026-07-25 13:23:51.244492045 +0300\n@@ -33,7 +33,7 @@\n \n normalization_object = Normalizer()\n X = normalization_object.fit_transform(X)\n-skf = StratifiedKFold(n_splits=5, shuffle=True)\n+skf = StratifiedKFold(n_splits=6, shuffle=True)\n \n top_auc = 0\n mean_fpr = np.linspace(0, 1, 100)\n"
+  },
+  "target_execution": {
+    "evidence": "The frozen workflow completed its full cross-validation experiment and printed final ROC/AUPR search output. run.py constructs the frozen StratifiedKFold before iterating over skf.split(X, y), so successful completion exercises the selected target.",
+    "status": "confirmed"
+  }
+}

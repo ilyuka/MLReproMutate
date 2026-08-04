@@ -1,0 +1,100 @@
+{
+  "baseline_reproductions": [
+    {
+      "attempt": "attempt-01-exact",
+      "output_preq_pdf_sha256": "8775d790dc90945d4dfc63f96e5c16b4d66edbdf101ce2bfb8d76b9af75fba5e",
+      "return_code": 0,
+      "stderr": "/tmp/mlrepromutate-d027/B02-28-attempt-01/venv/lib/python3.8/site-packages/skmultiflow/data/base_stream.py:191: FutureWarning: 'prepare_for_use' has been deprecated in v0.5.0 and will be removed in v0.7.0.\nNew instances of the Stream class are now ready to use after instantiation.\n  warnings.warn(\n/tmp/mlrepromutate-d027/B02-28-attempt-01/venv/lib/python3.8/site-packages/skmultiflow/trees/hoeffding_tree.py:34: FutureWarning: 'HoeffdingTree' has been renamed to 'HoeffdingTreeClassifier' in v0.5.0.\nThe old name will be removed in v0.7.0\n  warnings.warn(\"'HoeffdingTree' has been renamed to 'HoeffdingTreeClassifier' in v0.5.0.\\n\"\nD3.py:202: UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.\n  plt.show()",
+      "stdout": "Final accuracy: 86.6209, Elapsed time: 5.6519"
+    },
+    {
+      "attempt": "attempt-02-fresh",
+      "output_preq_pdf_sha256": "30f8bef428043e0d7d816afb224f25b59897b33655beea9b710d8bc124093a6d",
+      "return_code": 0,
+      "stderr": "/tmp/mlrepromutate-d027/B02-28-attempt-02/venv/lib/python3.8/site-packages/skmultiflow/data/base_stream.py:191: FutureWarning: 'prepare_for_use' has been deprecated in v0.5.0 and will be removed in v0.7.0.\nNew instances of the Stream class are now ready to use after instantiation.\n  warnings.warn(\n/tmp/mlrepromutate-d027/B02-28-attempt-02/venv/lib/python3.8/site-packages/skmultiflow/trees/hoeffding_tree.py:34: FutureWarning: 'HoeffdingTree' has been renamed to 'HoeffdingTreeClassifier' in v0.5.0.\nThe old name will be removed in v0.7.0\n  warnings.warn(\"'HoeffdingTree' has been renamed to 'HoeffdingTreeClassifier' in v0.5.0.\\n\"\nD3.py:202: UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.\n  plt.show()",
+      "stdout": "Final accuracy: 86.5282, Elapsed time: 5.6647"
+    }
+  ],
+  "candidate": {
+    "baseline": "StratifiedKFold(n_splits=2, shuffle=True)",
+    "mutant": "StratifiedKFold(n_splits=3, shuffle=True)"
+  },
+  "candidate_index": 1,
+  "canonical_primary_result": "setup-failed",
+  "case_id": "B02-28",
+  "correction_budget": 8,
+  "corrections": [
+    {
+      "action": "Use Python 3.8.20 instead of Python 3.12.",
+      "class": "historical-runtime-provisioning",
+      "evidence": "Canonical D025 setup failed in a modern Python/NumPy environment at scikit-multiflow's numpy.distutils-based build path; scikit-multiflow 0.5.3 supports the historical Python 3.8 runtime.",
+      "number": 1
+    },
+    {
+      "action": "Constrain NumPy to 1.23.5.",
+      "class": "non-target-dependency-compatibility",
+      "evidence": "With Python 3.8, installation succeeded but importing scikit-multiflow 0.5.3 failed because NumPy 1.24.4 removed np.float. NumPy 1.23.5 restored compatibility.",
+      "number": 2
+    }
+  ],
+  "corrections_used": 2,
+  "d027_status": "restored-pending-mutation-evaluation",
+  "dataset": {
+    "csv_data_rows": 45312,
+    "path": "real-world/elec.csv",
+    "sha256": "ebdfe5480ae25a43a7d054286135e3a9484697a2850d5158a333b1578c28bb97",
+    "source_repository": "ogozuacik/concept-drift-datasets-scikit-multiflow",
+    "source_revision": "fcbad97fe3df0e6d31020a6a74e3b456fd3a8377"
+  },
+  "frozen_environment_recipe": {
+    "packages": [
+      "contourpy==1.1.1",
+      "cycler==0.12.1",
+      "fonttools==4.57.0",
+      "importlib_resources==6.4.5",
+      "joblib==1.4.2",
+      "kiwisolver==1.4.7",
+      "matplotlib==3.7.5",
+      "numpy==1.23.5",
+      "packaging==26.2",
+      "pandas==2.0.3",
+      "pillow==10.4.0",
+      "pyparsing==3.1.4",
+      "python-dateutil==2.9.0.post0",
+      "pytz==2026.3.post1",
+      "scikit-learn==1.3.2",
+      "scikit-multiflow==0.5.3",
+      "scipy==1.10.1",
+      "six==1.17.0",
+      "sortedcontainers==2.4.0",
+      "threadpoolctl==3.5.0",
+      "tzdata==2026.3",
+      "zipp==3.20.2"
+    ],
+    "python": "3.8.20"
+  },
+  "mutation": {
+    "applied": false,
+    "outcome": null,
+    "status": "not-run"
+  },
+  "notes": [
+    "An earlier tentative attempt-01 run used an unnecessary MPLBACKEND=Agg override. It is retained only as audit history and is not one of the two baseline reproductions used for environment freeze.",
+    "The two valid baseline runs produced different final accuracy values. The frozen oracle is completion-only, and the frozen StratifiedKFold uses shuffle=True without random_state."
+  ],
+  "operator": "cv-fold-count",
+  "record_kind": "d027-pre-mutation-environment-freeze",
+  "repository": "ogozuacik/d3-discriminative-drift-detector-concept-drift",
+  "revision": "de9dbc748b17b3f95c8328930d4d6035084047fd",
+  "schema_version": 1,
+  "target": "D3.py",
+  "target_execution": {
+    "evidence": "The dataset contains 45312 data rows. The workflow initially consumes 10 samples and the D3 buffer capacity is 110. The remaining stream therefore necessarily fills the buffer. Frozen D3.py then enters D3_win.driftCheck(), which calls drift_detector(), where the frozen StratifiedKFold(n_splits=2, shuffle=True) is constructed and skf.split(...) is executed. Both complete baseline workflows returned code 0.",
+    "method": "control-flow proof plus completed full workflow",
+    "status": "confirmed"
+  },
+  "workflow": {
+    "command": "python D3.py elec.csv 100 0.1 0.7",
+    "oracle_kind": "completion-only"
+  }
+}

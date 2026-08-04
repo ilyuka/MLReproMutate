@@ -1,0 +1,140 @@
+{
+  "baseline": {
+    "command": "python test.py",
+    "environment": "fresh-independent",
+    "observed_wall_seconds": 8,
+    "return_code": 0,
+    "status": "passed",
+    "stderr_sha256": "aa07719c374c773ac8cf2745f4e5ce07aaad6a87203e23a367ea8c51d4963771",
+    "test_summary": "Ran 2 tests; OK"
+  },
+  "canonical_primary": {
+    "policy": "D025",
+    "screening_ledger_modified_by_d027": false,
+    "status": "setup-failed"
+  },
+  "case_id": "B02-27",
+  "d027": {
+    "correction_budget": 8,
+    "corrections": [
+      {
+        "action": "Provision setuptools.",
+        "class": "missing-runtime-test-validation-dependency",
+        "evidence": "The documented setup.py command previously failed because setuptools was absent.",
+        "number": 1,
+        "origin": "D025"
+      },
+      {
+        "action": "Provision the runtime dependencies declared by setup.py.",
+        "class": "missing-runtime-test-validation-dependency",
+        "evidence": "The unchanged baseline previously failed importing evolutionary_search because NumPy was absent.",
+        "number": 2,
+        "origin": "D025"
+      },
+      {
+        "action": "Use scikit-learn==0.24.2.",
+        "class": "non-target-dependency-adjustment",
+        "evidence": "The frozen source imports sklearn.model_selection._search._check_param_grid, which was absent from the modern resolved scikit-learn.",
+        "number": 3,
+        "origin": "D025"
+      },
+      {
+        "action": "Use Python 3.8.20.",
+        "class": "historical-runtime-provisioning",
+        "evidence": "The scikit-learn 0.24.2 compatibility adjustment could not be established under the canonical Python 3.12 environment; the historical runtime allowed a valid compatible installation.",
+        "number": 4,
+        "origin": "D027"
+      }
+    ],
+    "corrections_used": 4,
+    "restoration_classification": "restored"
+  },
+  "environment": {
+    "additional_installed_metadata": [
+      "setuptools==56.0.0",
+      "sklearn-deap==0.3.0"
+    ],
+    "baseline_mutant_package_sets_identical": true,
+    "python": "3.8.20",
+    "runtime_packages": [
+      "deap==1.4.3",
+      "joblib==1.4.2",
+      "numpy==1.24.4",
+      "scikit-learn==0.24.2",
+      "scipy==1.10.1",
+      "threadpoolctl==3.5.0"
+    ]
+  },
+  "frozen_case": {
+    "baseline_candidate": "StratifiedKFold(n_splits=4)",
+    "candidate_index": 1,
+    "mutant_candidate": "StratifiedKFold(n_splits=5)",
+    "operator": "cv-fold-count",
+    "oracle_kind": "assertion",
+    "repository": "rsteca/sklearn-deap",
+    "revision": "3ec2df4ec319dbf7a18b98a43ea30ef10f97bb90",
+    "target": "test.py",
+    "workflow": "python test.py",
+    "workflow_kind": "upstream-test",
+    "workflow_reference": "test.py::TestEvolutionarySearch.test_cv -> readme()"
+  },
+  "generated_at_utc": "2026-07-25T11:12:16.465381+00:00",
+  "interpretation": "D027 restored the historical environment without modifying repository source. The independent baseline and exact cv-fold-count mutant both passed the frozen upstream assertion workflow. Therefore the mutation SURVIVED. The change from four to five folds was independently confirmed to be semantically non-equivalent.",
+  "mutant": {
+    "command": "python test.py",
+    "environment": "fresh-independent",
+    "observed_wall_seconds": 10,
+    "return_code": 0,
+    "status": "passed",
+    "stderr_sha256": "ee8426d86c53800a8c4e8fc6e3b5d11b09623bf2248ab9693508c66cc7a6adc8",
+    "test_summary": "Ran 2 tests; OK"
+  },
+  "mutation": {
+    "applied": true,
+    "outcome": "SURVIVED",
+    "status": "evaluated"
+  },
+  "record_kind": "d027-manual-restoration-result",
+  "restoration_reproduction": {
+    "command": "python test.py",
+    "environment": "fresh-independent",
+    "observed_wall_seconds": 8,
+    "return_code": 0,
+    "status": "passed",
+    "stderr_sha256": "9e4aaeae37fbb449c028e60d15c5f41226d00ab7cd78e1bb50a74fd1d247f995",
+    "test_summary": "Ran 2 tests; OK"
+  },
+  "schema_version": 1,
+  "semantic_verification": {
+    "evidence": {
+      "baseline_fold_count": 4,
+      "baseline_test_sizes": [
+        450,
+        449,
+        449,
+        449
+      ],
+      "mutant_fold_count": 5,
+      "mutant_test_sizes": [
+        360,
+        360,
+        359,
+        359,
+        359
+      ]
+    },
+    "method": "Instantiate the frozen StratifiedKFold configurations on sklearn.datasets.load_digits().",
+    "status": "confirmed-non-equivalent"
+  },
+  "source_verification": {
+    "baseline_repository_clean": true,
+    "exact_mutation_only": true,
+    "mutant_only_tracked_change": "test.py",
+    "reproduction_repository_clean": true,
+    "source_diff": "--- /tmp/mlrepromutate-d027/B02-27-final/baseline/repo/test.py\t2026-07-25 14:09:02.487986120 +0300\n+++ /tmp/mlrepromutate-d027/B02-27-final/mutant/repo/test.py\t2026-07-25 14:10:11.415126819 +0300\n@@ -28,7 +28,7 @@\n         estimator=SVC(),\n         params=paramgrid,\n         scoring=\"accuracy\",\n-        cv=StratifiedKFold(n_splits=4),\n+        cv=StratifiedKFold(n_splits=5),\n         verbose=1,\n         population_size=10,\n         gene_mutation_prob=0.10,\n"
+  },
+  "target_execution": {
+    "evidence": "test_cv calls readme(), which constructs the selected StratifiedKFold and passes it as cv to EvolutionaryAlgorithmSearchCV. The full upstream test workflow completed successfully in both configurations.",
+    "status": "confirmed"
+  }
+}
