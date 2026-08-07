@@ -1,0 +1,69 @@
+===== B01 CANONICAL =====
+B01-01  SURVIVED   semantic=None                      file=B01-01-ecb-cvxpy.json
+B01-03  SURVIVED   semantic=None                      file=B01-03-MAPIE-seed.json
+B01-04  SURVIVED   semantic=None                      file=B01-04-photonai-cv.json
+B01-05  SURVIVED   semantic=None                      file=B01-05-multiimb-data-split.json
+B01-08  SURVIVED   semantic=None                      file=B01-08-hypertools-seed.json
+B01-09  SURVIVED   semantic=None                      file=B01-09-autorank-seed.json
+B01-10  SURVIVED   semantic=None                      file=B01-10-pwl-cv.json
+B01_CANONICAL_EVALUATED = 7
+B01_OUTCOMES = {'SURVIVED': 7}
+
+===== B02 CANONICAL =====
+B02-01  SURVIVED   semantic=confirmed-non-equivalent  file=B02-01-amended-policy-rerun.json
+B02-02  SURVIVED   semantic=None                      file=B02-02-tensorly-seed.json
+B02-04  SURVIVED   semantic=confirmed-non-equivalent  file=B02-04-torchdiffeq-seed.json
+B02-14  EQUIVALENT semantic=confirmed-equivalent      file=B02-14-concept-transformer-dependency.json
+B02-19  KILLED     semantic=confirmed-non-equivalent  file=B02-19-deepnano-dependency.json
+B02-26  SURVIVED   semantic=confirmed-non-equivalent  file=B02-26-policysynth-data-split.json
+B02_CANONICAL_EVALUATED = 6
+B02_CANONICAL_OUTCOMES = {'SURVIVED': 4, 'EQUIVALENT': 1, 'KILLED': 1}
+
+===== D027 VALID MUTATION OUTCOMES =====
+B02-03  SURVIVED   semantic=confirmed-non-equivalent  file=D027-B02-03-manual-restoration.json
+B02-07  SURVIVED   semantic=confirmed-non-equivalent  file=D027-B02-07-manual-restoration.json
+B02-21  SURVIVED   semantic=confirmed-non-equivalent  file=D027-B02-21-manual-restoration.json
+B02-22  SURVIVED   semantic=confirmed-non-equivalent  file=D027-B02-22-manual-restoration.json
+B02-23  SURVIVED   semantic=confirmed-non-equivalent  file=D027-B02-23-manual-restoration.json
+B02-27  SURVIVED   semantic=confirmed-non-equivalent  file=D027-B02-27-manual-restoration.json
+B02-28  SURVIVED   semantic=confirmed-non-equivalent  file=D027-B02-28-manual-restoration.json
+B02-29  SURVIVED   semantic=confirmed-non-equivalent  file=D027-B02-29-manual-restoration.json
+D027_MUTATION_EVALUATED = 8
+D027_OUTCOMES = {'SURVIVED': 8}
+
+===== COMBINED UNIQUE MUTATION-EVALUATED =====
+B01-01  SURVIVED   semantic=None                      source=canonical
+B01-03  SURVIVED   semantic=None                      source=canonical
+B01-04  SURVIVED   semantic=None                      source=canonical
+B01-05  SURVIVED   semantic=None                      source=canonical
+B01-08  SURVIVED   semantic=None                      source=canonical
+B01-09  SURVIVED   semantic=None                      source=canonical
+B01-10  SURVIVED   semantic=None                      source=canonical
+B02-01  SURVIVED   semantic=confirmed-non-equivalent  source=canonical
+B02-02  SURVIVED   semantic=None                      source=canonical
+B02-03  SURVIVED   semantic=confirmed-non-equivalent  source=D027
+B02-04  SURVIVED   semantic=confirmed-non-equivalent  source=canonical
+B02-07  SURVIVED   semantic=confirmed-non-equivalent  source=D027
+B02-14  EQUIVALENT semantic=confirmed-equivalent      source=canonical
+B02-19  KILLED     semantic=confirmed-non-equivalent  source=canonical
+B02-21  SURVIVED   semantic=confirmed-non-equivalent  source=D027
+B02-22  SURVIVED   semantic=confirmed-non-equivalent  source=D027
+B02-23  SURVIVED   semantic=confirmed-non-equivalent  source=D027
+B02-26  SURVIVED   semantic=confirmed-non-equivalent  source=canonical
+B02-27  SURVIVED   semantic=confirmed-non-equivalent  source=D027
+B02-28  SURVIVED   semantic=confirmed-non-equivalent  source=D027
+B02-29  SURVIVED   semantic=confirmed-non-equivalent  source=D027
+
+TOTAL_INTENDED_CORPUS = 39
+COMBINED_UNIQUE_MUTATION_EVALUATED = 21
+COMBINED_OUTCOMES = {'SURVIVED': 19, 'EQUIVALENT': 1, 'KILLED': 1}
+EVALUATED_COVERAGE = 21/39 = 53.8%
+
+===== CONFIRMED NON-EQUIVALENT DENOMINATOR =====
+KILLED = 1
+SURVIVED = 11
+DENOMINATOR = 12
+DETECTION_FRACTION = 1/12 = 8.3%
+
+===== B02-02 DIAGNOSTIC =====
+B02-02-tensorly-seed.json outcome= SURVIVED path= mutations.0.outcome semantic= None D027= False S1= False

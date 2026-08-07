@@ -1,0 +1,52 @@
+===== ALL D027 REPORTS =====
+B02-03  outcome=SURVIVED   semantic=confirmed-non-equivalent  restoration=restored             file=D027-B02-03-manual-restoration.json
+B02-05  outcome=None       semantic=not-run                   restoration=not-restored         file=D027-B02-05-manual-restoration.json
+B02-07  outcome=SURVIVED   semantic=confirmed-non-equivalent  restoration=restored             file=D027-B02-07-manual-restoration.json
+B02-17  outcome=None       semantic=None                      restoration=not-restored         file=D027-B02-17-manual-restoration.json
+B02-21  outcome=SURVIVED   semantic=confirmed-non-equivalent  restoration=restored             file=D027-B02-21-manual-restoration.json
+B02-22  outcome=SURVIVED   semantic=confirmed-non-equivalent  restoration=None                 file=D027-B02-22-manual-restoration.json
+B02-23  outcome=SURVIVED   semantic=confirmed-non-equivalent  restoration=None                 file=D027-B02-23-manual-restoration.json
+B02-24  outcome=None       semantic=not-run                   restoration=None                 file=D027-B02-24-manual-restoration.json
+B02-27  outcome=SURVIVED   semantic=confirmed-non-equivalent  restoration=None                 file=D027-B02-27-manual-restoration.json
+B02-28  outcome=SURVIVED   semantic=confirmed-non-equivalent  restoration=None                 file=D027-B02-28-manual-restoration.json
+B02-28  outcome=None       semantic=None                      restoration=None                 file=D027-B02-28-pre-mutation-freeze.json
+B02-29  outcome=SURVIVED   semantic=confirmed-non-equivalent  restoration=None                 file=D027-B02-29-manual-restoration.json
+
+===== D027 ACCOUNTING =====
+D027_REPORTS = 12
+D027_UNIQUE_CASES = 11
+D027_MUTATION_EVALUATED = 8
+D027_OUTCOMES = {'SURVIVED': 8}
+
+===== CANONICAL MUTATION-EVALUATED FOUND IN RUN REPORTS =====
+B02-01  SURVIVED
+B02-04  SURVIVED
+B02-14  EQUIVALENT
+B02-19  KILLED
+B02-26  SURVIVED
+CANONICAL_MUTATION_EVALUATED = 5
+CANONICAL_OUTCOMES = {'SURVIVED': 3, 'EQUIVALENT': 1, 'KILLED': 1}
+
+===== COMBINED UNIQUE EVALUATED CASES =====
+B02-01  SURVIVED   source=canonical
+B02-03  SURVIVED   source=D027
+B02-04  SURVIVED   source=canonical
+B02-07  SURVIVED   source=D027
+B02-14  EQUIVALENT source=canonical
+B02-19  KILLED     source=canonical
+B02-21  SURVIVED   source=D027
+B02-22  SURVIVED   source=D027
+B02-23  SURVIVED   source=D027
+B02-26  SURVIVED   source=canonical
+B02-27  SURVIVED   source=D027
+B02-28  SURVIVED   source=D027
+B02-29  SURVIVED   source=D027
+
+COMBINED_UNIQUE_MUTATION_EVALUATED = 13
+COMBINED_OUTCOMES = {'SURVIVED': 11, 'EQUIVALENT': 1, 'KILLED': 1}
+
+===== D027 REPORTS WITHOUT MUTATION OUTCOME =====
+B02-05  restoration=not-restored         file=D027-B02-05-manual-restoration.json
+B02-17  restoration=not-restored         file=D027-B02-17-manual-restoration.json
+B02-24  restoration=None                 file=D027-B02-24-manual-restoration.json
+B02-28  restoration=None                 file=D027-B02-28-pre-mutation-freeze.json
