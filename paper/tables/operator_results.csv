@@ -1,0 +1,5 @@
+operator,selected,evaluated,evaluated_percent,non_evaluable,survived,killed,equivalent,confirmed_non_equivalent_evaluated,detection_numerator,detection_denominator,detection_percent
+random-seed,10,5,50.0,5,5,0,0,5,0,5,0.0
+dependency-pin,10,4,40.0,6,1,2,1,3,2,3,66.7
+data-split,6,4,66.7,2,4,0,0,4,0,4,0.0
+cv-fold-count,3,3,100.0,0,3,0,0,3,0,3,0.0

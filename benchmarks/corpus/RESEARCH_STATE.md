@@ -1099,3 +1099,79 @@ User-facing commands:
 
 Current next normal execution remains B02-21. No case was executed while
 implementing the D025 harness support.
+
+---
+
+## D027 manual historical-environment restoration phase
+
+Stage-one execution is complete and remains canonical.
+
+Canonical accounting:
+
+    B01:
+        10 intended
+         7 mutation-evaluated
+         3 setup-failed
+
+    B02:
+        29 intended
+         6 mutation-evaluated
+        21 setup-failed
+         2 workflow-unavailable
+
+D027 is now frozen as a post-stage-one sensitivity analysis.
+
+Frozen D027 cohort:
+
+    24 canonical setup-failed cases
+    = 3 B01 + 21 B02
+
+Machine-readable cohort:
+
+    benchmarks/corpus/d027_restoration_cohort.jsonl
+
+D027 does not modify screening.jsonl and does not replace D025 canonical
+primary classifications.
+
+Every cohort case is intended for a restoration attempt. Restoration is
+baseline-first, uses at most eight substantive error-directed compatibility
+corrections per case, requires a reproducible fresh baseline before mutation,
+and preserves frozen revision/candidate/workflow/oracle.
+
+D027 stage ceilings:
+
+    clone / checkout / base provisioning: 300 s
+    setup / dependency installation:      3600 s
+    baseline validation:                   1800 s
+    mutant validation:                     1800 s
+    semantic verification:                  300 s
+
+B02-09 and B02-25 remain outside the restoration cohort because they are
+workflow-unavailable rather than setup-failed.
+
+Current next technical step:
+
+    investigate B02-28 under D027
+
+First investigate frozen upstream evidence and historical compatibility for:
+
+    ogozuacik/d3-discriminative-drift-detector-concept-drift
+
+Canonical problem:
+
+    scikit-multiflow 0.5.3
+        ->
+    historical numpy.distutils expectation
+        ->
+    incompatibility with modern NumPy / Python environment
+
+Do not assume historical Python or NumPy versions blindly.
+
+Inspect frozen repository documentation, CI/package metadata, and public
+package compatibility evidence before selecting the first D027 restoration
+recipe.
+
+Do not apply the cv-fold-count mutation until a reproducible valid baseline has
+been obtained.
+
+Never push.

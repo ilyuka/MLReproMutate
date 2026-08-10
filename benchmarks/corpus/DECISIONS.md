@@ -799,3 +799,394 @@ errors were swallowed by the selected workflow.
 This clarification changes no repository, revision, candidate, workflow,
 oracle, timeout, or D025 compatibility-correction budget and is independent of
 mutation outcome.
+
+---
+
+## D027 — Post-stage-one manual historical-environment restoration sensitivity protocol
+
+D027 was adopted on 2026-07-25 after completion of all canonical B01 and B02
+stage-one execution attempts.
+
+### Trigger
+
+Stage-one execution is complete:
+
+- B01: 10 intended, 7 mutation-evaluated, 3 setup-failed;
+- B02: 29 intended, 6 mutation-evaluated, 21 setup-failed, and
+  2 workflow-unavailable.
+
+The large PRE-MUTATION non-evaluability count motivates a deeper investigation
+of whether historically plausible software environments can restore valid
+baselines.
+
+D027 is motivated by executability attrition, not by whether previously
+observed mutations were KILLED, SURVIVED, or equivalent.
+
+### Inferential role
+
+D027 is a secondary manual-restoration sensitivity analysis.
+
+It does NOT replace, supersede, or rewrite canonical B01 or D025 B02 results.
+
+In particular:
+
+- D025 remains the final primary B02 execution policy;
+- canonical stage-one screening.jsonl records remain unchanged by D027;
+- previous reports remain immutable audit history;
+- D027-restored mutation outcomes must be reported separately from the primary
+  D025 mutation-detection estimate;
+- B01 remains a calibration batch and is not retrospectively converted into B02
+  primary evidence.
+
+A secondary expanded/sensitivity estimate may be reported from D027 results,
+but it must be explicitly labelled as post-stage-one manual restoration.
+
+### Frozen restoration cohort
+
+The D027 cohort is frozen before any D027 restoration execution.
+
+It contains every case whose canonical stage-one classification is
+setup-failed:
+
+B01:
+
+- B01-02
+- B01-06
+- B01-07
+
+B02:
+
+- B02-03
+- B02-05
+- B02-06
+- B02-07
+- B02-08
+- B02-10
+- B02-11
+- B02-12
+- B02-13
+- B02-15
+- B02-16
+- B02-17
+- B02-18
+- B02-20
+- B02-21
+- B02-22
+- B02-23
+- B02-24
+- B02-27
+- B02-28
+- B02-29
+
+Total:
+
+    24 setup-failed cases
+
+The machine-readable frozen cohort is:
+
+    benchmarks/corpus/d027_restoration_cohort.jsonl
+
+B02-09 and B02-25 are excluded because their canonical classifications are
+workflow-unavailable rather than setup-failed:
+
+- B02-09 requires unavailable CUDA hardware;
+- B02-25 passed its completion-only oracle but did not exercise the frozen
+  mutation target.
+
+No replacement repositories may be added.
+
+Every one of the 24 cohort cases is intended for a D027 attempt. Execution
+order is operational only and must not be used to drop difficult cases or
+retain only successfully restored cases.
+
+### Frozen empirical identity
+
+D027 must preserve for every case:
+
+- repository;
+- frozen revision;
+- frozen mutation operator;
+- frozen mutation candidate;
+- selected workflow;
+- selected oracle.
+
+Repository source or test compatibility patches are not permitted.
+
+The frozen mutation itself remains the only permitted source change.
+
+### Restoration objective
+
+The restoration phase first attempts to construct a historically plausible
+environment in which the frozen baseline workflow is valid.
+
+Mutation outcome information must not be used while constructing that
+environment.
+
+The mutation must not be applied until:
+
+1. the baseline satisfies the frozen workflow oracle; and
+2. execution reaches the frozen mutation target when target-execution evidence
+   is required under D026.
+
+### Evidence hierarchy
+
+Historical-environment decisions should preferentially use:
+
+1. documentation at the frozen repository revision;
+2. CI configuration at the frozen revision;
+3. requirements, setup, environment, lock, or package metadata;
+4. contemporaneous public package/release metadata;
+5. concrete observed setup or baseline failures.
+
+The canonical pre-D027 failure record is itself valid concrete evidence and may
+motivate the first D027 correction. A known D025 failure does not have to be
+reproduced merely to observe the same error again.
+
+### D027 time limits
+
+Per fresh execution attempt:
+
+- clone / checkout / base provisioning: 300 seconds
+- setup / dependency installation: 3600 seconds
+- baseline validation: 1800 seconds
+- mutant validation: 1800 seconds
+- semantic verification: 300 seconds
+
+These larger limits belong only to D027 sensitivity analysis and do not
+retroactively alter B01 or D025 classifications.
+
+### Bounded manual compatibility recovery
+
+At most EIGHT substantive error-directed compatibility corrections may be
+applied per case.
+
+A historical-runtime pivot counts as one of these eight corrections.
+
+Every correction must be justified by either:
+
+- a concrete canonical pre-D027 failure; or
+- a concrete failure observed during the current D027 restoration.
+
+A correction is one documented compatibility hypothesis/action. Unrelated
+adaptations must not be bundled together merely to evade the correction limit.
+
+Permitted correction classes are:
+
+1. Provisioning a historically supported Python/runtime version using
+   repository evidence and public archival distributions or channels.
+
+2. Selecting a compatible version or version range for a NON-TARGET dependency
+   after a concrete interpreter, packaging, ABI, API, or runtime
+   incompatibility.
+
+3. Installing a concretely demonstrated missing runtime, test, validation, or
+   build dependency.
+
+4. Installing environment/build prerequisites such as compilers, development
+   headers, or build tooling required to install the historical dependency
+   stack.
+
+5. Environment-only normalization such as PATH, PYTHONPATH, HOME, XDG, cache,
+   locale, backend, or equivalent configuration that does not change the
+   research workflow semantics.
+
+6. Recovering the SAME documented public dataset/model/artifact from its
+   canonical source or a provenance-preserving official/public mirror when the
+   original transport location is unavailable. The source, provenance, and
+   available checksum/hash information must be recorded. Substitution with a
+   different dataset/model/artifact is forbidden.
+
+Infrastructure-only failures do not consume the eight-correction budget.
+
+### Forbidden adaptations
+
+D027 does NOT permit:
+
+- repository source compatibility patches;
+- test patches;
+- changing the frozen mutation candidate;
+- changing the frozen workflow;
+- changing the frozen oracle;
+- skipping tests or validation steps;
+- weakening assertions;
+- reducing or substituting the frozen experiment merely to make it finish;
+- replacing a documented dataset/model with a different one;
+- using mutation outcome information to guide restoration;
+- selecting fixes because they appear more likely to produce KILLED or
+  SURVIVED;
+- substituting CPU for a workflow that genuinely requires CUDA or other
+  specialized hardware;
+- constraining the TARGET dependency in a dependency-pin case in a way that
+  cancels or weakens the frozen package==version -> package>=version mutation.
+
+### Reproducible baseline freeze
+
+A first successful baseline is not yet sufficient to freeze the restoration
+recipe.
+
+The tentative restoration recipe must be applied to a fresh independent
+baseline environment.
+
+If that fresh environment also satisfies the frozen baseline oracle and reaches
+the required frozen target, the restoration recipe becomes frozen for that
+case.
+
+The frozen recipe must record, as applicable:
+
+- interpreter/runtime;
+- package channels and indexes;
+- dependency constraints;
+- installed package versions;
+- build prerequisites;
+- environment variables;
+- public external artifact provenance.
+
+If fresh reproduction exposes a new substantive compatibility failure, further
+error-directed corrections may be made only within the remaining eight-
+correction budget.
+
+### Baseline/mutant symmetry
+
+After the restoration recipe is frozen, baseline and mutant evaluation must use
+fresh independent environments provisioned from the same frozen recipe.
+
+All compatibility adaptations must be symmetric.
+
+The exact frozen mutation must be the only intended baseline-versus-mutant
+difference.
+
+For dependency-pin cases, the TARGET dependency must retain the frozen
+baseline-versus-mutant distinction and may not be constrained by the
+restoration recipe in a way that neutralizes the mutation.
+
+### Mutation evaluation and semantic verification
+
+Only after a reproducible valid baseline has been established may the exact
+frozen mutation be applied.
+
+The identical frozen validation workflow and oracle are then executed in the
+mutant environment.
+
+D026 target-execution requirements remain applicable.
+
+Semantic verification follows the existing operator-specific rules.
+
+Mutation outcomes remain:
+
+- KILLED
+- SURVIVED
+- EQUIVALENT
+
+Setup/restoration failure remains distinct from mutation outcome.
+
+### D027 restoration classifications
+
+A D027 case may be recorded as:
+
+- restored — a reproducible valid baseline was obtained;
+- not-restored — the case exhausted the D027 correction budget or applicable
+  D027 stage limit without a valid reproducible baseline;
+- workflow-unavailable — restoration established that the frozen workflow
+  requires an unavailable external resource/hardware or cannot exercise the
+  frozen target;
+- infrastructure-invalid — the attempt was invalidated by suspend, DNS,
+  transient network failure, broken sandboxing, or equivalent host
+  infrastructure failure.
+
+Infrastructure-invalid attempts may be repeated fresh and do not consume a
+substantive compatibility correction unless an intentional compatibility
+adaptation was also made.
+
+### Reporting and provenance
+
+D027 must never delete or rewrite earlier reports.
+
+D027 reports use separate paths of the form:
+
+    benchmarks/corpus/runs/D027-<case-id>-manual-restoration.json
+
+A D027 report must reference the canonical case and preserve a chronological
+record of:
+
+- historical evidence consulted;
+- each observed failure;
+- each compatibility correction;
+- correction count;
+- environment recipe;
+- baseline reproduction;
+- mutation execution if reached;
+- semantic verification if reached;
+- final D027 restoration classification;
+- mutation outcome if evaluated.
+
+D027 results do not replace the canonical screening.jsonl line.
+
+### Execution order
+
+All 24 frozen cases are intended for restoration.
+
+Execution order is not an inclusion criterion.
+
+B02-28 may be used as the first technical D027 case because its canonical
+failure provides a concrete historical compatibility problem
+(scikit-multiflow / NumPy / historical Python environment), but success or
+failure on B02-28 must not affect whether the remaining cohort cases are
+attempted.
+
+Status:
+
+FROZEN BEFORE FIRST D027 RESTORATION EXECUTION.
+
+## D028 — End of execution and restoration phase
+
+The empirical execution phase is now closed.
+
+All intended primary repositories were processed:
+- B01: 10/10
+- B02: 29/29
+- total: 39/39
+
+D027 manual restoration was conducted on a subset of initially non-evaluable
+cases subject to available research time and resources.
+
+Cases without a D027 restoration report are classified as "D027 not attempted"
+and retain their canonical primary classification. They must not be counted as
+failed D027 restorations.
+
+No further repository execution or environment restoration will be performed
+for the current study dataset.
+
+Canonical primary results remain unchanged. D027 results remain a separate
+restoration layer.
+
+Subsequent work is limited to accounting, analysis, figures, manuscript
+preparation, and software/package validation.
+
+## D028 — End of execution and restoration phase
+
+The empirical execution and restoration phase is closed at this point.
+
+All intended primary repositories were processed:
+- B01: 10/10
+- B02: 29/29
+- total: 39/39
+
+D027 manual restoration was attempted for a subset of initially non-evaluable
+cases under the frozen D027 restoration protocol.
+
+Cases without a D027 restoration report are classified as D027-not-attempted.
+They retain their canonical primary classification and must not be counted as
+failed D027 restoration attempts.
+
+No further candidate-repository execution or environment restoration will be
+performed for the current study dataset.
+
+Canonical primary results remain unchanged. D027 results remain a separate
+restoration layer and must not silently overwrite canonical primary outcomes.
+
+Subsequent study work is limited to:
+- final accounting;
+- statistical analysis;
+- figures and tables;
+- manuscript preparation;
+- MLReproMutate software/package validation.

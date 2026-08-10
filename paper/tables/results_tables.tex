@@ -1,0 +1,46 @@
+\begin{table}[ht]
+\centering
+\caption{Study summary. Outcome counts use the full intended frame; confirmed detection uses a separate non-equivalent denominator.}
+\begin{tabular}{lrrrrrrrr}
+\hline
+layer & selected & evaluated & evaluated percent & non evaluable & non evaluable percent & survived & killed & equivalent \\
+\hline
+Primary execution & 39 & 13 & 33.3 & 26 & 66.7 & 11 & 1 & 1 \\
+Combined primary + D027 & 39 & 24 & 61.5 & 15 & 38.5 & 21 & 2 & 1 \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{B02 operator results. Confirmed-equivalent evaluations are excluded from detection denominators.}
+\begin{tabular}{lrrrrrrrrrrr}
+\hline
+operator & selected & evaluated & evaluated percent & non evaluable & survived & killed & equivalent & confirmed non equivalent evaluated & detection numerator & detection denominator & detection percent \\
+\hline
+random-seed & 10 & 5 & 50.0 & 5 & 5 & 0 & 0 & 5 & 0 & 5 & 0.0 \\
+dependency-pin & 10 & 4 & 40.0 & 6 & 1 & 2 & 1 & 3 & 2 & 3 & 66.7 \\
+data-split & 6 & 4 & 66.7 & 2 & 4 & 0 & 0 & 4 & 0 & 4 & 0.0 \\
+cv-fold-count & 3 & 3 & 100.0 & 0 & 3 & 0 & 0 & 3 & 0 & 3 & 0.0 \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{D027 restoration accounting. Report presence and substantive restoration attempt are distinct.}
+\begin{tabular}{lrr}
+\hline
+state & count & percent of cohort \\
+\hline
+Cohort & 24 & 100.0 \\
+Report/assessment present & 19 & 79.2 \\
+No D027 report & 5 & 20.8 \\
+Substantive restoration attempted & 18 & 75.0 \\
+Report present, restoration not attempted & 1 & 4.2 \\
+Restored & 11 & 45.8 \\
+Not restored after substantive attempt & 7 & 29.2 \\
+Mutation evaluated & 11 & 45.8 \\
+\hline
+\end{tabular}
+\end{table}
