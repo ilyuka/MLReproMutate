@@ -113,24 +113,31 @@ lines = [
     r"Detection is reported over confirmed non-equivalent evaluated "
     r"mutations; confirmed-equivalent evaluations are excluded.}",
     r"\label{tab:operator-results}",
+    r"\vspace{0.35em}",
     r"\small",
-    r"\renewcommand{\arraystretch}{1.18}",
-    r"\setlength{\tabcolsep}{4.5pt}",
-    r"\begin{tabular}{lrrrrrrr}",
+    r"\renewcommand{\arraystretch}{1.24}",
+    r"\setlength{\tabcolsep}{6pt}",
+    r"\begin{tabular}{lrrrrrr}",
     r"\toprule",
+    r"\addlinespace[2pt]",
     r"\textbf{Operator} & "
-    r"\textbf{Selected} & "
-    r"\textbf{Evaluated} & "
-    r"\textbf{Non-evaluable} & "
-    r"\textbf{\textsc{Killed}} & "
-    r"\textbf{\textsc{Survived}} & "
-    r"\textbf{\textsc{Equivalent}} & "
+    r"\textbf{Eval./sel.} & "
+    r"\textbf{Non-eval.} & "
+    r"\textbf{Killed} & "
+    r"\textbf{Surv.} & "
+    r"\textbf{Eq.} & "
     r"\textbf{Detection} \\",
+    r"\addlinespace[2pt]",
     r"\midrule",
+    r"\addlinespace[3pt]",
 ]
 
 for row in operators:
     killed = int(row["killed"])
+
+    evaluated_selected = (
+        f"{row['evaluated']}/{row['selected']}"
+    )
 
     detection = (
         f"{row['detection_numerator']}/"
@@ -147,8 +154,7 @@ for row in operators:
 
     lines.append(
         rf"\texttt{{{esc(row['operator'])}}} & "
-        f"{row['selected']} & "
-        f"{row['evaluated']} & "
+        f"{evaluated_selected} & "
         f"{row['non_evaluable']} & "
         f"{killed_cell} & "
         f"{row['survived']} & "
@@ -156,9 +162,12 @@ for row in operators:
         f"{detection_cell} \\\\"
     )
 
+    lines.append(r"\addlinespace[3pt]")
+
 lines += [
     r"\bottomrule",
     r"\end{tabular}",
+    r"\vspace{0.25em}",
     r"\end{table}",
     "",
 ]

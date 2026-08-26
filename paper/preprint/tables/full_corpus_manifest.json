@@ -1,0 +1,53 @@
+{
+  "rows": 39,
+  "expected_case_ids": [
+    "B01-01",
+    "B01-02",
+    "B01-03",
+    "B01-04",
+    "B01-05",
+    "B01-06",
+    "B01-07",
+    "B01-08",
+    "B01-09",
+    "B01-10",
+    "B02-01",
+    "B02-02",
+    "B02-03",
+    "B02-04",
+    "B02-05",
+    "B02-06",
+    "B02-07",
+    "B02-08",
+    "B02-09",
+    "B02-10",
+    "B02-11",
+    "B02-12",
+    "B02-13",
+    "B02-14",
+    "B02-15",
+    "B02-16",
+    "B02-17",
+    "B02-18",
+    "B02-19",
+    "B02-20",
+    "B02-21",
+    "B02-22",
+    "B02-23",
+    "B02-24",
+    "B02-25",
+    "B02-26",
+    "B02-27",
+    "B02-28",
+    "B02-29"
+  ],
+  "inputs": {
+    "screening.jsonl": "ff79bb9a21715c4613f133b6b838e254baa5bfcd52ae9be8d39855544a3fd1e4",
+    "d027_restoration_cohort.jsonl": "19e88b8bf5c49245ec2d360f98fba59d57cdbeb622fbd22305afc3cce41e036a",
+    "rq2/blind_case_evidence.jsonl": "2932a77b08962d2c6a636530c954e7cfb34286e7fcbfcb5daded2c1f04881329"
+  },
+  "outputs": {
+    "full_corpus.csv": "59cb83ad052dcdb52db099f387611ef9703496460285d9f41eedc0a319bcf7e1",
+    "table_full_corpus.tex": "d44caa1b62bcf97d0e58dfa90c8691fcb73344501ace41a64a3efb69306beebb"
+  }
+}

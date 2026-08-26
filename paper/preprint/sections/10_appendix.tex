@@ -1,0 +1,180 @@
+\appendix
+
+\section{Supplementary Empirical Accounting}
+\label{app:supplementary}
+
+The appendices report supporting accounting and diagnostic views of the frozen
+empirical evidence. They do not introduce additional repository executions,
+mutation outcomes, or post hoc case selection.
+
+\subsection{Full frozen corpus}
+\label{app:full-corpus}
+
+Table~\ref{tab:full-corpus} lists all 39 frozen repository--operator cases used
+in the empirical study. The table joins the final accounting layer with the
+outcome-blind workflow frame by frozen case identifier. B01 oracle entries are
+left unclassified because oracle kind was not prospectively recorded under the
+schema used for that calibration batch.
+
+The displayed outcome is the combined study result: the canonical primary
+result when mutation evaluation succeeded at the primary layer, the bounded
+D027 result when a previously non-evaluable frozen case was successfully
+restored and evaluated, and non-evaluable otherwise. This presentation does
+not alter the separate primary and restoration accounting reported in the main
+text.
+
+\input{tables/table_full_corpus.tex}
+
+\subsection{Bounded restoration accounting}
+\label{app:d027}
+
+The primary empirical layer remains the canonical execution record. D027 was a
+separate bounded restoration layer intended to recover evaluability for frozen
+cases without changing the selected repository revision, mutation candidate,
+validation workflow, or oracle.
+
+Within the 24-case D027 cohort, 19 cases had a restoration report or assessment.
+Substantive restoration was attempted for 18 cases. Eleven cases were restored
+and reached mutation evaluation, seven were not restored after a substantive
+attempt, and one additional reported case was not substantively attempted
+because repository identity could not be recovered.
+
+Table~\ref{tab:d027-accounting} reports this accounting separately from the
+primary mutation outcomes.
+
+\input{tables/table_d027_restoration.tex}
+
+
+\subsection{Operator-by-oracle diagnostic}
+\label{app:operator-oracle}
+
+RQ2 was analyzed descriptively because the oracle categories were sparse and
+operator composition was uneven. Table~\ref{tab:rq2-operator-oracle} reports
+the B02 operator-by-oracle cross-classification used as a diagnostic for this
+confounding.
+
+In particular, both detected B02 mutations occurred in
+\texttt{dependency-pin} cases classified as \texttt{completion-only}. The table
+is therefore useful for showing why the observed oracle-level proportions
+cannot be interpreted independently of mutation operator.
+
+\input{../../benchmarks/corpus/rq2/paper_assets/table_rq2_operator_oracle.tex}
+
+
+\subsection{Evaluability by workflow and oracle category}
+\label{app:rq2-attrition}
+
+Mutation outcomes are observed only for cases that reach successful baseline
+execution and mutation evaluation. Differential evaluability can therefore
+change the composition of the analyzed subsets.
+
+Table~\ref{tab:rq2-oracle-attrition} reports selected, evaluated, and meaningful case
+counts by the categories used in RQ2. These counts are presented to make
+attrition visible rather than implicitly conditioning the analysis on only
+successful executions.
+
+\input{../../benchmarks/corpus/rq2/paper_assets/table_rq2_attrition.tex}
+
+
+\section{Mutation Operator Specification}
+\label{app:operator-specification}
+
+The empirical study used the concise labels
+\texttt{random-seed},
+\texttt{dependency-pin},
+\texttt{data-split}, and
+\texttt{cv-fold-count}. The corresponding implemented transformations were
+deliberately narrow and deterministic once a mutation candidate had been
+selected.
+
+\begin{description}
+
+\item[\texttt{random-seed}.]
+Targets supported integer-literal seed calls and replaces the selected seed
+\(N\) with \(N+1\). Supported calls in the study implementation include
+Python's \texttt{random.seed}, NumPy seed calls, and
+\texttt{torch.manual\_seed}.
+
+\item[\texttt{dependency-pin}.]
+Targets an exact dependency requirement of the form
+\texttt{package==version} and replaces the exact constraint with
+\texttt{package>=version}. Dependency evaluation independently resolves the
+baseline and mutant environments. A textual mutation that resolves to the same
+installed target version is treated as semantically equivalent.
+
+\item[\texttt{data-split}.]
+Targets a supported scikit-learn \texttt{train\_test\_split} call containing an
+explicit non-\texttt{None} \texttt{stratify} argument and replaces the
+stratification expression with \texttt{None}.
+
+\item[\texttt{cv-fold-count}.]
+Targets an explicit literal \texttt{n\_splits} value in a supported
+KFold-family splitter and replaces \(N\) with \(N+1\). Supported splitters are
+\texttt{KFold}, \texttt{StratifiedKFold}, \texttt{RepeatedKFold}, and
+\texttt{RepeatedStratifiedKFold}.
+
+\end{description}
+
+Candidate detection and mutation application are separate operations.
+Source-level candidates retain target-location metadata and are matched again
+against the source before mutation application. This prevents a selected
+candidate from being silently redirected to another syntactic occurrence.
+
+
+\section{Outcome and Evidence Semantics}
+\label{app:outcome-semantics}
+
+The empirical analysis distinguishes execution state, mutation outcome, and
+semantic verification.
+
+A \textsc{Killed} mutation is one for which the frozen validation workflow
+returns a failing status after a successful baseline. A \textsc{Survived}
+mutation is one for which the same workflow succeeds after mutation.
+Infrastructure, setup, baseline, and restoration failures are not mutation
+outcomes.
+
+Semantic verification is recorded independently. The relevant study-level
+states are confirmed non-equivalent, confirmed equivalent, unverified, and not
+run. Confirmed-equivalent mutations are excluded from the meaningful detection
+denominator.
+
+Consequently, the main detection measure is
+
+\[
+\frac{
+  \textsc{Killed}
+}{
+  \textsc{Killed}
+  +
+  \text{confirmed non-equivalent \textsc{Survived}}
+}.
+\]
+
+A surviving mutation therefore has a deliberately narrow interpretation: the
+selected frozen validation workflow did not detect that particular confirmed
+non-equivalent mutation. It is not a repository-level classification of
+reproducibility.
+
+
+\section{Empirical Provenance and Freeze Boundaries}
+\label{app:freeze-boundaries}
+
+The empirical study used explicit freeze boundaries to separate corpus
+construction, execution, restoration, and analysis.
+
+The 39-case empirical frame was frozen before post-freeze analysis. Candidate
+repositories were not added, replaced, or rerun to improve the observed
+mutation-detection rate. D027 restoration retained the frozen revision,
+candidate, workflow, and oracle and did not rewrite the canonical primary
+execution record.
+
+For RQ2, workflow categories came from the frozen corpus metadata. Oracle
+categories for the B02 cases were defined prospectively under protocol version
+2 and frozen before joining them with mutation outcomes. The B01 calibration
+cases predated this schema and were therefore not retrospectively assigned
+oracle categories.
+
+The repository contains the machine-readable case records, restoration
+assessments, RQ2 blind frame, generated result tables, and manifests used to
+produce the reported accounting. These artifacts are retained as the auditable
+record underlying the manuscript tables.

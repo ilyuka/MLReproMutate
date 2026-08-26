@@ -2,17 +2,26 @@
 \centering
 \caption{Combined B02 results by mutation operator. Detection is reported over confirmed non-equivalent evaluated mutations; confirmed-equivalent evaluations are excluded.}
 \label{tab:operator-results}
+\vspace{0.35em}
 \small
-\renewcommand{\arraystretch}{1.18}
-\setlength{\tabcolsep}{4.5pt}
-\begin{tabular}{lrrrrrrr}
+\renewcommand{\arraystretch}{1.24}
+\setlength{\tabcolsep}{6pt}
+\begin{tabular}{lrrrrrr}
 \toprule
-\textbf{Operator} & \textbf{Selected} & \textbf{Evaluated} & \textbf{Non-evaluable} & \textbf{\textsc{Killed}} & \textbf{\textsc{Survived}} & \textbf{\textsc{Equivalent}} & \textbf{Detection} \\
+\addlinespace[2pt]
+\textbf{Operator} & \textbf{Eval./sel.} & \textbf{Non-eval.} & \textbf{Killed} & \textbf{Surv.} & \textbf{Eq.} & \textbf{Detection} \\
+\addlinespace[2pt]
 \midrule
-\texttt{random-seed} & 10 & 5 & 5 & 0 & 5 & 0 & 0/5 (0.0\%) \\
-\texttt{dependency-pin} & 10 & 4 & 6 & \textbf{2} & 1 & 1 & \textbf{2/3 (66.7\%)} \\
-\texttt{data-split} & 6 & 4 & 2 & 0 & 4 & 0 & 0/4 (0.0\%) \\
-\texttt{cv-fold-count} & 3 & 3 & 0 & 0 & 3 & 0 & 0/3 (0.0\%) \\
+\addlinespace[3pt]
+\texttt{random-seed} & 5/10 & 5 & 0 & 5 & 0 & 0/5 (0.0\%) \\
+\addlinespace[3pt]
+\texttt{dependency-pin} & 4/10 & 6 & \textbf{2} & 1 & 1 & \textbf{2/3 (66.7\%)} \\
+\addlinespace[3pt]
+\texttt{data-split} & 4/6 & 2 & 0 & 4 & 0 & 0/4 (0.0\%) \\
+\addlinespace[3pt]
+\texttt{cv-fold-count} & 3/3 & 0 & 0 & 3 & 0 & 0/3 (0.0\%) \\
+\addlinespace[3pt]
 \bottomrule
 \end{tabular}
+\vspace{0.25em}
 \end{table}

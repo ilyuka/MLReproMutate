@@ -1,0 +1,39 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+This study used mutation testing to examine whether validation workflows
+already present in machine-learning research repositories detect controlled
+changes in reproducibility-relevant experimental choices. Using MLReproMutate,
+we evaluated mutations affecting random seeds, dependency constraints, data
+splitting, and cross-validation configuration under an outcome-blind protocol
+with frozen repository revisions, mutation candidates, and validation
+workflows.
+
+Of the 39 frozen repository--operator cases, 13 were evaluable during primary
+execution. Bounded restoration increased the combined evaluable set to 24
+cases. After excluding one confirmed-equivalent mutation, 23 confirmed
+non-equivalent mutations entered the meaningful detection denominator. The
+selected validation workflows detected 2 of these 23 mutations and did not
+detect 21.
+
+These results do not imply that the corresponding repositories are
+irreproducible. Rather, they show that, for the evaluated cases in this sample,
+successful execution of an existing validation workflow often did not constrain
+the particular reproducibility-relevant choice that had been mutated.
+
+The study also highlights executability as a practical prerequisite for
+retrospective mutation analysis. A substantial fraction of frozen cases could
+not initially reach mutation evaluation, and bounded restoration recovered
+additional evidence without rewriting the primary execution record.
+
+Our descriptive analysis did not support attributing mutation detection to
+oracle explicitness. Both detected B02 mutations occurred in
+\texttt{dependency-pin} cases with \texttt{completion-only} workflows, while
+small and uneven category sizes, operator composition, and differential
+evaluability prevent stronger inference.
+
+More broadly, reproducibility-oriented mutation testing provides a way to ask
+a concrete validation question: if an experimentally important choice changes,
+does an existing repository safeguard notice? MLReproMutate provides an
+auditable mechanism for posing this question through controlled mutations,
+baseline-first execution, and explicit handling of semantic equivalence.

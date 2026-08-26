@@ -1,0 +1,167 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Limited detection by existing validation workflows}
+\label{sec:discussion-detection}
+
+The central empirical observation of this study is that the selected validation
+workflows detected only 2 of 23 confirmed non-equivalent
+reproducibility-relevant mutations. The remaining 21 mutations changed the
+relevant semantics of the evaluated case but were not rejected by the frozen
+validation workflow.
+
+This result should be interpreted as a property of the evaluated
+repository--mutation--workflow combinations rather than as a population-wide
+estimate for ML research software. The corpus was constructed using a frozen,
+operator-specific screening procedure, but the final meaningful denominator is
+small and the operator-specific sample sizes are uneven. We therefore do not
+infer that a fixed proportion of ML repositories would behave similarly under
+other mutations or validation workflows.
+
+Nevertheless, the observed survival of confirmed non-equivalent mutations
+shows that successful execution of an existing repository workflow does not
+necessarily imply sensitivity to reproducibility-relevant experimental
+changes. A workflow may exercise the affected code path while still accepting
+a changed seed, split, fold count, or resolved dependency environment.
+
+The result is therefore better understood as evidence about \emph{validation
+sensitivity}: for a substantial fraction of the evaluated cases in this
+sample, the selected existing workflow did not distinguish the original
+configuration from a controlled, semantically different one.
+
+
+\subsection{Mutation survival is not repository irreproducibility}
+\label{sec:discussion-survival}
+
+A SURVIVED mutation has a deliberately narrow meaning in our study. It means
+that a confirmed non-equivalent mutation was not detected by the selected
+frozen validation workflow. It does not imply that the repository is
+irreproducible, that its published results are incorrect, or that no other
+repository workflow would detect the same change.
+
+This distinction is especially important because the selected workflows vary in
+purpose. Some are upstream tests, whereas others are documented experiments,
+examples, validation commands, or CI workflows. A repository may contain
+additional checks that were not selected by the frozen protocol, and a
+documented example may have been designed to demonstrate usage rather than to
+validate numerical invariants.
+
+Conversely, a KILLED mutation should not be interpreted as proof that a
+repository is fully protected against reproducibility failures. A KILLED
+outcome establishes only that the selected workflow rejected the particular
+applied mutation under the study conditions.
+
+Mutation testing is therefore used here as a probe of existing validation
+behavior, not as a binary classifier of repository reproducibility.
+
+
+\subsection{Workflow form and oracle strength}
+\label{sec:discussion-oracles}
+
+RQ2 did not reveal a monotonic relationship between the explicitness of the
+validation oracle and mutation detection. In the prospectively classified B02
+subset, neither of the two meaningful \texttt{assertion} cases was detected,
+whereas two of thirteen \texttt{completion-only} cases were detected.
+
+Taken alone, these proportions could be misleading. Both detected B02
+mutations occurred in the same
+\texttt{dependency-pin} $\times$ \texttt{completion-only} cell. No KILLED
+mutation occurred in the other observed operator--oracle combinations.
+Moreover, only two of seven selected \texttt{assertion} cases entered the
+confirmed non-equivalent meaningful denominator, compared with thirteen of
+twenty-two \texttt{completion-only} cases.
+
+These observations prevent attributing the observed RQ2 pattern to oracle
+strength. In particular, the study does not show that completion-only workflows
+are stronger than assertion-based workflows.
+
+The dependency result also illustrates why workflow completion can still act
+as an effective detector for some classes of change. A dependency mutation can
+alter the resolved environment in a way that causes imports, APIs, or runtime
+behavior to fail before an explicit research-result assertion is reached. In
+such a case, a completion-only workflow can kill the mutation even though it
+contains no explicit numerical oracle.
+
+This distinction suggests that workflow type, oracle type, and mutation type
+capture different properties and should not be collapsed into a single notion
+of ``test strength.''
+
+
+\subsection{Executability as a prerequisite for mutation-based evaluation}
+\label{sec:discussion-executability}
+
+A second major observation concerns executability. Only 13 of the 39 frozen
+cases were evaluable during primary execution. Bounded restoration increased
+this number to 24, leaving 15 cases non-evaluable.
+
+These failures are methodologically distinct from mutation outcomes. A
+repository that cannot be executed in the contemporary study environment
+cannot be assigned a meaningful KILLED or SURVIVED result under the frozen
+baseline-first protocol.
+
+At the same time, the scale of the restoration problem is itself relevant to
+empirical work on historical ML research software. We encountered barriers
+associated with dependency resolution, obsolete package ecosystems, unavailable
+or incompatible builds, removed APIs, undeclared runtime requirements, native
+dependencies, specialized hardware assumptions, and unavailable workflow
+requirements.
+
+We do not interpret these barriers as direct evidence that the corresponding
+research results are non-reproducible. They instead demonstrate that
+retrospective execution can be constrained by software-ecosystem drift before
+the scientific behavior of interest can even be evaluated.
+
+The D027 layer substantially increased the evaluable sample while preserving
+the frozen repository revision, candidate mutation, workflow, and oracle
+classification. Separating restoration from the canonical primary result was
+therefore important: it allowed us to recover additional empirical evidence
+without rewriting the original execution record.
+
+
+\subsection{Implications for ML research-software validation}
+\label{sec:discussion-implications}
+
+The results suggest that reproducibility-relevant validation may require checks
+that are more specific than successful workflow completion alone. In
+particular, workflows intended to guard experimental reproducibility can
+benefit from making important experimental assumptions observable and
+testable.
+
+Examples include explicit checks on generated partitions, evaluation-protocol
+parameters, expected dependency environments, or other artifacts that encode
+experiment configuration. The appropriate safeguard depends on the scientific
+workflow; the study does not imply that every repository should assert exact
+numerical outputs or fix every dependency indefinitely.
+
+A practical role for reproducibility-oriented mutation testing is therefore to
+ask a targeted question: if a relevant experimental choice changes, does an
+existing validation workflow notice?
+
+This question complements conventional software testing. Traditional unit and
+integration tests may establish functional correctness for APIs and components,
+while reproducibility-oriented mutations probe whether validation is sensitive
+to changes in experimental configuration that may still leave the software
+operational.
+
+For research-software developers, surviving confirmed non-equivalent mutations
+can identify locations where existing validation does not currently constrain a
+reproducibility-relevant choice. Such observations can motivate additional
+checks where those choices are scientifically important, without implying that
+every surviving mutation represents a defect.
+
+
+\subsection{Role of MLReproMutate}
+\label{sec:discussion-tool}
+
+MLReproMutate was used in this study to make the mutation process explicit,
+repeatable, and auditable. The empirical contribution is not merely the
+application of mutation testing to ML software, but the use of a
+reproducibility-oriented mutation model together with frozen repository
+revisions, frozen validation workflows, explicit semantic-equivalence handling,
+and structured execution evidence.
+
+This separation between mutation generation, repository execution, semantic
+verification, and analysis is important for future extensions. Additional
+operators or repository populations can be studied without redefining the
+meaning of the outcomes used here, while the current frozen corpus remains an
+auditable empirical record.

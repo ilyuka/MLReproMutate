@@ -57,8 +57,9 @@ or environment choice that can affect the reproducibility of an ML workflow.
 \texttt{random-seed} targets supported literal calls to Python, NumPy, or
 PyTorch random-seed APIs and changes an integer seed from \(N\) to \(N+1\).
 
-\texttt{dependency-pin} changes an exact dependency constraint from
-\texttt{package==version} to \texttt{package>=version}.
+\texttt{dependency-pin} relaxes an exact dependency pin. It replaces
+\texttt{package}\allowbreak\texttt{==}\allowbreak\texttt{version} with
+\texttt{package}\allowbreak\texttt{>=}\allowbreak\texttt{version}.
 
 \texttt{data-split} removes a non-null \texttt{stratify} argument from a
 supported \texttt{train\_test\_split} call.
@@ -173,12 +174,9 @@ Mutation survival alone does not establish that a mutation changed the
 semantics of the evaluated computation. The analysis therefore separates
 validation-workflow detection from semantic equivalence.
 
-Semantic verification distinguished
-\texttt{confirmed-non-equivalent},
-\texttt{confirmed-equivalent},
-\texttt{unverified}, and
-\texttt{not-run} states. Confirmed equivalent mutations were excluded from the
-meaningful detection denominator.
+Semantic verification distinguished four states: confirmed
+non-equivalent, confirmed equivalent, unverified, and not run. Confirmed
+equivalent mutations were excluded from the meaningful detection denominator.
 
 The primary detection measure used for RQ1 and RQ2 is
 

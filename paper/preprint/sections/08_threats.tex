@@ -1,0 +1,173 @@
+\section{Threats to Validity}
+\label{sec:threats}
+
+\subsection{Construct validity}
+\label{sec:threats-construct}
+
+The four mutation operators represent a deliberately narrow subset of
+reproducibility-relevant choices in ML research software. They do not cover all
+sources of experimental variability, configuration drift, data-processing
+choices, hardware effects, nondeterminism, or environment differences that may
+affect reproducibility.
+
+Accordingly, the mutations should be interpreted as controlled
+reproducibility-relevant perturbations rather than as a complete model of real
+ML faults. In particular, the study does not assume that every applied mutation
+corresponds to a naturally occurring defect or that all reproducibility
+failures can be represented by the four operators.
+
+This limitation is partly intentional. The supported mutations were restricted
+to mechanically identifiable syntax with explicit transformations, making
+candidate selection and mutation application auditable. The resulting gain in
+measurement precision comes at the cost of narrower construct coverage.
+
+A second construct threat concerns the validation workflow used as the
+detection oracle. The selected workflow represents one frozen repository
+validation path, not the complete set of safeguards that may exist in a
+repository. A SURVIVED mutation therefore means only that the selected workflow
+did not detect the applied confirmed non-equivalent change. It does not imply
+that no other test, experiment, manual inspection, or downstream scientific
+analysis would detect it.
+
+Similarly, a KILLED mutation establishes sensitivity to one applied mutation
+but does not establish that the repository is generally protected against
+reproducibility failures.
+
+We mitigate these interpretation risks by separating workflow type from oracle
+type, explicitly distinguishing completion-only workflows from workflows with
+substantive acceptance conditions, and treating mutation outcomes as properties
+of repository--mutation--workflow combinations rather than repository-level
+reproducibility labels.
+
+
+\subsection{Internal validity}
+\label{sec:threats-internal}
+
+A central internal-validity risk in mutation studies is outcome-dependent
+selection. Repository choice, mutation-candidate choice, validation-workflow
+choice, or oracle classification could otherwise be influenced by knowledge of
+which cases are likely to produce KILLED or SURVIVED outcomes.
+
+For the primary B02 corpus, we addressed this risk through static,
+outcome-blind corpus construction. Repository eligibility, fixed revisions,
+candidate mutations, validation workflows, and prospectively recorded oracle
+categories were frozen before primary mutation execution. Candidate
+repositories were not executed during corpus construction, and the corpus was
+not extended or replaced after observing empirical outcomes.
+
+The RQ2 classification was likewise separated from outcome analysis. Workflow
+categories were inherited from the frozen corpus, and B02 oracle categories had
+been recorded prospectively under protocol version 2. The RQ2 classification
+frame was independently frozen before outcome joining. Consequently, the
+observed RQ2 pattern was not used to redefine oracle categories.
+
+Execution and restoration introduce another internal-validity concern. Changes
+made solely to make historical software executable could alter the behavior
+being measured. D027 therefore preserved the frozen repository revision,
+mutation candidate, validation workflow, and oracle classification. Source
+compatibility patches were prohibited, validation workflows could not be
+weakened or skipped, restoration was baseline-first, and the restoration recipe
+was fixed before evaluating the corresponding mutant. Baseline and mutant were
+evaluated under symmetric restored conditions.
+
+Nevertheless, restoration cannot eliminate all uncertainty associated with
+executing historical software in a contemporary environment. A reconstructed
+environment may differ from the original authors' environment in ways that are
+not fully observable from repository metadata. We therefore retain the
+canonical primary result separately and treat D027 as an additional bounded
+evidence layer rather than as a replacement for primary execution.
+
+Semantic-equivalence handling also affects internal validity. A surviving
+syntactic mutation that does not change the relevant semantics should not
+contribute evidence of weak validation. We therefore exclude confirmed
+equivalent mutations from the meaningful detection denominator and distinguish
+confirmed non-equivalent, confirmed equivalent, unverified, and not-run
+semantic states.
+
+
+\subsection{External validity}
+\label{sec:threats-external}
+
+The study does not constitute a random sample of all ML research repositories.
+The corpus was constructed using operator-specific static eligibility criteria
+and a fixed stopping rule. Consequently, the results should not be interpreted
+as population-wide estimates of mutation detection or research-software
+reproducibility.
+
+The B02 operator frames are also unequal. The frozen stopping rule yielded ten
+cases each for \texttt{random-seed} and \texttt{dependency-pin}, but the
+eligible static frames for \texttt{data-split} and \texttt{cv-fold-count} were
+exhausted at six and three cases. The meaningful evaluated denominators are
+smaller still.
+
+The repository population may also differ systematically from other forms of ML
+software. The study focuses on research repositories for which both a supported
+mutation candidate and a usable repository validation workflow could be
+identified under the static protocol. Production ML systems, notebooks without
+repository-level workflows, closed-source research code, and projects using
+unsupported frameworks or configuration mechanisms are therefore outside the
+observed frame.
+
+These constraints limit generalization, but they also define the scope of the
+empirical claim precisely: the study measures the behavior of the selected
+frozen repository--operator cases under their selected validation workflows.
+
+
+\subsection{Conclusion validity}
+\label{sec:threats-conclusion}
+
+The number of detected mutations is small. Across the 23 confirmed
+non-equivalent evaluated mutations, only two were KILLED. RQ2 category sizes
+are also sparse and uneven; for example, the prospective B02 oracle analysis
+contains only two meaningful \texttt{assertion} cases.
+
+We therefore treat RQ2 as descriptive and exploratory. We do not infer causal
+effects of workflow type or oracle type, and we do not interpret differences in
+observed percentages as evidence of statistical superiority.
+
+This is especially important for the B02 oracle comparison. Both detected
+mutations occurred in the
+\texttt{dependency-pin} $\times$ \texttt{completion-only} cell. The observed
+difference between \texttt{assertion} and \texttt{completion-only} workflows
+can therefore reflect operator composition, sparse denominators, differential
+evaluability, or other case-level factors rather than oracle strength.
+
+For the same reason, operator-specific proportions such as the observed
+detection among confirmed non-equivalent \texttt{dependency-pin} cases are
+reported descriptively and should not be interpreted as estimates of a general
+operator effect.
+
+The primary quantitative claim is therefore intentionally narrow: in this
+sample, the selected validation workflows detected 2 of 23 confirmed
+non-equivalent reproducibility-relevant mutations.
+
+
+\subsection{Temporal and executability validity}
+\label{sec:threats-temporal}
+
+The repositories in the corpus were executed after their frozen revisions had
+been created, using contemporary software and infrastructure. Historical
+dependency ecosystems, package indexes, compilers, operating-system libraries,
+hardware availability, and external resources may have changed in the
+intervening period.
+
+This temporal distance was empirically consequential. Primary execution
+evaluated only 13 of 39 frozen cases, and bounded restoration increased the
+combined evaluated set to 24. The remaining non-evaluable cases therefore
+reduce the observable empirical denominator and may introduce differential
+attrition across workflow, operator, or oracle categories.
+
+We do not interpret present-day execution failure as direct evidence that the
+original research artifact was irreproducible at the time of publication.
+Instead, these failures characterize the difficulty of retrospectively
+executing the frozen software under the study conditions.
+
+Conversely, successful contemporary restoration does not reconstruct the
+original environment perfectly. D027 was designed to recover bounded
+executability while preserving the frozen empirical target, not to claim
+historical environment identity.
+
+The study therefore reports primary and restored evidence separately before
+combining successful evaluations at the analysis layer. This separation makes
+the effect of temporal software-ecosystem drift visible rather than silently
+removing non-evaluable cases from the study.

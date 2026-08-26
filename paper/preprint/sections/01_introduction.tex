@@ -1,0 +1,103 @@
+\section{Introduction}
+\label{sec:introduction}
+
+Reproducibility in machine-learning research depends not only on the
+availability of source code, but also on experimental choices encoded in that
+code and its execution environment. Random seeds, data partitioning,
+cross-validation protocols, dependency versions, and related configuration
+choices can affect measured results even when the software continues to execute
+successfully \cite{reimers2017score,henderson2018matters,bouthillier2021variance}.
+Accordingly, reproducibility initiatives increasingly emphasize the
+publication of code, environments, experimental details, and executable
+workflows \cite{gundersen2018reproducibility,pineau2021improving,heil2021standards}.
+
+An open question is whether the validation mechanisms already present in
+research repositories are sensitive to changes in these
+reproducibility-relevant choices. A repository may contain tests, continuous
+integration, validation scripts, documented experiments, or runnable examples.
+Such workflows provide evidence that software can execute or that particular
+properties hold, but they are not necessarily designed to detect changes in
+experimental configuration.
+
+This distinction is difficult to study from ordinary repository outcomes
+alone. When a validation workflow succeeds, it is generally unknown whether it
+would also succeed after a scientifically relevant experimental choice had
+changed. Mutation testing provides a way to make this counterfactual explicit:
+introduce a controlled change and observe whether the existing validation
+workflow distinguishes the mutant from the original program
+\cite{jia2011mutation,just2014mutants}.
+
+Mutation testing has already been applied extensively to conventional software,
+scientific software, and machine-learning systems
+\cite{hook2009trustworthiness,ma2018deepmutation,humbatova2021deepcrime}.
+Dependency-update testing has likewise used artificial faults to assess whether
+test suites can detect problems introduced through changed dependencies
+\cite{hejderup2022dependencies}. The present work therefore does not claim that
+mutation testing itself is new to ML or research software. Instead, we use
+mutation testing for a specific measurement target: the sensitivity of
+\emph{existing validation workflows in real ML research repositories} to
+controlled changes in reproducibility-relevant experimental choices.
+
+We introduce MLReproMutate, research software that detects and applies
+domain-specific mutations to reproducibility-relevant choices in Python ML
+projects. In the present study, we consider four mutation classes:
+\texttt{random-seed}, which changes a literal random seed;
+\texttt{dependency-pin}, which relaxes an exact dependency constraint;
+\texttt{data-split}, which disables explicit stratification in a
+train/test split; and \texttt{cv-fold-count}, which changes an explicit
+cross-validation fold count. Each mutation is evaluated against a validation
+workflow selected from the repository rather than against a newly introduced
+study-specific test oracle.
+
+We use MLReproMutate in an empirical study of 39 frozen
+repository--operator cases drawn from real ML research repositories. Corpus
+construction was static and outcome-blind: repository eligibility, source
+revision, mutation candidate, and validation workflow were fixed before
+mutation outcomes were observed. For the primary B02 corpus, validation-oracle
+categories were also recorded prospectively. Cases that could not execute at
+baseline were kept separate from mutation outcomes rather than being replaced
+after observing execution results.
+
+Primary execution produced mutation outcomes for 13 of the 39 cases. A bounded
+post-primary restoration procedure increased the combined evaluable set to 24
+cases while preserving the frozen revision, mutation candidate, and validation
+workflow. One evaluated mutation was confirmed semantically equivalent. Among
+the remaining 23 confirmed non-equivalent mutations, the selected validation
+workflows detected 2 and did not detect 21. Thus, \emph{in this sample}, the
+observed confirmed mutation-detection proportion was 2/23 (8.7\%).
+
+We additionally examine detection descriptively by validation-workflow type and,
+for the prospectively classified B02 subset, by oracle type. The two detected
+B02 mutations both occurred in the
+\texttt{dependency-pin} $\times$ \texttt{completion-only} cell. Sparse cells,
+unequal operator composition, and differential evaluability prevent attributing
+this pattern to oracle strength. We therefore treat these comparisons as
+descriptive rather than as evidence of causal or statistical differences among
+workflow categories.
+
+The study makes four contributions:
+
+\begin{itemize}
+    \item We present a reproducibility-oriented mutation model and its
+    implementation in MLReproMutate, targeting experimental choices surrounding
+    ML research workflows rather than learned-model structure alone.
+
+    \item We define an outcome-blind empirical protocol that freezes repository
+    revisions, mutation candidates, validation workflows, and prospective oracle
+    metadata before mutation outcomes are observed.
+
+    \item We provide empirical evidence from 39 frozen
+    repository--operator cases, including explicit accounting for baseline
+    executability, bounded restoration, and semantic equivalence.
+
+    \item We distinguish mutation survival from repository-level
+    reproducibility: a surviving confirmed non-equivalent mutation establishes
+    only that the selected validation workflow did not detect that particular
+    controlled change.
+\end{itemize}
+
+The remainder of the paper reviews related work
+(Section~\ref{sec:related-work}), describes MLReproMutate and its mutation model
+(Section~\ref{sec:mlrepromutate}), states the research questions and empirical
+protocol, reports the results, and discusses their implications and threats to
+validity.

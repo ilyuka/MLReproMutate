@@ -1,10 +1,10 @@
 \section{MLReproMutate and Mutation Model}
 \label{sec:mlrepromutate}
 
-MLReproMutate is a Python research-software tool for applying controlled
-mutations to reproducibility-relevant choices in machine-learning research
-software and evaluating whether an existing repository validation workflow
-detects the resulting change.
+MLReproMutate is Python research software for applying controlled
+mutations to reproducibility-relevant choices in machine-learning projects. It
+evaluates whether an existing repository validation workflow detects the
+resulting change.
 
 The tool differs from model-level mutation approaches that perturb learned
 parameters, neural-network structure, or input examples. Its mutation targets
@@ -102,7 +102,7 @@ $\rightarrow$
 \texttt{data-split} &
 Explicit non-\texttt{None}
 \texttt{stratify} argument in
-\texttt{sklearn.model\_selection.train\_test\_split} &
+\texttt{train\_test\_split} &
 \texttt{stratify=<expr.>}
 $\rightarrow$
 \texttt{stratify=None} \\
