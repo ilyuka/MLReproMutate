@@ -1,0 +1,206 @@
+\section{MLReproMutate and Mutation Model}
+\label{sec:mlrepromutate}
+
+MLReproMutate is a Python research-software tool for applying controlled
+mutations to reproducibility-relevant choices in machine-learning research
+software and evaluating whether an existing repository validation workflow
+detects the resulting change.
+
+The tool differs from model-level mutation approaches that perturb learned
+parameters, neural-network structure, or input examples. Its mutation targets
+are instead elements of the surrounding experimental software and
+configuration: choices such as random seeds, dependency constraints, data
+partitioning, and evaluation-protocol parameters.
+
+The present study uses four implemented operators. Throughout the paper we use
+the concise study labels \texttt{random-seed}, \texttt{dependency-pin},
+\texttt{data-split}, and \texttt{cv-fold-count}. These labels identify the
+mutation classes used in the empirical protocol; the corresponding
+implementation classes have more explicit software-level names.
+
+
+\subsection{Operator interface and mutation candidates}
+\label{sec:mlrepromutate-interface}
+
+MLReproMutate represents a mutation operator through two conceptually separate
+operations: candidate detection and mutation application. An operator first
+identifies syntactically supported locations in a repository and represents
+each location as a mutation candidate. A candidate records the operator,
+reproducibility category, target file, a human-readable description, and
+operator-specific metadata needed to identify and validate the target.
+
+Mutation application is then performed against a selected candidate rather than
+by searching for a new target at execution time. The implementation verifies
+that the candidate still corresponds to the expected source location before
+rewriting the file. This design reduces the risk that a mutation is silently
+applied to a different syntactic occurrence after candidate selection.
+
+For Python-source operators, candidate detection uses the Python abstract syntax
+tree (AST) and records source-position metadata. The mutation is applied only
+after the relevant call and literal or expression have been matched again
+against the stored candidate information. The dependency operator similarly
+records the target requirements file, package, version, and line position and
+verifies the expected pin before replacement.
+
+
+\subsection{Reproducibility mutation operators}
+\label{sec:mlrepromutate-operators}
+
+Table~\ref{tab:mutation-operators} summarizes the four operators used in the
+study. The transformations are intentionally narrow: each operator recognizes
+a restricted syntactic form and applies one deterministic mutation.
+
+\begin{table}[t]
+\centering
+\caption{Reproducibility-relevant mutation operators used in the empirical
+study. Each transformation is deterministic once a candidate has been
+selected.}
+\label{tab:mutation-operators}
+
+\vspace{0.45em}
+
+\small
+\renewcommand{\arraystretch}{1.30}
+\setlength{\tabcolsep}{7pt}
+
+\begin{tabularx}{\textwidth}{
+    >{\raggedright\arraybackslash}p{0.18\textwidth}
+    >{\raggedright\arraybackslash}X
+    >{\raggedright\arraybackslash}p{0.31\textwidth}
+}
+\toprule
+\addlinespace[2pt]
+
+\textbf{Study label} &
+\textbf{Supported target} &
+\textbf{Transformation} \\
+
+\addlinespace[2pt]
+\midrule
+\addlinespace[4pt]
+
+\texttt{random-seed} &
+Literal integer argument to
+\texttt{random.seed},
+\texttt{np.random.seed},
+\texttt{numpy.random.seed}, or
+\texttt{torch.manual\_seed} &
+$N \rightarrow N+1$ \\
+
+\addlinespace[5pt]
+
+\texttt{dependency-pin} &
+Exact dependency pin
+\texttt{package==version}
+in a supported requirements file &
+\texttt{package==version}
+$\rightarrow$
+\texttt{package>=version} \\
+
+\addlinespace[5pt]
+
+\texttt{data-split} &
+Explicit non-\texttt{None}
+\texttt{stratify} argument in
+\texttt{sklearn.model\_selection.train\_test\_split} &
+\texttt{stratify=<expr.>}
+$\rightarrow$
+\texttt{stratify=None} \\
+
+\addlinespace[5pt]
+
+\texttt{cv-fold-count} &
+Explicit literal \texttt{n\_splits} in
+\texttt{KFold}, \texttt{StratifiedKFold},
+\texttt{RepeatedKFold}, or
+\texttt{RepeatedStratifiedKFold} &
+$N \rightarrow N+1$
+for \texttt{n\_splits} \\
+
+\addlinespace[4pt]
+\bottomrule
+\end{tabularx}
+
+\vspace{0.3em}
+\end{table}
+
+
+\paragraph{\texttt{random-seed}.}
+The random-seed operator targets supported seed-setting calls whose first
+positional argument is an integer literal. It does not attempt to resolve
+variables, expressions, configuration files, or dynamically supplied seed
+values. For an eligible literal seed $N$, the mutation replaces the literal
+with $N+1$. The transformation preserves the presence of explicit seeding while
+changing the selected pseudorandom sequence.
+
+\paragraph{\texttt{dependency-pin}.}
+The dependency-pin operator recognizes exact requirement specifications of the
+form \texttt{package==version} and relaxes the equality constraint to
+\texttt{package>=version}. The textual mutation alone does not guarantee that a
+different package version will be installed. For resolved-dependency
+evaluation, MLReproMutate therefore constructs baseline and mutant dependency
+environments separately and records the installed version of the target
+distribution. If both specifications resolve to the same installed version,
+the dependency mutation is treated as equivalent rather than as evidence that
+the validation workflow failed to detect a dependency change.
+
+\paragraph{\texttt{data-split}.}
+The data-split operator targets supported scikit-learn
+\texttt{train\_test\_split} calls containing an explicit
+\texttt{stratify} keyword whose value is not \texttt{None}. The operator
+replaces the complete stratification expression with \texttt{None}. Candidate
+detection resolves supported import forms before accepting a call, reducing
+false matches to unrelated functions with the same local name.
+
+\paragraph{\texttt{cv-fold-count}.}
+The cv-fold-count operator targets supported scikit-learn cross-validation
+splitters with an explicit literal integer \texttt{n\_splits} argument. The
+supported splitter classes are \texttt{KFold},
+\texttt{StratifiedKFold}, \texttt{RepeatedKFold}, and
+\texttt{RepeatedStratifiedKFold}. For an eligible fold count $N \geq 2$, the
+operator replaces it with $N+1$.
+
+
+\subsection{Baseline-first mutation evaluation}
+\label{sec:mlrepromutate-evaluation}
+
+MLReproMutate evaluates mutations relative to an executable unmodified
+baseline. Before evaluating selected candidates, the validation workflow is run
+against an isolated copy of the unmodified project. A baseline timeout or
+non-zero exit status prevents the corresponding mutation from being interpreted
+as a validation outcome.
+
+After a successful baseline, each mutation is applied in an isolated project
+workspace and the same validation command is executed against the mutated
+project. At the engine level, a successful validation command corresponds to a
+SURVIVED mutation, a non-zero exit status corresponds to a KILLED mutation, and
+a validation timeout is represented separately.
+
+The implementation also defines additional internal states such as INVALID and
+EQUIVALENT. In particular, resolved dependency evaluation can distinguish a
+syntactically changed dependency specification that resolves to the same
+installed version from one that actually changes the resolved environment.
+
+The empirical protocol in Section~\ref{sec:study-design} imposes stricter
+study-level rules on top of these software-level execution states. Setup and
+baseline failures are kept separate from mutation outcomes, and semantic
+verification determines which evaluated mutations enter the confirmed
+non-equivalent detection denominator.
+
+
+\subsection{Isolation and auditability}
+\label{sec:mlrepromutate-auditability}
+
+Mutation evaluation is performed in temporary project sandboxes rather than by
+modifying the source repository in place. Candidate metadata and mutation
+results provide an explicit link between the selected source location, applied
+transformation, validation execution, and resulting outcome.
+
+This separation is important for empirical use. Candidate detection can be
+performed independently from mutation execution, selected candidates can be
+frozen before outcomes are observed, and the same mutation definition can be
+reapplied to an isolated repository copy. MLReproMutate therefore provides the
+mutation mechanism and execution primitives, while corpus construction,
+workflow selection, semantic verification, and the study-specific stopping
+rules remain explicit parts of the empirical protocol described in
+Section~\ref{sec:study-design}.
