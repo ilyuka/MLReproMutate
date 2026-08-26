@@ -5,7 +5,7 @@
 \label{sec:discussion-detection}
 
 The central empirical observation of this study is that the selected validation
-workflows detected only 2 of 23 confirmed non-equivalent
+workflows detected 2 of 23 confirmed non-equivalent
 reproducibility-relevant mutations. The remaining 21 mutations changed the
 relevant semantics of the evaluated case but were not rejected by the frozen
 validation workflow.
@@ -25,9 +25,9 @@ changes. A workflow may exercise the affected code path while still accepting
 a changed seed, split, fold count, or resolved dependency environment.
 
 The result is therefore better understood as evidence about \emph{validation
-sensitivity}: for a substantial fraction of the evaluated cases in this
-sample, the selected existing workflow did not distinguish the original
-configuration from a controlled, semantically different one.
+sensitivity}: in 21 of the 23 confirmed non-equivalent evaluations, the
+selected existing workflow did not distinguish the original configuration from
+the controlled, semantically different one.
 
 
 \subsection{Mutation survival is not repository irreproducibility}
@@ -90,7 +90,7 @@ of ``test strength.''
 \subsection{Executability as a prerequisite for mutation-based evaluation}
 \label{sec:discussion-executability}
 
-A second major observation concerns executability. Only 13 of the 39 frozen
+A second observation concerns executability. Only 13 of the 39 frozen
 cases were evaluable during primary execution. Bounded restoration increased
 this number to 24, leaving 15 cases non-evaluable.
 

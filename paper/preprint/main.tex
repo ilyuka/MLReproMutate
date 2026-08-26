@@ -9,6 +9,8 @@
 \usepackage{array}
 \usepackage{amsmath}
 \usepackage{graphicx}
+\usepackage{flafter}
+\usepackage{placeins}
 \usepackage{hyperref}
 \usepackage[nameinlink,noabbrev]{cleveref}
 \usepackage{url}
@@ -19,7 +21,11 @@
     colorlinks=true,
     linkcolor=blue,
     citecolor=blue,
-    urlcolor=blue
+    urlcolor=blue,
+    pdftitle={Mutation Testing for Reproducibility Safeguards in Machine Learning Research Software: An Empirical Study},
+    pdfauthor={Ilya Shulepov},
+    pdfsubject={Empirical study of mutation testing for reproducibility safeguards in machine-learning research software},
+    pdfkeywords={mutation testing, reproducibility, machine learning, research software, software testing}
 }
 
 \geometry{margin=1in}
@@ -40,16 +46,20 @@
 \setlength{\parskip}{0pt}
 
 \title{
-Mutation Testing for Reproducibility Safeguards in
-Machine Learning Research Software:
-An Empirical Study
+  Mutation Testing for Reproducibility Safeguards in\\
+  Machine Learning Research Software: An Empirical Study
 }
 
 \author{
-% TODO: author name and affiliation
+  Ilya Shulepov\\
+  \small Independent Researcher\\
+  \small \href{mailto:ia_shulepov1@student.mpgu.edu}
+              {\texttt{ia\_shulepov1@student.mpgu.edu}}\\
+  \small \href{https://orcid.org/0009-0001-1348-9576}
+              {ORCID: 0009-0001-1348-9576}
 }
 
-\date{}
+\date{August 2026}
 
 \begin{document}
 
@@ -95,9 +105,11 @@ choices.
 \input{sections/07_discussion}
 \input{sections/08_threats}
 \input{sections/09_conclusion}
+
+\clearpage
 \input{sections/10_appendix}
 
-% Uncomment after references.bib is added.
+% Bibliography
 \bibliographystyle{plain}
 \bibliography{references}
 
