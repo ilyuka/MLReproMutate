@@ -1,0 +1,8 @@
+dimension,scope,category,selected,combined_evaluated,meaningful_n,evaluated_not_meaningful,not_combined_evaluated,meaningful_percent_of_selected,killed,survived
+workflow_kind,B01+B02,upstream-test,13,7,6,1,6,46.15384615384615,0,6
+workflow_kind,B01+B02,ci,1,1,1,0,0,100.0,0,1
+workflow_kind,B01+B02,documented-validation,3,2,2,0,1,66.66666666666667,1,1
+workflow_kind,B01+B02,documented-experiment,11,3,3,0,8,27.272727272727273,0,3
+workflow_kind,B01+B02,documented-example,11,11,11,0,0,100.0,1,10
+oracle_kind,B02-prospective,assertion,7,3,2,1,4,28.571428571428573,0,2
+oracle_kind,B02-prospective,completion-only,22,13,13,0,9,59.09090909090909,2,11

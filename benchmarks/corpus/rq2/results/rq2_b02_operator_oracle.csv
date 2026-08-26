@@ -1,0 +1,9 @@
+operator,oracle_kind,meaningful_n,killed,survived,detection_percent
+random-seed,assertion,1,0,1,0.0
+random-seed,completion-only,4,0,4,0.0
+dependency-pin,assertion,0,0,0,
+dependency-pin,completion-only,3,2,1,66.66666666666667
+data-split,assertion,0,0,0,
+data-split,completion-only,4,0,4,0.0
+cv-fold-count,assertion,1,0,1,0.0
+cv-fold-count,completion-only,2,0,2,0.0

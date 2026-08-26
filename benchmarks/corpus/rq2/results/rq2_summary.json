@@ -1,0 +1,106 @@
+{
+  "b02_meaningful": {
+    "killed": 2,
+    "n": 15,
+    "survived": 13
+  },
+  "b02_oracle_contrast": [
+    {
+      "detection_percent": 0.0,
+      "detection_rate": 0.0,
+      "evaluated_confirmed_non_equivalent": 2,
+      "killed": 0,
+      "oracle_strength_derived": "substantive-oracle",
+      "survived": 2
+    },
+    {
+      "detection_percent": 15.384615384615385,
+      "detection_rate": 0.15384615384615385,
+      "evaluated_confirmed_non_equivalent": 13,
+      "killed": 2,
+      "oracle_strength_derived": "completion-only",
+      "survived": 11
+    }
+  ],
+  "b02_oracle_kind": [
+    {
+      "detection_percent": 0.0,
+      "detection_rate": 0.0,
+      "evaluated_confirmed_non_equivalent": 2,
+      "killed": 0,
+      "oracle_kind": "assertion",
+      "survived": 2
+    },
+    {
+      "detection_percent": null,
+      "detection_rate": null,
+      "evaluated_confirmed_non_equivalent": 0,
+      "killed": 0,
+      "oracle_kind": "metric-threshold",
+      "survived": 0
+    },
+    {
+      "detection_percent": null,
+      "detection_rate": null,
+      "evaluated_confirmed_non_equivalent": 0,
+      "killed": 0,
+      "oracle_kind": "reference-comparison",
+      "survived": 0
+    },
+    {
+      "detection_percent": 15.384615384615385,
+      "detection_rate": 0.15384615384615385,
+      "evaluated_confirmed_non_equivalent": 13,
+      "killed": 2,
+      "oracle_kind": "completion-only",
+      "survived": 11
+    }
+  ],
+  "combined_meaningful": {
+    "killed": 2,
+    "n": 23,
+    "survived": 21
+  },
+  "workflow_kind": [
+    {
+      "detection_percent": 0.0,
+      "detection_rate": 0.0,
+      "evaluated_confirmed_non_equivalent": 6,
+      "killed": 0,
+      "survived": 6,
+      "workflow_kind": "upstream-test"
+    },
+    {
+      "detection_percent": 0.0,
+      "detection_rate": 0.0,
+      "evaluated_confirmed_non_equivalent": 1,
+      "killed": 0,
+      "survived": 1,
+      "workflow_kind": "ci"
+    },
+    {
+      "detection_percent": 50.0,
+      "detection_rate": 0.5,
+      "evaluated_confirmed_non_equivalent": 2,
+      "killed": 1,
+      "survived": 1,
+      "workflow_kind": "documented-validation"
+    },
+    {
+      "detection_percent": 0.0,
+      "detection_rate": 0.0,
+      "evaluated_confirmed_non_equivalent": 3,
+      "killed": 0,
+      "survived": 3,
+      "workflow_kind": "documented-experiment"
+    },
+    {
+      "detection_percent": 9.090909090909092,
+      "detection_rate": 0.09090909090909091,
+      "evaluated_confirmed_non_equivalent": 11,
+      "killed": 1,
+      "survived": 10,
+      "workflow_kind": "documented-example"
+    }
+  ]
+}

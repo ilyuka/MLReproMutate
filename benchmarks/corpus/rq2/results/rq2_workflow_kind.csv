@@ -1,0 +1,6 @@
+workflow_kind,evaluated_confirmed_non_equivalent,killed,survived,detection_rate,detection_percent
+upstream-test,6,0,6,0.0,0.0
+ci,1,0,1,0.0,0.0
+documented-validation,2,1,1,0.5,50.0
+documented-experiment,3,0,3,0.0,0.0
+documented-example,11,1,10,0.09090909090909091,9.090909090909092
