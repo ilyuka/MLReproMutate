@@ -1,0 +1,37 @@
+{
+  "artifact": "MLReproMutate RQ2 outcome-blind evidence frame",
+  "b02_oracle_counts": {
+    "assertion": 7,
+    "completion-only": 22
+  },
+  "b02_workflow_counts": {
+    "ci": 1,
+    "documented-example": 6,
+    "documented-experiment": 9,
+    "documented-validation": 3,
+    "upstream-test": 10
+  },
+  "batch_counts": {
+    "B01": 10,
+    "B02": 29
+  },
+  "blinding": {
+    "b01_oracle_kind": "not-prospectively-recorded",
+    "b02_oracle_kind": "prospective-protocol-v2",
+    "baseline_results_included": false,
+    "operator_included": false,
+    "outcome_fields_included": false,
+    "restoration_results_included": false,
+    "screening_execution_results_included": false,
+    "semantic_verification_included": false
+  },
+  "case_count": 39,
+  "inputs": {
+    "/home/ilya/Desktop/projekts/joss/ml-repro-mutate/benchmarks/corpus/sampling_frame.jsonl": "cea570ce7e805ec64f4bad07f393bf64993cb7076de0259aa1288a438c6b68c9",
+    "/home/ilya/Desktop/projekts/joss/ml-repro-mutate/benchmarks/corpus/screening.jsonl": "ff79bb9a21715c4613f133b6b838e254baa5bfcd52ae9be8d39855544a3fd1e4"
+  },
+  "output": {
+    "path": "/home/ilya/Desktop/projekts/joss/ml-repro-mutate/benchmarks/corpus/rq2/blind_case_evidence.jsonl",
+    "sha256": "2932a77b08962d2c6a636530c954e7cfb34286e7fcbfcb5daded2c1f04881329"
+  }
+}
