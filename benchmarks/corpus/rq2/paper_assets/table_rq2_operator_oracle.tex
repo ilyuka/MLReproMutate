@@ -1,0 +1,17 @@
+\begin{table}[t]
+\centering
+\caption{Operator composition of the prospective B02 oracle analysis. Both detected mutations occurred in the dependency-pin/completion-only cell; sparse cells prevent attribution of this pattern to oracle kind.}
+\label{tab:rq2-operator-oracle}
+\begin{tabular}{lrrrr}
+\toprule
+Operator & Oracle kind & N & Killed & Survived \\
+\midrule
+random-seed & assertion & 1 & 0 & 1 \\
+random-seed & completion-only & 4 & 0 & 4 \\
+dependency-pin & completion-only & 3 & 2 & 1 \\
+data-split & completion-only & 4 & 0 & 4 \\
+cv-fold-count & assertion & 1 & 0 & 1 \\
+cv-fold-count & completion-only & 2 & 0 & 2 \\
+\bottomrule
+\end{tabular}
+\end{table}

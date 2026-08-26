@@ -1,0 +1,20 @@
+{
+  "figures_generated": false,
+  "inputs": {
+    "results/rq2_b02_operator_oracle.csv": "3c07513919f36945a0c263c06281c1e69f539c5bb0e2808b0b8f8fccecdec197",
+    "results/rq2_b02_oracle_kind.csv": "297b7de58510153276a34890b3b24eae14c7ef170c6ac9803e2b2db1741c0728",
+    "results/rq2_evaluability_by_category.csv": "c5f6b8d748890779d7a1bf7d8dc2addd2bf0eda89c391b2601d92612691e5aba",
+    "results/rq2_workflow_kind.csv": "b86d16f2d2ff7154d45535bf26f64e1f6e3e025d3428f545176aee5f791fe17e"
+  },
+  "outputs": {
+    "paper_assets/table_rq2_attrition.md": "d8e30ad25a0ce6179c9d135600a617fee067b98daa3e135d77ee7bf01ee5642b",
+    "paper_assets/table_rq2_attrition.tex": "390d09c1b25e2d4c189ef54f0d40c3fdbd37c2ec2cc85033bbcdc8d30277ed16",
+    "paper_assets/table_rq2_operator_oracle.md": "dacc323d06c5677b3175b8ee29b31af39e2c982481b65ce6bd6e607bafb40d22",
+    "paper_assets/table_rq2_operator_oracle.tex": "2037b631bcd8c31fef533536949e42486526b492fe553b9a17bf838745d68551",
+    "paper_assets/table_rq2_oracle_kind.md": "157b81bcdb365484e3e15c649fa56affc80db22263737d919ccaa0ab68353cc1",
+    "paper_assets/table_rq2_oracle_kind.tex": "14c3ed2b6356bcc23233e6476c6b94bc86294b69f81ad4bcf9aa2d3fd879638b",
+    "paper_assets/table_rq2_workflow_kind.md": "28a614965fcf60b4b3342c8cc37a435f6fc976ffbc16d53c66e7269272ecae1d",
+    "paper_assets/table_rq2_workflow_kind.tex": "cb1611a9a18a0ed4537e9829fc79a566ae738fe99a71c658d6e84af58600313f"
+  },
+  "presentation": "tables-only"
+}
