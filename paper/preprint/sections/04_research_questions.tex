@@ -1,0 +1,25 @@
+\section{Research Questions}
+\label{sec:research-questions}
+
+We investigate whether validation workflows already present in
+machine-learning research repositories are sensitive to controlled changes in
+reproducibility-relevant experimental choices. The study addresses two
+research questions.
+
+\paragraph{RQ1.}
+When reproducibility-relevant mutations are introduced into ML research
+software, how often are they detected by existing repository validation
+workflows?
+
+\paragraph{RQ2.}
+How does mutation detection differ by validation-workflow type and by the
+strength of the workflow's validation oracle?
+
+RQ1 concerns the overall sensitivity of the selected validation workflows to
+confirmed non-equivalent mutations. RQ2 examines this sensitivity
+descriptively across workflow and oracle categories that were fixed
+independently of mutation outcomes.
+
+Neither research question treats mutation survival as evidence that a
+repository is irreproducible. A surviving mutation indicates only that the
+selected validation workflow did not detect that particular controlled change.

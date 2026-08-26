@@ -1,0 +1,110 @@
+\section{Results}
+\label{sec:results}
+
+\subsection{Executability and bounded restoration}
+\label{sec:results-executability}
+
+Primary execution evaluated 13 of the 39 frozen cases (33.3\%), while 26
+cases (66.7\%) were non-evaluable at the primary layer. These non-evaluable
+cases were retained in the study frame rather than replaced by additional
+repositories.
+
+\input{tables/table_study_summary.tex}
+
+The bounded D027 restoration layer increased the number of evaluable cases
+from 13 to 24, corresponding to 61.5\% of the complete frozen frame. Fifteen
+of 39 cases (38.5\%) remained non-evaluable after combining primary and
+restoration evidence.
+
+Within the 24-case D027 cohort, a report or assessment was present for 19
+cases. Substantive restoration was attempted for 18 cases. Eleven cases were
+successfully restored and evaluated, while seven were not restored after a
+substantive attempt. One additional case had a D027 report but no substantive
+restoration attempt, and five cohort cases had no D027 report.
+
+These counts characterize executability under the study protocol rather than
+mutation detection. In particular, setup and workflow failures were not
+assigned KILLED or SURVIVED outcomes.
+
+
+\subsection{RQ1: Detection of reproducibility-relevant mutations}
+\label{sec:results-rq1}
+
+Among the 24 combined evaluated cases, one mutation was confirmed
+semantically equivalent and was excluded from the meaningful detection
+denominator. The resulting denominator contained 23 confirmed
+non-equivalent mutations.
+
+Of these 23 mutations, 2 were \textsc{Killed} and 21 were
+\textsc{Survived}. The observed detection proportion was therefore
+
+\[
+\frac{2}{23} = 8.7\%.
+\]
+
+Thus, in this sample, the selected repository validation workflows detected
+2 of 23 confirmed non-equivalent reproducibility-relevant mutations. The
+remaining 21 confirmed non-equivalent mutations completed without detection
+by their selected frozen workflows.
+
+The B02 operator-specific results were uneven. All five meaningful
+\texttt{random-seed} evaluations survived. For \texttt{dependency-pin},
+four cases were evaluated: two were KILLED, one was SURVIVED, and one was
+confirmed equivalent. Excluding the equivalent case yielded two detections
+among three confirmed non-equivalent \texttt{dependency-pin} evaluations.
+All four meaningful \texttt{data-split} cases and all three
+\texttt{cv-fold-count} cases survived.
+
+\input{tables/table_operator_results.tex}
+
+These operator-level counts are descriptive. The operator-specific
+denominators are small and unequal, and the corpus construction was not
+designed to estimate population-level differences in mutation detection
+between operators.
+
+
+\subsection{RQ2: Detection by workflow and oracle type}
+\label{sec:results-rq2}
+
+We first stratified the 23 confirmed non-equivalent evaluated mutations by the
+frozen validation-workflow category.
+
+Among six \texttt{upstream-test} cases, none of the mutations was detected.
+The single CI case also survived. One of two
+\texttt{documented-validation} cases was detected, as was one of eleven
+\texttt{documented-example} cases. None of the three
+\texttt{documented-experiment} cases was detected.
+
+\input{../../benchmarks/corpus/rq2/paper_assets/table_rq2_workflow_kind.tex}
+
+The primary oracle analysis was restricted to B02 because oracle kind was
+prospectively recorded only under protocol version 2. Fifteen B02 cases
+entered the confirmed non-equivalent meaningful denominator. Of these, two
+used an \texttt{assertion} oracle and thirteen used a
+\texttt{completion-only} oracle.
+
+Neither of the two \texttt{assertion} cases was detected. Two of the thirteen
+\texttt{completion-only} cases were detected, corresponding to a descriptive
+detection proportion of 15.4\%.
+
+\input{../../benchmarks/corpus/rq2/paper_assets/table_rq2_oracle_kind.tex}
+
+This pattern does not establish that completion-only workflows provide
+stronger mutation detection than assertion-based workflows. A diagnostic
+cross-classification by operator showed that both detected B02 mutations
+occurred in the \texttt{dependency-pin} $\times$
+\texttt{completion-only} cell: two of the three confirmed non-equivalent
+cases in that cell were KILLED. No KILLED mutation occurred in any other
+observed B02 operator--oracle cell.
+
+The oracle categories also differed in evaluability. Of seven prospectively
+classified \texttt{assertion} cases, three were combined-evaluable and two
+entered the confirmed non-equivalent meaningful denominator. Of 22
+\texttt{completion-only} cases, thirteen were combined-evaluable and all
+thirteen entered the meaningful denominator.
+
+Together, the sparse cells, operator composition, and differential
+evaluability prevent attributing the observed detection pattern to oracle
+strength. RQ2 therefore provides descriptive evidence of variation across
+workflow and oracle categories, but no evidence of a monotonic relationship
+between oracle explicitness and mutation detection.

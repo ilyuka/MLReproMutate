@@ -1,0 +1,263 @@
+\section{Study Design}
+\label{sec:study-design}
+
+\subsection{Outcome-blind corpus construction}
+\label{sec:corpus-construction}
+
+We evaluated MLReproMutate on a frozen corpus of 39 repository--operator cases
+drawn from machine-learning research software. Corpus construction was
+performed separately from mutation execution and was intentionally
+outcome-blind: repository eligibility, mutation candidates, revisions, and
+validation workflows were selected without executing candidate repositories
+or observing mutation outcomes.
+
+The corpus consisted of two batches. B01 was a 10-repository calibration batch
+used during development of the empirical protocol. B02 was the primary
+operator-specific corpus and contained 29 repository--operator cases. The
+final B02 composition was 10 \texttt{random-seed}, 10
+\texttt{dependency-pin}, 6 \texttt{data-split}, and 3
+\texttt{cv-fold-count} cases.
+
+For B02, repositories were screened using an operator-specific static
+eligibility procedure. Screening could use repository source code,
+documentation, tests, continuous-integration configuration, experiment or
+example source, and publication metadata, but could not execute repository
+code, install dependencies, create environments, download datasets for
+validation, or inspect mutation outcomes. In particular, repositories were
+not selected because their tests appeared likely to kill a mutation or
+because a candidate appeared especially sensitive to the proposed change.
+
+The stopping rule was fixed before primary execution as
+
+\[
+n_{\mathrm{primary}} = \min(10, n_{\mathrm{eligible}}).
+\]
+
+Consequently, \texttt{random-seed} and \texttt{dependency-pin} each
+contributed ten B02 cases, whereas the eligible static frames for
+\texttt{data-split} and \texttt{cv-fold-count} were exhausted at six and
+three cases, respectively. These smaller operator frames therefore represent
+the eligible population identified under the frozen screening procedure
+rather than post-hoc reductions based on execution outcomes.
+
+The complete 39-case corpus, including repository revisions, candidate
+mutations, and selected validation workflows, was frozen before primary
+mutation execution. No repository was subsequently added to compensate for
+setup failures, workflow failures, survived mutations, or other empirical
+outcomes.
+
+
+\subsection{Mutation operators and candidate selection}
+\label{sec:mutation-operators}
+
+The study used four reproducibility-relevant mutation operators implemented by
+MLReproMutate. Each operator represents a controlled change to an experimental
+or environment choice that can affect the reproducibility of an ML workflow.
+
+\texttt{random-seed} targets supported literal calls to Python, NumPy, or
+PyTorch random-seed APIs and changes an integer seed from \(N\) to \(N+1\).
+
+\texttt{dependency-pin} changes an exact dependency constraint from
+\texttt{package==version} to \texttt{package>=version}.
+
+\texttt{data-split} removes a non-null \texttt{stratify} argument from a
+supported \texttt{train\_test\_split} call.
+
+\texttt{cv-fold-count} changes a literal \texttt{n\_splits=N} argument in a
+supported KFold-family call to \texttt{n\_splits=N+1}.
+
+Candidate selection was restricted to syntax supported by the frozen operator
+definitions. The study therefore does not attempt to enumerate every
+reproducibility-relevant choice that can occur in ML research software.
+Instead, it evaluates a deliberately narrow set of mechanically identifiable
+and auditable mutations.
+
+For each selected case, the repository revision and candidate mutation were
+fixed before execution. Candidate selection was not changed after observing
+whether a baseline executed successfully or whether a mutant was detected.
+
+
+\subsection{Frozen validation workflows}
+\label{sec:validation-workflows}
+
+Each case was associated with one validation workflow selected before mutation
+execution. The objective was not to construct a new test suite for the
+repository, but to measure the sensitivity of validation behavior that already
+existed in the research artifact.
+
+The protocol allowed five workflow categories:
+\texttt{upstream-test}, \texttt{ci},
+\texttt{documented-validation}, \texttt{documented-experiment}, and
+\texttt{documented-example}. The selected command and its repository
+documentation or source reference were frozen together with the case.
+
+These categories describe the provenance or form of the workflow and are
+treated categorically rather than ordinally. For example, an upstream test
+command is not assumed a priori to provide a stronger reproducibility oracle
+than a documented experiment, and an example workflow is not assumed to
+provide a weaker one.
+
+The term \emph{validation workflow} is intentionally broader than
+\emph{reproducibility safeguard}. A workflow may execute substantial research
+code while providing no explicit check on its outputs. Accordingly,
+successful completion alone was not interpreted as evidence that a workflow
+constituted a strong reproducibility oracle.
+
+
+\subsection{Validation-oracle classification}
+\label{sec:oracle-classification}
+
+To distinguish workflow form from the mechanism that determines workflow
+success, protocol version 2 prospectively classified the validation oracle for
+every selected B02 case. Oracle classification was recorded before mutation
+execution and was therefore independent of \textsc{Killed},
+\textsc{Survived}, or \textsc{Equivalent} outcomes.
+
+Four oracle categories were permitted. \texttt{assertion} indicates that
+explicit assertions or test expectations determine success.
+\texttt{metric-threshold} indicates an explicit numerical acceptance
+criterion. \texttt{reference-comparison} indicates comparison with an expected
+value or reference artifact. \texttt{completion-only} indicates that the
+selected workflow is considered successful if it terminates with exit status
+zero, without an explicit assertion, threshold, or reference comparison
+relevant to the workflow result.
+
+The frozen B02 corpus contained 22 \texttt{completion-only} and 7
+\texttt{assertion} workflows; no B02 case used a
+\texttt{metric-threshold} or \texttt{reference-comparison} oracle.
+
+For a secondary descriptive contrast fixed before outcome analysis, the latter
+three explicit-oracle categories were grouped as
+\texttt{substantive-oracle}, while \texttt{completion-only} remained
+separate. This binary grouping does not imply an ordering among
+\texttt{assertion}, \texttt{metric-threshold}, and
+\texttt{reference-comparison}.
+
+B01 predates the protocol-v2 oracle field. We therefore retain the frozen B01
+workflow categories but do not retrospectively treat B01 cases as if an oracle
+category had been prospectively recorded. The primary oracle analysis for RQ2
+is consequently restricted to B02.
+
+
+\subsection{Primary execution protocol}
+\label{sec:primary-execution}
+
+Primary execution followed a baseline-first protocol. For each frozen case,
+the selected repository revision was prepared according to the study protocol
+and the frozen validation workflow was first executed on the unmodified
+baseline. Mutation execution proceeded only when the baseline satisfied the
+protocol's evaluability requirements.
+
+If the baseline could not be established because of environment setup failure,
+unavailable workflow requirements, or other infrastructure barriers, the case
+was classified as non-evaluable at the primary layer rather than assigned a
+mutation outcome. Mutation outcomes were therefore defined only for cases in
+which the corresponding baseline and mutant could be evaluated under the
+frozen workflow.
+
+A mutation was classified as \textsc{Killed} when the selected validation
+workflow failed or returned a non-zero status after the mutation. It was
+classified as \textsc{Survived} when the same workflow completed successfully
+despite the mutation. A mutation was classified as \textsc{Equivalent} when
+semantic verification established that the applied mutation had not changed
+the relevant semantics of the evaluated case.
+
+Setup failures, workflow-unavailability events, and other infrastructure
+failures were not counted as mutation outcomes.
+
+
+\subsection{Semantic verification}
+\label{sec:semantic-verification}
+
+Mutation survival alone does not establish that a mutation changed the
+semantics of the evaluated computation. The analysis therefore separates
+validation-workflow detection from semantic equivalence.
+
+Semantic verification distinguished
+\texttt{confirmed-non-equivalent},
+\texttt{confirmed-equivalent},
+\texttt{unverified}, and
+\texttt{not-run} states. Confirmed equivalent mutations were excluded from the
+meaningful detection denominator.
+
+The primary detection measure used for RQ1 and RQ2 is
+
+\[
+\frac{\mathrm{KILLED}}
+     {\mathrm{KILLED} +
+      \mathrm{confirmed\text{-}non\text{-}equivalent\ SURVIVED}}.
+\]
+
+This distinction is important for interpreting survival. A confirmed
+non-equivalent \textsc{Survived} mutation means that the selected frozen
+validation workflow did not detect that particular reproducibility-relevant
+change. It does not imply that the repository as a whole is irreproducible.
+
+
+\subsection{Bounded restoration of non-evaluable cases}
+\label{sec:d027-restoration}
+
+Primary execution revealed substantial environment and dependency drift in
+historical ML research repositories. To distinguish mutation sensitivity from
+failures caused by contemporary execution environments, we applied a separate
+bounded restoration protocol, D027, to a predefined subset of initially
+non-evaluable cases.
+
+D027 was an additional evidence layer rather than a revision of the primary
+study. Canonical primary outcomes and failure classifications were retained
+unchanged. Restoration preserved the frozen repository revision, mutation
+candidate, validation workflow, and oracle classification.
+
+Restoration followed several constraints intended to prevent outcome-directed
+repair. Source-level compatibility patches were prohibited; validation
+workflows could not be skipped or weakened; the baseline had to be restored
+before mutation evaluation; the restoration recipe was fixed before executing
+the mutant; and baseline and mutant were evaluated using symmetric restoration
+conditions. Restoration attempts were bounded, and infrastructure failures
+were kept distinct from mutation outcomes.
+
+The D027 cohort contained 24 cases. A structured D027 report or assessment was
+available for 19 cases. Substantive restoration was attempted for 18 cases, 11
+of which were successfully restored and subsequently evaluated. Seven cases
+were not restored after substantive attempts. One additional case had a D027
+report but no substantive restoration attempt because repository identity
+recovery failed, and five cohort cases had no D027 report.
+
+Successful D027 evaluations were combined with primary evaluations only at the
+analysis layer. D027 never changed the frozen workflow or oracle
+classification and never replaced the canonical primary record.
+
+
+\subsection{Analysis procedure and denominators}
+\label{sec:analysis-denominators}
+
+We distinguish three levels of accounting: the complete frozen corpus, the set
+of evaluable cases, and the set of confirmed non-equivalent mutations that
+enter the meaningful detection denominator.
+
+The complete corpus contains 39 cases. Primary execution evaluated 13 cases
+and left 26 non-evaluable. After incorporating successful D027 restoration, 24
+cases were evaluable and 15 remained non-evaluable.
+
+Among the 24 combined evaluated cases, one mutation was confirmed equivalent.
+The meaningful detection denominator therefore contains 23 confirmed
+non-equivalent mutations: 2 \textsc{Killed} and 21 \textsc{Survived}.
+
+RQ1 reports detection over these 23 cases. RQ2 first stratifies the same
+combined meaningful cases by the frozen workflow category. The primary oracle
+analysis is restricted to B02 because only B02 contains prospectively recorded
+oracle classifications. Fifteen B02 cases entered the confirmed
+non-equivalent meaningful denominator for this analysis: 2 \textsc{Killed}
+and 13 \textsc{Survived}.
+
+RQ2 is treated as descriptive and exploratory. Category sizes are small and
+uneven, and only two confirmed non-equivalent mutations were detected. We
+therefore report counts and descriptive proportions rather than interpreting
+category differences as causal effects or evidence of statistical superiority.
+
+As an additional diagnostic for RQ2 interpretation, we examined operator
+composition within the prospectively classified B02 oracle groups and
+evaluability attrition across categories. These diagnostics were performed
+after the workflow and oracle classification frame had been independently
+frozen. They are used to identify potential confounding and denominator
+imbalance, not to redefine the RQ2 categories.

@@ -1,0 +1,75 @@
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage{url}
+\usepackage{geometry}
+\usepackage{caption}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue
+}
+
+\geometry{margin=1in}
+
+% Table typography
+\captionsetup[table]{
+    skip=8pt,
+    font=small,
+    labelfont=bf
+}
+
+\setlength{\textfloatsep}{18pt plus 2pt minus 4pt}
+\setlength{\floatsep}{16pt plus 2pt minus 3pt}
+\setlength{\intextsep}{16pt plus 2pt minus 3pt}
+
+% Subtle manuscript typography.
+\setlength{\parindent}{1.2em}
+\setlength{\parskip}{0pt}
+
+\title{
+Mutation Testing for Reproducibility Safeguards in
+Machine Learning Research Software:
+An Empirical Study
+}
+
+\author{
+% TODO: author name and affiliation
+}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+% Write after the main manuscript is stable.
+\end{abstract}
+
+% \input{sections/01_introduction}
+% \input{sections/02_related_work}
+% \input{sections/03_mlrepromutate}
+
+\input{sections/04_research_questions}
+\input{sections/05_study_design}
+
+\input{sections/06_results}
+% \input{sections/07_discussion}
+% \input{sections/08_threats}
+% \input{sections/09_conclusion}
+
+% Uncomment after references.bib is added.
+% \bibliographystyle{plain}
+% \bibliography{references}
+
+\end{document}
