@@ -1,0 +1,193 @@
+\section{Background and Related Work}
+\label{sec:related-work}
+
+\subsection{Reproducibility and experimental variability in machine learning}
+\label{sec:related-reproducibility}
+
+Concerns about reproducibility in artificial intelligence and machine learning
+span both research reporting and experimental practice. Gundersen and Kjensmo
+surveyed empirical AI publications and found substantial gaps in the
+documentation needed to reproduce reported experiments
+\cite{gundersen2018reproducibility}. Raff subsequently studied independent
+reimplementation of machine-learning research and emphasized that the
+availability of code alone does not determine whether a result can be
+independently reproduced \cite{raff2019reproducible}. Community interventions
+such as the NeurIPS reproducibility program have therefore combined artifact
+availability with reporting checklists and other changes to experimental
+practice \cite{pineau2021improving}.
+
+A related body of work has shown that apparently minor experimental choices can
+materially affect measured ML performance. Reimers and Gurevych demonstrated
+that random-seed choice can change reported results for neural sequence-tagging
+systems \cite{reimers2017score}. Henderson et al.\ documented substantial
+variance and reporting challenges in deep reinforcement learning
+\cite{henderson2018matters}. Bouthillier et al.\ analyzed variance arising from
+data sampling, parameter initialization, and hyperparameter selection in ML
+benchmarks \cite{bouthillier2021variance}, while Pham et al.\ showed that both
+algorithmic and implementation-level factors can introduce variance in deep
+learning software \cite{pham2020variance}.
+
+Reproducibility problems in ML-based science are not limited to stochastic
+variation. Kapoor and Narayanan documented data leakage as a recurring source
+of overoptimistic scientific conclusions \cite{kapoor2023leakage}. Heil et
+al.\ similarly argue for explicit reproducibility standards spanning data,
+models, code, programming practice, and workflow automation
+\cite{heil2021standards}.
+
+These studies motivate treating experimental configuration as part of the
+scientific artifact rather than as incidental software detail. However, their
+primary questions concern reproducibility, reporting, variance, or
+methodological correctness. Our study asks a complementary testing question:
+when a reproducibility-relevant experimental choice is deliberately changed,
+does a validation workflow already present in the repository detect that
+change?
+
+
+\subsection{Executability and quality of research software}
+\label{sec:related-executability}
+
+Artifact availability is distinct from artifact executability. Collberg and
+Proebsting reported substantial difficulties obtaining and rebuilding software
+artifacts from computer-systems research \cite{collberg2016repeatability}.
+At a larger scale, Trisovic et al.\ studied thousands of research-code files
+from publicly available replication datasets and found that a large fraction
+failed during clean-environment re-execution, even though some failures could
+be mitigated through code cleaning \cite{trisovic2022execution}.
+
+This distinction matters for mutation-based empirical studies. A mutation
+cannot be meaningfully classified as detected or undetected when the
+unmodified baseline cannot first execute under the selected validation
+workflow. For this reason, our protocol treats setup, environment, and baseline
+workflow failures as a separate evidence layer rather than assigning them
+mutation outcomes.
+
+The same literature also motivates preserving environment and workflow
+information as part of research artifacts. Reproducibility recommendations for
+ML emphasize explicit software environments, workflow automation, and
+publication of the materials necessary to rerun an analysis
+\cite{heil2021standards}. In our study, these concerns arise not only as
+recommendations for future projects but also as practical constraints on
+retrospective execution of historical repositories.
+
+
+\subsection{Mutation testing and scientific software}
+\label{sec:related-mutation}
+
+Mutation testing evaluates a validation mechanism by introducing controlled
+changes---mutants---and observing whether the available tests distinguish the
+mutated program from the original. The technique has a long history in
+software engineering; Jia and Harman provide a broad survey of its development,
+operator design, cost, and mutation adequacy measures
+\cite{jia2011mutation}.
+
+A central justification for mutation analysis is that artificial faults can
+provide a useful proxy for assessing test effectiveness when the complete set
+of real faults is unknown. Just et al.\ compared mutant detection with
+detection of real faults and found empirical evidence supporting this
+relationship while also identifying limitations of the proxy
+\cite{just2014mutants}. Mutation studies must also contend with mutants that do
+not change relevant program semantics, motivating explicit treatment of
+equivalent mutants rather than counting every syntactic change as an effective
+fault.
+
+Mutation techniques have also been considered in scientific software, where
+the oracle problem can be particularly acute. Hook and Kelly used mutation in
+the context of testing trustworthiness of scientific software, explicitly
+addressing the difficulty of determining correct numerical outputs
+\cite{hook2009trustworthiness}. This work is important precedent for applying
+mutation concepts outside conventional business software.
+
+Our use of mutation testing follows the same general adequacy principle but
+changes the object being measured. We do not primarily ask whether a unit-test
+suite detects arbitrary program faults. Instead, we use narrowly defined
+reproducibility-relevant transformations to probe whether a frozen validation
+workflow constrains experimental choices that may influence a research result.
+
+
+\subsection{Mutation testing of machine-learning systems}
+\label{sec:related-ml-mutation}
+
+Mutation testing is already well established as a research direction for
+machine-learning and deep-learning systems. DeepMutation introduced both
+source-level mutations of training data and training programs and model-level
+mutations of trained neural networks, using mutant detection to assess test-data
+quality \cite{ma2018deepmutation}. DeepMutation++ extended mutation-based
+evaluation for deep neural networks, including support for feed-forward and
+recurrent architectures \cite{hu2019deepmutationpp}.
+
+Subsequent work moved toward mutation operators grounded in observed DL faults.
+DeepCrime derives source-level mutation operators from real fault evidence and
+uses them to assess deep-learning test data
+\cite{humbatova2021deepcrime}. DeepMetis in turn uses mutation score as an
+optimization objective when augmenting DL test sets
+\cite{riccio2021deepmetis}. These studies demonstrate that domain-specific
+mutation operators can be more informative than simply applying conventional
+program mutations to ML code.
+
+There is therefore no novelty claim in this paper that mutation testing has not
+previously been applied to ML systems. Some prior source-level DL mutation
+operators also touch training and experimental configuration. The distinction
+in our work is the measurement target and the oracle: MLReproMutate targets
+reproducibility-relevant choices in research repositories and evaluates them
+against validation workflows that existed in those repositories, rather than
+primarily assessing the adequacy of model test data or the robustness of a
+trained neural network.
+
+
+\subsection{Dependencies, environments, and workflow reproducibility}
+\label{sec:related-environments}
+
+Dependency changes form an especially important overlap between reproducibility
+engineering and mutation testing. A declared dependency modification is not
+necessarily equivalent to a semantic environment change: package resolution
+may select the same installed version, or a changed version may affect only
+code that is not exercised by validation.
+
+Hejderup and Gousios directly studied whether test suites can be trusted to
+support automated dependency updates. Using Java projects and a large number of
+artificial dependency faults, they found substantial gaps in the ability of
+tests to detect semantic problems introduced through dependencies
+\cite{hejderup2022dependencies}. Their work demonstrates that mutation-based
+evaluation of dependency-update safeguards predates the present study.
+
+Our \texttt{dependency-pin} operator addresses a different but adjacent
+question in research software. It changes a repository's declared exact
+constraint from \texttt{package==version} to
+\texttt{package>=version}, resolves baseline and mutant environments
+independently, and verifies whether the installed target dependency actually
+changed before interpreting the validation result. The selected repository
+workflow, rather than dependency-call coverage alone, serves as the empirical
+oracle.
+
+Environment concerns also connect dependency management to long-term
+executability. Research-code studies show that software and environment drift
+can prevent later execution \cite{trisovic2022execution}, while reproducibility
+standards emphasize capturing and automating computational workflows
+\cite{heil2021standards}. This motivates our separation between semantic
+dependency changes, validation outcomes, and infrastructure failures.
+
+
+\subsection{Positioning of this study}
+\label{sec:related-positioning}
+
+The literature above establishes substantial prior work on ML reproducibility,
+research-code executability, conventional and scientific-software mutation
+testing, mutation testing of deep-learning systems, and testing of dependency
+updates. The contribution of the present study is therefore not a claim to be
+the first use of mutation testing in ML, scientific software, or dependency
+management.
+
+Instead, the study combines these concerns around a specific empirical
+measurement target: the sensitivity of existing ML research-repository
+validation workflows to controlled changes in reproducibility-relevant
+experimental choices. The empirical protocol operates on frozen revisions of
+real research repositories, freezes mutation candidates and validation
+workflows before observing outcomes, distinguishes infrastructure failures from
+mutation outcomes, and explicitly verifies semantic equivalence where required.
+
+This positioning also distinguishes mutation survival from a direct measure of
+reproducibility. A surviving confirmed non-equivalent mutation shows that the
+selected frozen workflow did not detect one controlled change. It does not
+establish that the repository or its reported scientific result is
+irreproducible. Conversely, a killed mutation demonstrates sensitivity to that
+specific change rather than general reproducibility assurance.
