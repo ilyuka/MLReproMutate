@@ -1,64 +1,58 @@
 # MLReproMutate
 
-MLReproMutate is an early-stage research software project for evaluating
-reproducibility safeguards in machine-learning experiments using
-domain-specific mutation testing.
+MLReproMutate is research software for mutation testing of
+reproducibility-relevant safeguards in machine-learning research software.
 
-The core research question is:
+It introduces controlled mutations to experimental and environment choices
+and evaluates whether validation workflows already present in a repository
+detect those changes.
 
-> If a realistic reproducibility fault is deliberately introduced into a
-> machine-learning experiment, do the project's existing tests, CI checks,
-> and experiment safeguards detect it?
+## Mutation operators
 
-## Status
+The current release implements four mutation classes used in the empirical
+study:
 
-MLReproMutate is currently under active early-stage development.
+- `random-seed` — changes a supported literal random seed from `N` to `N + 1`;
+- `dependency-pin` — relaxes an exact dependency constraint from
+  `package==version` to `package>=version`;
+- `data-split` — replaces an explicit non-`None` `stratify` argument in a
+  supported `train_test_split` call with `None`;
+- `cv-fold-count` — changes an explicit cross-validation fold count from
+  `N` to `N + 1`.
 
-The initial focus is on CPU-runnable Python machine-learning projects and
-reproducibility faults involving:
+## Evaluation model
 
-- dependency versions;
-- dataset and artifact identity;
-- experiment configuration;
-- preprocessing;
-- random state;
-- artifact provenance.
+Mutation evaluation is baseline-first. The unmodified project is evaluated
+before the mutant, and infrastructure or baseline failures are kept separate
+from mutation outcomes.
 
-The project does **not** aim to test neural-network robustness, adversarial
-examples, or model-level mutation testing.
+The software distinguishes mutation execution from semantic verification,
+including explicit handling of equivalent dependency mutations.
 
-## Planned workflow
+## Empirical study
 
-MLReproMutate will:
+The repository contains the frozen empirical evidence underlying the
+accompanying empirical preprint, including corpus records, bounded-restoration
+evidence, RQ2 metadata, generated accounting tables, and provenance
+information.
 
-1. detect applicable reproducibility mutation candidates;
-2. create an isolated project copy;
-3. execute a baseline validation command;
-4. introduce one controlled reproducibility mutation;
-5. execute the validation command again;
-6. classify the mutation outcome;
-7. produce a machine-readable report.
-
-Planned outcome classes include:
-
-- `KILLED`
-- `SURVIVED`
-- `INVALID`
-- `EQUIVALENT`
-- `TIMEOUT`
-- `ERROR`
+The empirical corpus is frozen and is not expanded in response to observed
+mutation outcomes.
 
 ## Development
 
-The project is being developed publicly as research software.
+Install the project in editable mode with `python -m pip install -e .`.
 
-See:
+Run the test suite with `python -m pytest -q`.
 
-- `docs/threat-model.md`
-- `docs/research-log.md`
-- `CHANGELOG.md`
-- `CONTRIBUTING.md`
+Run software static checks with `ruff check src tests`.
+
+Inspect the command-line interface with `mlrepromutate --help`.
+
+## Citation
+
+Citation metadata is provided in `CITATION.cff`.
 
 ## License
 
-MIT License.
+MLReproMutate is released under the MIT License.

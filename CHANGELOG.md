@@ -2,10 +2,10 @@
 
 All notable changes to MLReproMutate will be documented in this file.
 
-The project is currently in early development and does not yet have a stable
-public API.
+MLReproMutate is currently pre-1.0 software; its public API may change between
+releases.
 
-## Unreleased
+## [0.1.0] - 2026-08-27
 ### Changed
 
 - Reuse a successful baseline validation across all mutation candidates in a single orchestration run.
@@ -40,3 +40,7 @@ public API.
   `random.seed`, NumPy seed calls, and `torch.manual_seed`.
 - Added a controlled random-seed fixture demonstrating both survived and
   killed reproducibility mutations.
+- Added the `data-split` mutation operator for removing explicit
+  `train_test_split` stratification.
+- Added the `cv-fold-count` mutation operator for changing explicit
+  cross-validation fold counts.

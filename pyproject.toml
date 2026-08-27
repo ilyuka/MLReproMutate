@@ -4,13 +4,13 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mlrepromutate"
-version = "0.0.0"
+version = "0.1.0"
 description = "Mutation testing for reproducibility safeguards in machine-learning experiments"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
 authors = [
-    { name = "YOUR NAME" }
+    { name = "Ilya Shulepov" }
 ]
 
 dependencies = [
@@ -26,6 +26,11 @@ dev = [
 
 [project.scripts]
 mlrepromutate = "mlrepromutate.cli:app"
+
+[project.urls]
+Homepage = "https://github.com/ilyuka/MLReproMutate"
+Repository = "https://github.com/ilyuka/MLReproMutate"
+Issues = "https://github.com/ilyuka/MLReproMutate/issues"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
