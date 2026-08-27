@@ -4,6 +4,7 @@ from pathlib import Path
 
 from typer.testing import CliRunner
 
+import mlrepromutate
 from mlrepromutate.cli import app
 
 ANSI_ESCAPE = re.compile(
@@ -21,7 +22,7 @@ def test_version_command() -> None:
     result = runner.invoke(app, ["version"])
 
     assert result.exit_code == 0
-    assert "0.0.0" in result.stdout
+    assert result.stdout.strip() == mlrepromutate.__version__
 
 
 def test_run_reports_survived_mutation(
