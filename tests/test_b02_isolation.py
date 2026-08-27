@@ -124,6 +124,9 @@ def test_virtualenv_executable_inside_work_root_runs(
 
 
 def test_cwd_outside_fixed_work_root_is_rejected(tmp_path: Path) -> None:
+    if not WORK_ROOT.is_dir():
+        pytest.skip(f"B02 work root does not exist: {WORK_ROOT}")
+
     completed = subprocess.run(
         wrapper_command(tmp_path, "/usr/bin/true"),
         check=False,
