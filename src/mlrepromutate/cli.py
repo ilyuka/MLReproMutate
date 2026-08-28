@@ -9,6 +9,7 @@ from mlrepromutate import __version__
 from mlrepromutate.engine import (
     BaselineValidationError,
     CommandResolutionError,
+    ExecutionMode,
     ExperimentRunner,
     MutationEvaluator,
     MutationOrchestrator,
@@ -96,6 +97,16 @@ def run(
             help="Mutation operator to evaluate.",
         ),
     ] = OperatorName.DEPENDENCY_PIN,
+    execution_mode: Annotated[
+        ExecutionMode,
+        typer.Option(
+            "--execution-mode",
+            help=(
+                "Project isolation mode: sandbox copies the project; "
+                "in-place temporarily mutates the supplied workspace."
+            ),
+        ),
+    ] = ExecutionMode.SANDBOX,
     timeout: Annotated[
         float,
         typer.Option(
@@ -199,6 +210,13 @@ def run(
         }
 
         if dependency_mode is DependencyMode.RESOLVED:
+            if execution_mode is ExecutionMode.IN_PLACE:
+                raise typer.BadParameter(
+                    "--execution-mode in-place is not supported with "
+                    "--dependency-mode resolved.",
+                    param_hint="--execution-mode",
+                )
+
             if requirements_file is None:
                 raise typer.BadParameter(
                     "--dependency-mode resolved requires "
@@ -226,7 +244,10 @@ def run(
                 requirements_file=requirements_file,
             )
         else:
-            evaluator = MutationEvaluator(runner)
+            evaluator = MutationEvaluator(
+            runner,
+            execution_mode=execution_mode,
+        )
 
     elif operator_name is OperatorName.RANDOM_SEED:
         if requirements_file is not None:
@@ -255,7 +276,10 @@ def run(
             ),
         }
 
-        evaluator = MutationEvaluator(runner)
+        evaluator = MutationEvaluator(
+            runner,
+            execution_mode=execution_mode,
+        )
 
     elif operator_name is OperatorName.DATA_SPLIT:
         if requirements_file is not None:
@@ -284,7 +308,10 @@ def run(
             ),
         }
 
-        evaluator = MutationEvaluator(runner)
+        evaluator = MutationEvaluator(
+            runner,
+            execution_mode=execution_mode,
+        )
 
     else:
         if requirements_file is not None:
@@ -313,7 +340,10 @@ def run(
             ),
         }
 
-        evaluator = MutationEvaluator(runner)
+        evaluator = MutationEvaluator(
+            runner,
+            execution_mode=execution_mode,
+        )
 
     if candidate_index is not None:
         operator_configuration["candidate_index"] = candidate_index

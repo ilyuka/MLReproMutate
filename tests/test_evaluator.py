@@ -158,3 +158,141 @@ def test_evaluation_does_not_modify_original_project(
     evaluator.evaluate(project, operator, candidate)
 
     assert requirements.read_text(encoding="utf-8") == original_content
+
+def test_evaluator_in_place_restores_mutated_target(
+    tmp_path: Path,
+) -> None:
+    from mlrepromutate.engine import ExecutionMode
+    from mlrepromutate.operators.dependency import (
+        RelaxRequirementsPinOperator,
+    )
+
+    project = tmp_path / "project"
+    project.mkdir()
+
+    requirements = project / "requirements.txt"
+    requirements.write_text(
+        "demo==1.0.0\n",
+        encoding="utf-8",
+    )
+
+    validate = project / "validate.py"
+    validate.write_text(
+        "from pathlib import Path\n"
+        "text = Path('requirements.txt').read_text()\n"
+        "raise SystemExit(0 if 'demo>=1.0.0' in text else 1)\n",
+        encoding="utf-8",
+    )
+
+    operator = RelaxRequirementsPinOperator(
+        requirements_file=Path("requirements.txt"),
+    )
+    candidate = operator.detect(project)[0]
+
+    runner = ExperimentRunner(
+        ["python", "validate.py"],
+    )
+
+    evaluator = MutationEvaluator(
+        runner,
+        execution_mode=ExecutionMode.IN_PLACE,
+    )
+
+    result = evaluator.evaluate_mutation(
+        project,
+        operator,
+        candidate,
+    )
+
+    assert result.outcome.value == "survived"
+    assert requirements.read_text(
+        encoding="utf-8"
+    ) == "demo==1.0.0\n"
+
+
+def test_evaluator_in_place_restores_target_after_killed_mutation(
+    tmp_path: Path,
+) -> None:
+    from mlrepromutate.engine import ExecutionMode
+    from mlrepromutate.operators.dependency import (
+        RelaxRequirementsPinOperator,
+    )
+
+    project = tmp_path / "project"
+    project.mkdir()
+
+    requirements = project / "requirements.txt"
+    original = b"demo==1.0.0\n"
+    requirements.write_bytes(original)
+
+    validate = project / "validate.py"
+    validate.write_text(
+        "from pathlib import Path\n"
+        "text = Path('requirements.txt').read_text()\n"
+        "raise SystemExit(1 if 'demo>=1.0.0' in text else 0)\n",
+        encoding="utf-8",
+    )
+
+    operator = RelaxRequirementsPinOperator(
+        requirements_file=Path("requirements.txt"),
+    )
+    candidate = operator.detect(project)[0]
+
+    evaluator = MutationEvaluator(
+        ExperimentRunner(["python", "validate.py"]),
+        execution_mode=ExecutionMode.IN_PLACE,
+    )
+
+    result = evaluator.evaluate_mutation(
+        project,
+        operator,
+        candidate,
+    )
+
+    assert result.outcome.value == "killed"
+    assert requirements.read_bytes() == original
+
+
+def test_evaluator_in_place_restores_target_after_timeout(
+    tmp_path: Path,
+) -> None:
+    from mlrepromutate.engine import ExecutionMode
+    from mlrepromutate.operators.dependency import (
+        RelaxRequirementsPinOperator,
+    )
+
+    project = tmp_path / "project"
+    project.mkdir()
+
+    requirements = project / "requirements.txt"
+    original = b"demo==1.0.0\n"
+    requirements.write_bytes(original)
+
+    validate = project / "validate.py"
+    validate.write_text(
+        "import time\n"
+        "time.sleep(1)\n",
+        encoding="utf-8",
+    )
+
+    operator = RelaxRequirementsPinOperator(
+        requirements_file=Path("requirements.txt"),
+    )
+    candidate = operator.detect(project)[0]
+
+    evaluator = MutationEvaluator(
+        ExperimentRunner(
+            ["python", "validate.py"],
+            timeout_seconds=0.05,
+        ),
+        execution_mode=ExecutionMode.IN_PLACE,
+    )
+
+    result = evaluator.evaluate_mutation(
+        project,
+        operator,
+        candidate,
+    )
+
+    assert result.outcome.value == "timeout"
+    assert requirements.read_bytes() == original

@@ -495,3 +495,47 @@ def test_run_can_select_one_mutation_candidate(
     assert "Detected 2 mutation candidates." in result.stdout
     assert "Selected mutation candidate 1 of 2." in result.stdout
     assert "Summary: 1 mutations" in result.stdout
+
+
+def test_run_rejects_in_place_resolved_dependency_mode(
+    tmp_path: Path,
+) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+
+    (project / "requirements.txt").write_text(
+        "demo==1.0.0\n",
+        encoding="utf-8",
+    )
+
+    (project / "validate.py").write_text(
+        "raise SystemExit(0)\n",
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(
+        app,
+        [
+            "run",
+            str(project),
+            "--operator",
+            "dependency-pin",
+            "--requirements-file",
+            "requirements.txt",
+            "--dependency-mode",
+            "resolved",
+            "--execution-mode",
+            "in-place",
+            "--command",
+            "python validate.py",
+        ],
+    )
+
+    assert result.exit_code == 2
+
+    normalized_output = " ".join(result.output.split())
+
+    assert "execution-mode" in normalized_output
+    assert "in-place" in normalized_output
+    assert "dependency-mode" in normalized_output
+    assert "resolved" in normalized_output

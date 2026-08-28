@@ -11,13 +11,21 @@ from mlrepromutate.engine.runner import (
     ExperimentRunner,
 )
 from mlrepromutate.engine.sandbox import ProjectSandbox
+from mlrepromutate.engine.workspace import (
+    ExecutionMode,
+    MutationWorkspace,
+    ProjectWorkspace,
+)
 
 __all__ = [
     "BaselineValidationError",
     "CommandResolutionError",
+    "ExecutionMode",
     "ExecutionResult",
     "ExperimentRunner",
     "MutationEvaluator",
     "MutationOrchestrator",
+    "MutationWorkspace",
     "ProjectSandbox",
+    "ProjectWorkspace",
 ]

@@ -2,7 +2,11 @@ from pathlib import Path
 from typing import Any
 
 from mlrepromutate.engine.runner import ExecutionResult, ExperimentRunner
-from mlrepromutate.engine.sandbox import ProjectSandbox
+from mlrepromutate.engine.workspace import (
+    ExecutionMode,
+    MutationWorkspace,
+    ProjectWorkspace,
+)
 from mlrepromutate.models import (
     MutationCandidate,
     MutationOutcome,
@@ -18,8 +22,13 @@ class BaselineValidationError(RuntimeError):
 class MutationEvaluator:
     """Evaluate mutation candidates against project safeguards."""
 
-    def __init__(self, runner: ExperimentRunner) -> None:
+    def __init__(
+        self,
+        runner: ExperimentRunner,
+        execution_mode: ExecutionMode = ExecutionMode.SANDBOX,
+    ) -> None:
         self.runner = runner
+        self.execution_mode = execution_mode
 
     def validate_baseline(
         self,
@@ -27,8 +36,11 @@ class MutationEvaluator:
     ) -> ExecutionResult:
         """Validate the unmodified project once."""
 
-        with ProjectSandbox(project_root) as sandbox:
-            result = self.runner.run(sandbox)
+        with ProjectWorkspace(
+            project_root,
+            self.execution_mode,
+        ) as workspace:
+            result = self.runner.run(workspace)
 
         if result.timed_out:
             raise BaselineValidationError(
@@ -50,9 +62,13 @@ class MutationEvaluator:
     ) -> MutationResult:
         """Evaluate one mutation after a successful baseline."""
 
-        with ProjectSandbox(project_root) as sandbox:
-            operator.apply(sandbox, candidate)
-            mutation_execution = self.runner.run(sandbox)
+        with MutationWorkspace(
+            project_root,
+            candidate,
+            self.execution_mode,
+        ) as workspace:
+            operator.apply(workspace, candidate)
+            mutation_execution = self.runner.run(workspace)
 
         if mutation_execution.timed_out:
             outcome = MutationOutcome.TIMEOUT

@@ -28,4 +28,4 @@ class MutationOperator(ABC):
         project_root: Path,
         candidate: MutationCandidate,
     ) -> None:
-        """Apply a mutation to an isolated project workspace."""
+        """Apply a mutation to a project workspace."""
