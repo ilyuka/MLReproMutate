@@ -54,13 +54,16 @@ class DependencyMode(StrEnum):
 app = typer.Typer(
     name="mlrepromutate",
     help="Mutation testing for reproducibility safeguards in ML experiments.",
-    no_args_is_help=True,
+    no_args_is_help=False,
 )
 
 
-@app.callback()
-def main() -> None:
+@app.callback(invoke_without_command=True)
+def main(ctx: typer.Context) -> None:
     """MLReproMutate command-line interface."""
+
+    if ctx.invoked_subcommand is None:
+        _interactive_wizard()
 
 
 @app.command()
@@ -113,7 +116,7 @@ def run(
         typer.Option(
             "--exclude",
             help=(
-                "Project-relative path to omit from sandbox copies. "
+                "Path relative to the project root to omit from sandbox copies. "
                 "Repeat the option to exclude multiple paths."
             ),
         ),
@@ -649,3 +652,168 @@ def detect(
         typer.echo()
         typer.echo(f"[{index}] {location}")
         typer.echo(f"  {candidate.description}")
+
+
+def _interactive_wizard() -> None:
+    """Guide a user through an interactive mutation run."""
+
+    typer.echo("MLReproMutate interactive setup")
+    typer.echo()
+
+    project = Path(
+        typer.prompt(
+            "Project directory",
+            default=".",
+        )
+    ).expanduser().resolve()
+
+    if not project.exists():
+        typer.echo(
+            f"Project directory does not exist: {project}",
+            err=True,
+        )
+        raise typer.Exit(code=2)
+
+    if not project.is_dir():
+        typer.echo(
+            f"Project path is not a directory: {project}",
+            err=True,
+        )
+        raise typer.Exit(code=2)
+
+    typer.echo()
+    typer.echo("Choose mutation operator:")
+    typer.echo("  1. random-seed")
+    typer.echo("  2. dependency-pin")
+    typer.echo("  3. data-split")
+    typer.echo("  4. cv-fold-count")
+
+    operator_selection = typer.prompt(
+        "Selection",
+        type=int,
+    )
+
+    operators = {
+        1: OperatorName.RANDOM_SEED,
+        2: OperatorName.DEPENDENCY_PIN,
+        3: OperatorName.DATA_SPLIT,
+        4: OperatorName.CV_FOLD_COUNT,
+    }
+
+    operator_name = operators.get(operator_selection)
+
+    if operator_name is None:
+        typer.echo(
+            "Operator selection must be between 1 and 4.",
+            err=True,
+        )
+        raise typer.Exit(code=2)
+
+    requirements_file: Path | None = None
+    python_file: Path | None = None
+
+    if operator_name is OperatorName.DEPENDENCY_PIN:
+        raw_requirements_file = typer.prompt(
+            "Requirements file (leave blank for auto-detect)",
+            default="",
+            show_default=False,
+        ).strip()
+
+        if raw_requirements_file:
+            requirements_file = Path(raw_requirements_file)
+    else:
+        raw_python_file = typer.prompt(
+            "Python file (leave blank for auto-detect)",
+            default="",
+            show_default=False,
+        ).strip()
+
+        if raw_python_file:
+            python_file = Path(raw_python_file)
+
+    command = typer.prompt(
+        "Validation command",
+        default="pytest -q",
+    )
+
+    typer.echo()
+    typer.echo("Choose execution mode:")
+    typer.echo("  1. sandbox  - isolated temporary project copy")
+    typer.echo("  2. in-place - disposable/CI workspace, no project copy")
+
+    execution_selection = typer.prompt(
+        "Selection",
+        type=int,
+    )
+
+    execution_modes = {
+        1: ExecutionMode.SANDBOX,
+        2: ExecutionMode.IN_PLACE,
+    }
+
+    execution_mode = execution_modes.get(execution_selection)
+
+    if execution_mode is None:
+        typer.echo(
+            "Execution mode selection must be 1 or 2.",
+            err=True,
+        )
+        raise typer.Exit(code=2)
+
+    excludes: list[Path] | None = None
+
+    if execution_mode is ExecutionMode.SANDBOX:
+        raw_excludes = typer.prompt(
+            "Exclude paths relative to project root (comma-separated, optional)",
+            default="",
+            show_default=False,
+        ).strip()
+
+        if raw_excludes:
+            excludes = [
+                Path(value.strip())
+                for value in raw_excludes.split(",")
+                if value.strip()
+            ]
+
+    typer.echo()
+    typer.echo("Previewing mutation candidates...")
+
+    detect(
+        project=project,
+        operator_name=operator_name,
+        requirements_file=requirements_file,
+        python_file=python_file,
+    )
+
+    typer.echo()
+
+    if not typer.confirm(
+        "Run detected mutations?",
+        default=False,
+    ):
+        typer.echo("Cancelled.")
+        return
+
+    if execution_mode is ExecutionMode.IN_PLACE:
+        typer.echo()
+        typer.echo(
+            "In-place mode temporarily modifies mutation targets. "
+            "Use it only in a disposable or version-controlled workspace."
+        )
+
+    typer.echo()
+
+    run(
+        project=project,
+        command=command,
+        operator_name=operator_name,
+        execution_mode=execution_mode,
+        exclude=excludes,
+        timeout=300.0,
+        requirements_file=requirements_file,
+        dependency_mode=DependencyMode.MANIFEST,
+        python_file=python_file,
+        candidate_index=None,
+        json_out=None,
+    )

@@ -789,3 +789,99 @@ def test_run_requires_explicit_operator(
     output = " ".join(result.output.split())
 
     assert "operator" in output.lower()
+
+
+def test_bare_command_runs_interactive_preview_without_execution(
+    tmp_path: Path,
+) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+
+    (project / "experiment.py").write_text(
+        "import random\n"
+        "random.seed(42)\n",
+        encoding="utf-8",
+    )
+
+    sentinel = project / "executed.txt"
+
+    (project / "validate.py").write_text(
+        "from pathlib import Path\n"
+        "Path('executed.txt').write_text('executed')\n",
+        encoding="utf-8",
+    )
+
+    user_input = (
+        f"{project}\n"
+        "1\n"
+        "experiment.py\n"
+        "python validate.py\n"
+        "1\n"
+        "\n"
+        "n\n"
+    )
+
+    result = runner.invoke(
+        app,
+        [],
+        input=user_input,
+    )
+
+    assert result.exit_code == 0
+    assert "MLReproMutate interactive setup" in result.output
+    assert "Detected 1 mutation candidates." in result.output
+    assert "Cancelled." in result.output
+    assert not sentinel.exists()
+
+
+def test_interactive_wizard_can_run_in_place(
+    tmp_path: Path,
+) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+
+    experiment = project / "experiment.py"
+    original = (
+        "import random\n"
+        "random.seed(42)\n"
+    )
+    experiment.write_text(
+        original,
+        encoding="utf-8",
+    )
+
+    (project / "validate.py").write_text(
+        "raise SystemExit(0)\n",
+        encoding="utf-8",
+    )
+
+    user_input = (
+        f"{project}\n"
+        "1\n"
+        "experiment.py\n"
+        "python validate.py\n"
+        "2\n"
+        "y\n"
+    )
+
+    result = runner.invoke(
+        app,
+        [],
+        input=user_input,
+    )
+
+    assert result.exit_code == 0
+    assert "SURVIVED" in result.output
+    assert experiment.read_text(encoding="utf-8") == original
+
+
+def test_help_does_not_start_interactive_wizard() -> None:
+    result = runner.invoke(
+        app,
+        ["--help"],
+    )
+
+    assert result.exit_code == 0
+    assert "interactive setup" not in result.output
+    assert "detect" in result.output
+    assert "run" in result.output
