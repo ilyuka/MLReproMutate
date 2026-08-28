@@ -97,7 +97,7 @@ def run(
             "--operator",
             help="Mutation operator to evaluate.",
         ),
-    ] = OperatorName.DEPENDENCY_PIN,
+    ],
     execution_mode: Annotated[
         ExecutionMode,
         typer.Option(

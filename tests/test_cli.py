@@ -46,6 +46,8 @@ def test_run_reports_survived_mutation(
         [
             "run",
             str(project),
+            "--operator",
+            "dependency-pin",
             "--command",
             "python validate.py",
         ],
@@ -80,6 +82,8 @@ def test_run_reports_no_applicable_mutations(
         [
             "run",
             str(project),
+            "--operator",
+            "dependency-pin",
             "--command",
             "python -c \"raise SystemExit(0)\"",
         ],
@@ -110,6 +114,8 @@ def test_run_reports_baseline_failure(
         [
             "run",
             str(project),
+            "--operator",
+            "dependency-pin",
             "--command",
             "python validate.py",
         ],
@@ -144,6 +150,8 @@ def test_run_can_scope_dependency_mutations_to_one_file(
         [
             "run",
             str(project),
+            "--operator",
+            "dependency-pin",
             "--command",
             "python validate.py",
             "--requirements-file",
@@ -180,6 +188,8 @@ def test_run_can_write_json_report(
         [
             "run",
             str(project),
+            "--operator",
+            "dependency-pin",
             "--command",
             "python validate.py",
             "--requirements-file",
@@ -211,6 +221,8 @@ def test_resolved_mode_requires_requirements_file(
         [
             "run",
             str(project),
+            "--operator",
+            "dependency-pin",
             "--command",
             "python validate.py",
             "--dependency-mode",
@@ -240,6 +252,8 @@ def test_resolved_mode_requires_python_command(
         [
             "run",
             str(project),
+            "--operator",
+            "dependency-pin",
             "--command",
             "pytest -q",
             "--requirements-file",
@@ -747,3 +761,31 @@ def test_detect_requires_explicit_operator(
     )
 
     assert result.exit_code == 2
+
+
+def test_run_requires_explicit_operator(
+    tmp_path: Path,
+) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+
+    (project / "validate.py").write_text(
+        "raise SystemExit(0)\n",
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(
+        app,
+        [
+            "run",
+            str(project),
+            "--command",
+            "python validate.py",
+        ],
+    )
+
+    assert result.exit_code == 2
+
+    output = " ".join(result.output.split())
+
+    assert "operator" in output.lower()
