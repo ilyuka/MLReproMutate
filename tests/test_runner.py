@@ -189,3 +189,100 @@ def test_runner_does_not_wait_for_interactive_input(
     assert result.return_code != 0
     assert "EOFError" in result.stderr
 
+
+
+def test_runner_falls_back_from_python_to_python3(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def fake_which(name: str) -> str | None:
+        if name == "python":
+            return None
+        if name == "python3":
+            return "/usr/bin/python3"
+        return None
+
+    monkeypatch.setattr(
+        "mlrepromutate.engine.runner.shutil.which",
+        fake_which,
+    )
+
+    runner = ExperimentRunner(["python", "validate.py"])
+
+    assert runner.command == (
+        "/usr/bin/python3",
+        "validate.py",
+    )
+
+
+def test_runner_falls_back_from_python3_to_python(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def fake_which(name: str) -> str | None:
+        if name == "python3":
+            return None
+        if name == "python":
+            return "/usr/bin/python"
+        return None
+
+    monkeypatch.setattr(
+        "mlrepromutate.engine.runner.shutil.which",
+        fake_which,
+    )
+
+    runner = ExperimentRunner(["python3", "validate.py"])
+
+    assert runner.command == (
+        "/usr/bin/python",
+        "validate.py",
+    )
+
+
+def test_runner_prefers_requested_python_alias(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def fake_which(name: str) -> str | None:
+        return {
+            "python": "/venv/bin/python",
+            "python3": "/usr/bin/python3",
+        }.get(name)
+
+    monkeypatch.setattr(
+        "mlrepromutate.engine.runner.shutil.which",
+        fake_which,
+    )
+
+    runner = ExperimentRunner(["python", "validate.py"])
+
+    assert runner.command[0] == "/venv/bin/python"
+
+
+def test_runner_does_not_rewrite_non_python_command() -> None:
+    runner = ExperimentRunner(["pytest", "-q"])
+
+    assert runner.command == ("pytest", "-q")
+
+
+def test_runner_does_not_rewrite_explicit_python_path() -> None:
+    runner = ExperimentRunner(
+        ["/custom/environment/bin/python", "validate.py"]
+    )
+
+    assert runner.command == (
+        "/custom/environment/bin/python",
+        "validate.py",
+    )
+
+
+def test_runner_rejects_missing_python_aliases(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        "mlrepromutate.engine.runner.shutil.which",
+        lambda name: None,
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="Could not find either 'python' or 'python3'",
+    ):
+        ExperimentRunner(["python", "validate.py"])

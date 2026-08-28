@@ -1,8 +1,45 @@
+import shutil
 import subprocess
 import time
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
+
+
+class CommandResolutionError(ValueError):
+    """Raised when a requested Python executable cannot be resolved."""
+
+
+def resolve_command_executable(
+    command: Sequence[str],
+) -> tuple[str, ...]:
+    """Resolve portable Python command aliases without changing other commands."""
+
+    resolved = tuple(command)
+
+    if not resolved:
+        raise ValueError("Command must not be empty.")
+
+    requested = resolved[0]
+
+    if requested not in {"python", "python3"}:
+        return resolved
+
+    executable = shutil.which(requested)
+
+    if executable is None:
+        fallback = "python3" if requested == "python" else "python"
+        executable = shutil.which(fallback)
+
+    if executable is None:
+        raise CommandResolutionError(
+            "Could not find either 'python' or 'python3' on PATH."
+        )
+
+    return (
+        executable,
+        *resolved[1:],
+    )
 
 
 @dataclass(frozen=True)
@@ -31,7 +68,7 @@ class ExperimentRunner:
         if timeout_seconds <= 0:
             raise ValueError("Timeout must be greater than zero.")
 
-        self.command = tuple(command)
+        self.command = resolve_command_executable(command)
         self.timeout_seconds = timeout_seconds
 
     def run(self, project_root: Path) -> ExecutionResult:

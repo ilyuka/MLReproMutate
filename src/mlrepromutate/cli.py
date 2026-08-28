@@ -8,6 +8,7 @@ import typer
 from mlrepromutate import __version__
 from mlrepromutate.engine import (
     BaselineValidationError,
+    CommandResolutionError,
     ExperimentRunner,
     MutationEvaluator,
     MutationOrchestrator,
@@ -165,6 +166,11 @@ def run(
             command_parts,
             timeout_seconds=timeout,
         )
+    except CommandResolutionError as exc:
+        raise typer.BadParameter(
+            str(exc),
+            param_hint="--command",
+        ) from exc
     except ValueError as exc:
         raise typer.BadParameter(
             str(exc),
@@ -199,7 +205,7 @@ def run(
                     "--requirements-file."
                 )
 
-            executable_name = Path(command_parts[0]).name
+            executable_name = Path(runner.command[0]).name
 
             if not executable_name.startswith("python"):
                 raise typer.BadParameter(
@@ -207,7 +213,7 @@ def run(
                     "a Python validation command."
                 )
 
-            bootstrap_python = Path(command_parts[0])
+            bootstrap_python = Path(runner.command[0])
 
             resolver = VirtualEnvironmentResolver(
                 bootstrap_python=bootstrap_python,

@@ -5,11 +5,16 @@ from mlrepromutate.engine.evaluator import (
     MutationEvaluator,
 )
 from mlrepromutate.engine.orchestrator import MutationOrchestrator
-from mlrepromutate.engine.runner import ExecutionResult, ExperimentRunner
+from mlrepromutate.engine.runner import (
+    CommandResolutionError,
+    ExecutionResult,
+    ExperimentRunner,
+)
 from mlrepromutate.engine.sandbox import ProjectSandbox
 
 __all__ = [
     "BaselineValidationError",
+    "CommandResolutionError",
     "ExecutionResult",
     "ExperimentRunner",
     "MutationEvaluator",
