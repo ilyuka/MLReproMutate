@@ -16,39 +16,30 @@ experimental choices.
 
 MLReproMutate requires Python 3.11 or newer.
 
-Clone the repository and install the package:
+Install the current release from PyPI:
 
-```bash
-git clone https://github.com/ilyuka/MLReproMutate.git
-cd MLReproMutate
-
-python -m venv .venv
-source .venv/bin/activate
-
-python -m pip install .
-```
+    python -m pip install mlrepromutate
 
 Confirm the installation:
 
-```bash
-mlrepromutate version
-mlrepromutate --help
-```
+    mlrepromutate version
+    mlrepromutate --help
 
 For a guided first run, start the interactive setup:
 
-```bash
-mlrepromutate
-```
+    mlrepromutate
 
 The wizard guides you through project selection, mutation operator,
 validation command, execution mode, candidate preview, and confirmation.
 
-For development dependencies:
+To work from the source repository instead:
 
-```bash
-python -m pip install -e ".[dev]"
-```
+    git clone https://github.com/ilyuka/MLReproMutate.git
+    cd MLReproMutate
+
+    python -m venv .venv
+    source .venv/bin/activate
+    python -m pip install -e ".[dev]"
 
 ## Quick start
 
@@ -370,10 +361,14 @@ guidelines.
 
 Citation metadata is provided in [CITATION.cff](CITATION.cff).
 
-The archived software release can be cited using:
+The current archived software release can be cited using:
 
-> Shulepov, Ilya. MLReproMutate, version 0.1.0. Zenodo, 2026.
-> https://doi.org/10.5281/zenodo.22126120
+> Shulepov, Ilya. MLReproMutate, version 0.1.1. Zenodo, 2026.
+> https://doi.org/10.5281/zenodo.22141449
+
+The frozen empirical study used MLReproMutate v0.1.0 and its associated
+archived artifacts (`10.5281/zenodo.22126120`); that version-specific archive
+remains unchanged.
 
 ## License
 

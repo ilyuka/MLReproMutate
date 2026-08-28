@@ -140,8 +140,10 @@ equivalence, and mutation outcomes.
 
 The study and accompanying machine-readable artifacts provide a reproducible
 reference application of the software rather than a hypothetical future use
-case. MLReproMutate version 0.1.0 and the archived empirical artifacts are
-available on Zenodo [@mlrepromutate2026].
+case. The study used MLReproMutate version 0.1.0 and its frozen archived
+artifacts [@mlrepromutate2026empirical]. The current public software release,
+version 0.1.1, is archived separately as a newer version on Zenodo
+[@mlrepromutate2026current].
 
 The project also provides automated tests, continuous integration across
 supported Python versions, worked examples, contribution guidelines, and a
