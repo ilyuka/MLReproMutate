@@ -35,6 +35,15 @@ mlrepromutate version
 mlrepromutate --help
 ```
 
+For a guided first run, start the interactive setup:
+
+```bash
+mlrepromutate
+```
+
+The wizard guides you through project selection, mutation operator,
+validation command, execution mode, candidate preview, and confirmation.
+
 For development dependencies:
 
 ```bash
@@ -57,9 +66,10 @@ mlrepromutate run examples/random-seed \
 ```
 
 MLReproMutate first validates the unmodified baseline. It then detects the
-supported mutation candidate, applies the mutation in an isolated workspace,
-runs the same validation command, and reports whether the workflow detected the
-change.
+supported mutation candidate, applies the mutation in the selected execution
+workspace, runs the same validation command, and reports whether the workflow
+detected the change. The default `sandbox` execution mode uses temporary
+isolated project copies.
 
 For the unguarded fixture, the random-seed mutation survives because the
 validation workflow checks only that the experiment completes successfully.
@@ -160,6 +170,94 @@ At the execution level:
 A survived mutation does **not** by itself establish that a repository or its
 scientific results are irreproducible. It shows only that the selected
 validation workflow did not detect that particular controlled change.
+
+## Candidate preview
+
+Mutation candidates can be inspected without executing project code:
+
+```bash
+mlrepromutate detect examples/random-seed \
+  --operator random-seed \
+  --python-file experiment.py
+```
+
+`detect` performs candidate detection only. It does not run the baseline,
+validation command, or mutants.
+
+## Execution modes
+
+The default `sandbox` mode evaluates the project in temporary copies so that
+mutation targets in the original project are not modified:
+
+```bash
+mlrepromutate run PROJECT \
+  --operator random-seed \
+  --command "pytest -q" \
+  --execution-mode sandbox
+```
+
+Large directories that are not needed by the validation workflow can be omitted
+from sandbox copies with repeatable project-relative `--exclude` options:
+
+```bash
+mlrepromutate run PROJECT \
+  --operator random-seed \
+  --command "pytest -q" \
+  --execution-mode sandbox \
+  --exclude data \
+  --exclude checkpoints
+```
+
+Exclusion paths are interpreted relative to the project root. Absolute paths
+and parent-directory traversal are rejected.
+
+The `in-place` mode avoids copying the project and is intended for disposable
+or version-controlled workspaces such as CI checkouts:
+
+```bash
+mlrepromutate run PROJECT \
+  --operator random-seed \
+  --command "pytest -q" \
+  --execution-mode in-place
+```
+
+MLReproMutate restores its mutation target after each in-place evaluation,
+including failed or timed-out validations. However, arbitrary side effects
+created by the validation command itself are not reverted. For that reason,
+`in-place` should be used only in workspaces where such side effects are safe.
+
+`dependency-pin --dependency-mode resolved` currently requires `sandbox` mode.
+
+## Continuous integration
+
+MLReproMutate can be used as a CI validation step. A disposable CI checkout is
+a natural fit for `in-place` execution because no full project copy is needed:
+
+```yaml
+- uses: actions/checkout@v4
+
+- name: Install MLReproMutate
+  run: python3 -m pip install mlrepromutate
+
+- name: Check reproducibility safeguards
+  run: |
+    mlrepromutate run . \
+      --operator random-seed \
+      --python-file experiment.py \
+      --execution-mode in-place \
+      --command "pytest -q"
+```
+
+For human use, `mlrepromutate` provides an interactive setup. For scripts, CI,
+and reproducible research workflows, prefer explicit `detect` and `run`
+commands.
+
+## Python validation commands
+
+For validation commands whose executable is exactly `python` or `python3`,
+MLReproMutate resolves the requested executable from `PATH` and falls back to
+the other common alias when necessary. Other executables such as `pytest`,
+`bash`, and `make` are not rewritten.
 
 ## Machine-readable reports
 

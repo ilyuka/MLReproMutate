@@ -26,6 +26,27 @@ mlrepromutate version
 mlrepromutate --help
 ```
 
+## Preview the mutation
+
+Before executing a validation workflow, inspect the detected candidate:
+
+```bash
+mlrepromutate detect examples/random-seed \
+  --operator random-seed \
+  --python-file experiment.py
+```
+
+Candidate detection does not execute the project or apply a mutation.
+
+You can also start the guided interactive workflow with:
+
+```bash
+mlrepromutate
+```
+
+The explicit commands below are preferable when recording a reproducible
+research or CI procedure.
+
 ## Run a mutation against an unguarded workflow
 
 The example project contains:
@@ -56,8 +77,8 @@ mlrepromutate run examples/random-seed \
 ```
 
 MLReproMutate first validates the unmodified baseline. It then detects the
-supported seed mutation, evaluates it in an isolated workspace, and reports the
-outcome.
+supported seed mutation, evaluates it in the default isolated `sandbox`
+workspace, and reports the outcome.
 
 For this fixture, the mutation is expected to survive because the unguarded
 workflow does not check the exact deterministic result.
