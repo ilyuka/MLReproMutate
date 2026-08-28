@@ -5,6 +5,42 @@ All notable changes to MLReproMutate will be documented in this file.
 MLReproMutate is currently pre-1.0 software; its public API may change between
 releases.
 
+## [0.1.1] - 2026-08-28
+
+### Fixed
+
+- Report the installed MLReproMutate package version from distribution
+  metadata instead of a hard-coded development placeholder.
+- Resolve validation commands using either `python` or `python3` when one of
+  those common executable aliases is unavailable.
+
+### Added
+
+- Interactive command-line setup for guided project, operator, validation,
+  execution-mode, and candidate selection.
+- Static `detect` command for previewing mutation candidates without executing
+  project code.
+- `in-place` execution mode for disposable, CI, container, or otherwise safely
+  resettable workspaces.
+- Repeatable project-relative `--exclude` options for omitting unnecessary
+  paths from sandbox copies.
+- User-facing quick-start and command-line documentation.
+- CI usage documentation for reproducibility mutation checks.
+- Expanded worked examples for the supported mutation operators.
+- Public citation and link for the accompanying empirical study,
+  arXiv:2608.27100.
+- GitHub Actions workflow for PyPI Trusted Publishing.
+
+### Changed
+
+- Require explicit selection of a mutation operator instead of defaulting to
+  `dependency-pin`.
+- Keep `sandbox` as the safe default execution mode while allowing users to
+  avoid full project copies with explicit `in-place` execution.
+- Expanded installation, usage, interpretation, isolation, and contribution
+  guidance.
+
+
 ## [0.1.0] - 2026-08-27
 ### Changed
 

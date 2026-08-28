@@ -4,13 +4,32 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mlrepromutate"
-version = "0.1.0"
+version = "0.1.1"
 description = "Mutation testing for reproducibility safeguards in machine-learning experiments"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
 authors = [
     { name = "Ilya Shulepov" }
+]
+keywords = [
+    "mutation testing",
+    "reproducibility",
+    "machine learning",
+    "research software",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Testing",
 ]
 
 dependencies = [
@@ -31,9 +50,21 @@ mlrepromutate = "mlrepromutate.cli:app"
 Homepage = "https://github.com/ilyuka/MLReproMutate"
 Repository = "https://github.com/ilyuka/MLReproMutate"
 Issues = "https://github.com/ilyuka/MLReproMutate/issues"
+Documentation = "https://github.com/ilyuka/MLReproMutate/tree/main/docs"
+Changelog = "https://github.com/ilyuka/MLReproMutate/blob/main/CHANGELOG.md"
+Preprint = "https://arxiv.org/abs/2608.27100"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
 [tool.ruff]
 line-length = 88
+[tool.hatch.build.targets.wheel]
+packages = ["src/mlrepromutate"]
+
+[tool.hatch.build.targets.sdist]
+only-include = [
+    "src/mlrepromutate",
+    "CHANGELOG.md",
+    "CITATION.cff",
+]
