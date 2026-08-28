@@ -547,7 +547,9 @@ def test_run_rejects_in_place_resolved_dependency_mode(
 
     assert result.exit_code == 2
 
-    normalized_output = " ".join(result.output.split())
+    normalized_output = " ".join(
+        strip_ansi(result.output).split()
+    )
 
     assert "execution-mode" in normalized_output
     assert "in-place" in normalized_output
@@ -644,7 +646,9 @@ def test_run_rejects_exclude_with_in_place_mode(
 
     assert result.exit_code == 2
 
-    output = " ".join(result.output.split())
+    output = " ".join(
+        strip_ansi(result.output).split()
+    )
 
     assert "exclude" in output
     assert "execution-mode" in output
