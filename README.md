@@ -224,9 +224,12 @@ The software release and frozen empirical artifacts are archived on Zenodo:
 **MLReproMutate v0.1.0**
 DOI: https://doi.org/10.5281/zenodo.22126120
 
-The accompanying empirical preprint is stored under `paper/preprint/`. A public
-preprint citation will be added here once its permanent identifier is
-available.
+The accompanying empirical study is available as a preprint:
+
+**Ilya Shulepov. _Mutation Testing for Reproducibility Safeguards in Machine
+Learning Research Software: An Empirical Study._ arXiv:2608.27100, 2026.**
+
+https://arxiv.org/abs/2608.27100
 
 ## Development
 
