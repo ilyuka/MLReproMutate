@@ -19,6 +19,7 @@ from mlrepromutate.engine.resolved_dependency import (
     ResolvedDependencyEvaluator,
 )
 from mlrepromutate.engine.runner import ExecutionResult
+from mlrepromutate.engine.sandbox import normalize_sandbox_excludes
 from mlrepromutate.models import MutationCandidate
 from mlrepromutate.operators.data_split import (
     RemoveTrainTestSplitStratificationOperator,
@@ -107,6 +108,16 @@ def run(
             ),
         ),
     ] = ExecutionMode.SANDBOX,
+    exclude: Annotated[
+        list[Path] | None,
+        typer.Option(
+            "--exclude",
+            help=(
+                "Project-relative path to omit from sandbox copies. "
+                "Repeat the option to exclude multiple paths."
+            ),
+        ),
+    ] = None,
     timeout: Annotated[
         float,
         typer.Option(
@@ -188,6 +199,26 @@ def run(
             param_hint="--timeout",
         ) from exc
 
+    try:
+        sandbox_excludes = normalize_sandbox_excludes(
+            exclude or (),
+        )
+    except ValueError as exc:
+        raise typer.BadParameter(
+            str(exc),
+            param_hint="--exclude",
+        ) from exc
+
+    if (
+        execution_mode is ExecutionMode.IN_PLACE
+        and sandbox_excludes
+    ):
+        raise typer.BadParameter(
+            "--exclude is only valid with "
+            "--execution-mode sandbox.",
+            param_hint="--exclude",
+        )
+
     if operator_name is OperatorName.DEPENDENCY_PIN:
         if python_file is not None:
             raise typer.BadParameter(
@@ -242,11 +273,13 @@ def run(
                 runner=runner,
                 resolver=resolver,
                 requirements_file=requirements_file,
+                sandbox_excludes=sandbox_excludes,
             )
         else:
             evaluator = MutationEvaluator(
             runner,
             execution_mode=execution_mode,
+            sandbox_excludes=sandbox_excludes,
         )
 
     elif operator_name is OperatorName.RANDOM_SEED:
@@ -279,6 +312,7 @@ def run(
         evaluator = MutationEvaluator(
             runner,
             execution_mode=execution_mode,
+            sandbox_excludes=sandbox_excludes,
         )
 
     elif operator_name is OperatorName.DATA_SPLIT:
@@ -311,6 +345,7 @@ def run(
         evaluator = MutationEvaluator(
             runner,
             execution_mode=execution_mode,
+            sandbox_excludes=sandbox_excludes,
         )
 
     else:
@@ -343,6 +378,7 @@ def run(
         evaluator = MutationEvaluator(
             runner,
             execution_mode=execution_mode,
+            sandbox_excludes=sandbox_excludes,
         )
 
     if candidate_index is not None:

@@ -1,3 +1,4 @@
+from collections.abc import Sequence
 from contextlib import AbstractContextManager
 from enum import StrEnum
 from pathlib import Path
@@ -21,9 +22,12 @@ class ProjectWorkspace(AbstractContextManager[Path]):
         self,
         project_root: Path,
         mode: ExecutionMode = ExecutionMode.SANDBOX,
+        *,
+        excludes: Sequence[Path] = (),
     ) -> None:
         self.project_root = project_root.resolve()
         self.mode = mode
+        self.excludes = tuple(excludes)
         self._sandbox: ProjectSandbox | None = None
         self.workspace: Path | None = None
 
@@ -39,7 +43,10 @@ class ProjectWorkspace(AbstractContextManager[Path]):
             )
 
         if self.mode is ExecutionMode.SANDBOX:
-            self._sandbox = ProjectSandbox(self.project_root)
+            self._sandbox = ProjectSandbox(
+                self.project_root,
+                excludes=self.excludes,
+            )
             self.workspace = self._sandbox.__enter__()
         else:
             self.workspace = self.project_root
@@ -71,10 +78,13 @@ class MutationWorkspace(AbstractContextManager[Path]):
         project_root: Path,
         candidate: MutationCandidate,
         mode: ExecutionMode = ExecutionMode.SANDBOX,
+        *,
+        excludes: Sequence[Path] = (),
     ) -> None:
         self.project_root = project_root.resolve()
         self.candidate = candidate
         self.mode = mode
+        self.excludes = tuple(excludes)
 
         self._workspace_context: ProjectWorkspace | None = None
         self.workspace: Path | None = None
@@ -86,6 +96,7 @@ class MutationWorkspace(AbstractContextManager[Path]):
         self._workspace_context = ProjectWorkspace(
             self.project_root,
             self.mode,
+            excludes=self.excludes,
         )
         self.workspace = self._workspace_context.__enter__()
 

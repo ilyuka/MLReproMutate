@@ -79,3 +79,87 @@ def test_sandbox_rejects_file_as_project(tmp_path: Path) -> None:
 
     with pytest.raises(NotADirectoryError), ProjectSandbox(project_file):
         pass
+
+def test_sandbox_excludes_requested_directory(
+    tmp_path: Path,
+) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+
+    data = project / "data"
+    data.mkdir()
+    (data / "dataset.bin").write_bytes(b"large-data")
+
+    (project / "experiment.py").write_text(
+        "print('keep me')\n",
+        encoding="utf-8",
+    )
+
+    with ProjectSandbox(
+        project,
+        excludes=[Path("data")],
+    ) as sandbox:
+        assert not (sandbox / "data").exists()
+        assert (sandbox / "experiment.py").exists()
+
+
+def test_sandbox_excludes_nested_path_only(
+    tmp_path: Path,
+) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+
+    data = project / "data"
+    data.mkdir()
+
+    raw = data / "raw"
+    raw.mkdir()
+    (raw / "large.bin").write_bytes(b"large")
+
+    processed = data / "processed"
+    processed.mkdir()
+    (processed / "small.txt").write_text(
+        "keep",
+        encoding="utf-8",
+    )
+
+    with ProjectSandbox(
+        project,
+        excludes=[Path("data/raw")],
+    ) as sandbox:
+        assert not (sandbox / "data" / "raw").exists()
+        assert (
+            sandbox / "data" / "processed" / "small.txt"
+        ).exists()
+
+
+def test_sandbox_rejects_absolute_exclusion(
+    tmp_path: Path,
+) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+
+    with pytest.raises(
+        ValueError,
+        match="relative to the project root",
+    ):
+        ProjectSandbox(
+            project,
+            excludes=[tmp_path / "data"],
+        )
+
+
+def test_sandbox_rejects_parent_traversal_exclusion(
+    tmp_path: Path,
+) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+
+    with pytest.raises(
+        ValueError,
+        match="escape the project root",
+    ):
+        ProjectSandbox(
+            project,
+            excludes=[Path("../data")],
+        )

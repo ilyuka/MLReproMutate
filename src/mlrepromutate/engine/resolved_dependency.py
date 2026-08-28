@@ -1,3 +1,4 @@
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
@@ -30,8 +31,13 @@ class ResolvedDependencyEvaluator(MutationEvaluator):
         runner: ExperimentRunner,
         resolver: VirtualEnvironmentResolver,
         requirements_file: Path,
+        *,
+        sandbox_excludes: Sequence[Path] = (),
     ) -> None:
-        super().__init__(runner)
+        super().__init__(
+            runner,
+            sandbox_excludes=sandbox_excludes,
+        )
 
         self.resolver = resolver
         self.requirements_file = requirements_file
@@ -44,7 +50,10 @@ class ResolvedDependencyEvaluator(MutationEvaluator):
     ) -> ExecutionResult:
         """Resolve and validate the unmodified dependency environment."""
 
-        with ProjectSandbox(project_root) as sandbox:
+        with ProjectSandbox(
+            project_root,
+            excludes=self.sandbox_excludes,
+        ) as sandbox:
             resolution = self.resolver.resolve(
                 sandbox,
                 self.requirements_file,
@@ -146,7 +155,10 @@ class ResolvedDependencyEvaluator(MutationEvaluator):
                 },
             )
 
-        with ProjectSandbox(project_root) as sandbox:
+        with ProjectSandbox(
+            project_root,
+            excludes=self.sandbox_excludes,
+        ) as sandbox:
             operator.apply(
                 sandbox,
                 candidate,

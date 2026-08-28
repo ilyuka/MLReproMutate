@@ -1,3 +1,4 @@
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
@@ -26,9 +27,12 @@ class MutationEvaluator:
         self,
         runner: ExperimentRunner,
         execution_mode: ExecutionMode = ExecutionMode.SANDBOX,
+        *,
+        sandbox_excludes: Sequence[Path] = (),
     ) -> None:
         self.runner = runner
         self.execution_mode = execution_mode
+        self.sandbox_excludes = tuple(sandbox_excludes)
 
     def validate_baseline(
         self,
@@ -39,6 +43,7 @@ class MutationEvaluator:
         with ProjectWorkspace(
             project_root,
             self.execution_mode,
+            excludes=self.sandbox_excludes,
         ) as workspace:
             result = self.runner.run(workspace)
 
@@ -66,6 +71,7 @@ class MutationEvaluator:
             project_root,
             candidate,
             self.execution_mode,
+            excludes=self.sandbox_excludes,
         ) as workspace:
             operator.apply(workspace, candidate)
             mutation_execution = self.runner.run(workspace)

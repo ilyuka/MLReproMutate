@@ -539,3 +539,99 @@ def test_run_rejects_in_place_resolved_dependency_mode(
     assert "in-place" in normalized_output
     assert "dependency-mode" in normalized_output
     assert "resolved" in normalized_output
+
+
+def test_run_supports_repeated_sandbox_excludes(
+    tmp_path: Path,
+) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+
+    (project / "experiment.py").write_text(
+        "import random\n"
+        "random.seed(42)\n",
+        encoding="utf-8",
+    )
+
+    data = project / "data"
+    data.mkdir()
+    (data / "large.bin").write_bytes(b"large")
+
+    checkpoints = project / "checkpoints"
+    checkpoints.mkdir()
+    (checkpoints / "model.bin").write_bytes(b"model")
+
+    (project / "validate.py").write_text(
+        "from pathlib import Path\n"
+        "raise SystemExit(\n"
+        "    0 if not Path('data').exists() "
+        "and not Path('checkpoints').exists() else 1\n"
+        ")\n",
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(
+        app,
+        [
+            "run",
+            str(project),
+            "--operator",
+            "random-seed",
+            "--python-file",
+            "experiment.py",
+            "--execution-mode",
+            "sandbox",
+            "--exclude",
+            "data",
+            "--exclude",
+            "checkpoints",
+            "--command",
+            "python validate.py",
+        ],
+    )
+
+    assert result.exit_code == 0
+
+
+def test_run_rejects_exclude_with_in_place_mode(
+    tmp_path: Path,
+) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+
+    (project / "experiment.py").write_text(
+        "import random\n"
+        "random.seed(42)\n",
+        encoding="utf-8",
+    )
+
+    (project / "validate.py").write_text(
+        "raise SystemExit(0)\n",
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(
+        app,
+        [
+            "run",
+            str(project),
+            "--operator",
+            "random-seed",
+            "--python-file",
+            "experiment.py",
+            "--execution-mode",
+            "in-place",
+            "--exclude",
+            "data",
+            "--command",
+            "python validate.py",
+        ],
+    )
+
+    assert result.exit_code == 2
+
+    output = " ".join(result.output.split())
+
+    assert "exclude" in output
+    assert "execution-mode" in output
+    assert "sandbox" in output
