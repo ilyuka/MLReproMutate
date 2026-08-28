@@ -533,3 +533,119 @@ def run(
 
 if __name__ == "__main__":
     app()
+
+
+@app.command()
+def detect(
+    project: Annotated[
+        Path,
+        typer.Argument(
+            exists=True,
+            file_okay=False,
+            dir_okay=True,
+            readable=True,
+            resolve_path=True,
+            help="Project directory to inspect.",
+        ),
+    ],
+    operator_name: Annotated[
+        OperatorName,
+        typer.Option(
+            "--operator",
+            help="Mutation operator whose candidates should be detected.",
+        ),
+    ],
+    requirements_file: Annotated[
+        Path | None,
+        typer.Option(
+            "--requirements-file",
+            help=(
+                "Restrict dependency candidates to one requirements "
+                "file relative to the project root."
+            ),
+        ),
+    ] = None,
+    python_file: Annotated[
+        Path | None,
+        typer.Option(
+            "--python-file",
+            help=(
+                "Restrict Python source candidates to one file "
+                "relative to the project root."
+            ),
+        ),
+    ] = None,
+) -> None:
+    """Detect mutation candidates without executing project code."""
+
+    if operator_name is OperatorName.DEPENDENCY_PIN:
+        if python_file is not None:
+            raise typer.BadParameter(
+                "--python-file is only valid with --operator "
+                "random-seed, data-split, or cv-fold-count.",
+                param_hint="--python-file",
+            )
+
+        operator = RelaxRequirementsPinOperator(
+            requirements_file=requirements_file,
+        )
+
+    elif operator_name is OperatorName.RANDOM_SEED:
+        if requirements_file is not None:
+            raise typer.BadParameter(
+                "--requirements-file is only valid with "
+                "--operator dependency-pin.",
+                param_hint="--requirements-file",
+            )
+
+        operator = ChangePythonRandomSeedOperator(
+            python_file=python_file,
+        )
+
+    elif operator_name is OperatorName.DATA_SPLIT:
+        if requirements_file is not None:
+            raise typer.BadParameter(
+                "--requirements-file is only valid with "
+                "--operator dependency-pin.",
+                param_hint="--requirements-file",
+            )
+
+        operator = RemoveTrainTestSplitStratificationOperator(
+            python_file=python_file,
+        )
+
+    else:
+        if requirements_file is not None:
+            raise typer.BadParameter(
+                "--requirements-file is only valid with "
+                "--operator dependency-pin.",
+                param_hint="--requirements-file",
+            )
+
+        operator = ChangeCrossValidationFoldCountOperator(
+            python_file=python_file,
+        )
+
+    try:
+        candidates = list(operator.detect(project))
+    except (ValueError, FileNotFoundError) as exc:
+        raise typer.BadParameter(str(exc)) from exc
+
+    if not candidates:
+        typer.echo("No applicable mutations found.")
+        return
+
+    typer.echo(
+        f"Detected {len(candidates)} mutation candidates."
+    )
+
+    for index, candidate in enumerate(candidates, start=1):
+        line_number = candidate.metadata.get("line_number")
+        location = str(candidate.target)
+
+        if isinstance(line_number, int):
+            location = f"{location}:{line_number}"
+
+        typer.echo()
+        typer.echo(f"[{index}] {location}")
+        typer.echo(f"  {candidate.description}")

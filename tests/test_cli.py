@@ -635,3 +635,115 @@ def test_run_rejects_exclude_with_in_place_mode(
     assert "exclude" in output
     assert "execution-mode" in output
     assert "sandbox" in output
+
+
+def test_detect_lists_random_seed_candidates_without_execution(
+    tmp_path: Path,
+) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+
+    (project / "experiment.py").write_text(
+        "import random\n"
+        "random.seed(42)\n",
+        encoding="utf-8",
+    )
+
+    sentinel = project / "should-not-exist.txt"
+
+    (project / "dangerous.py").write_text(
+        "from pathlib import Path\n"
+        "Path('should-not-exist.txt').write_text('executed')\n",
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(
+        app,
+        [
+            "detect",
+            str(project),
+            "--operator",
+            "random-seed",
+            "--python-file",
+            "experiment.py",
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert "Detected 1 mutation candidates." in result.output
+    assert "experiment.py" in result.output
+    assert "random" in result.output.lower()
+    assert not sentinel.exists()
+
+
+def test_detect_lists_dependency_pin_candidates(
+    tmp_path: Path,
+) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+
+    (project / "requirements.txt").write_text(
+        "numpy==2.0.0\n",
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(
+        app,
+        [
+            "detect",
+            str(project),
+            "--operator",
+            "dependency-pin",
+            "--requirements-file",
+            "requirements.txt",
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert "Detected 1 mutation candidates." in result.output
+    assert "requirements.txt:1" in result.output
+    assert "numpy" in result.output
+
+
+def test_detect_reports_no_candidates(
+    tmp_path: Path,
+) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+
+    (project / "experiment.py").write_text(
+        "print('nothing to mutate')\n",
+        encoding="utf-8",
+    )
+
+    result = runner.invoke(
+        app,
+        [
+            "detect",
+            str(project),
+            "--operator",
+            "random-seed",
+            "--python-file",
+            "experiment.py",
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert "No applicable mutations found." in result.output
+
+
+def test_detect_requires_explicit_operator(
+    tmp_path: Path,
+) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+
+    result = runner.invoke(
+        app,
+        [
+            "detect",
+            str(project),
+        ],
+    )
+
+    assert result.exit_code == 2
