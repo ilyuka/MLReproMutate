@@ -29,8 +29,9 @@ dependency constraints, data-split stratification, and cross-validation fold
 counts. Rather than mutating learned model parameters or generating adversarial
 inputs, MLReproMutate targets choices encoded in the surrounding experimental
 software and configuration. Each mutation is evaluated relative to an
-executable unmodified baseline, and mutation execution is isolated from the
-source repository.
+executable unmodified baseline. The default sandbox execution mode evaluates
+mutations in isolated temporary project copies, while an explicit in-place mode
+is available for disposable or otherwise safely resettable workspaces.
 
 MLReproMutate is intended for researchers studying research-software quality,
 machine-learning reproducibility, and mutation testing, as well as developers
@@ -120,10 +121,12 @@ cross-validation `n_splits` value by one.
 Evaluation is baseline-first. The selected validation command is run against
 the unmodified project before mutants are interpreted. A baseline failure or
 timeout is therefore kept separate from a mutation result. After a successful
-baseline, each mutation is evaluated in an isolated project workspace using
-the same validation command. Successful validation corresponds to a survived
-mutation, while a non-zero validation exit status corresponds to a killed
-mutation; other execution states are represented separately.
+baseline, each mutation is evaluated using the same validation command. The
+default sandbox mode uses an isolated temporary project copy; the optional
+in-place mode restores the mutation target after evaluation. Successful
+validation corresponds to a survived mutation, while a non-zero validation
+exit status corresponds to a killed mutation; other execution states are
+represented separately.
 
 This design deliberately does not treat mutation survival as evidence that a
 repository is irreproducible. A surviving mutation establishes only that the
@@ -151,14 +154,20 @@ public issue tracker to support reuse and external evaluation.
 
 # AI usage disclosure
 
-Generative AI tools were used during software development, documentation
-preparation, research workflow assistance, and manuscript drafting.
+OpenAI ChatGPT and OpenAI Codex were used from February 2026 through
+August 2026 during software development, documentation preparation, research
+workflow assistance, and manuscript drafting. In both products, the author
+used the latest model version available at the time of use rather than pinning
+the project to a single fixed model. Consequently, the specific model changed
+as OpenAI released newer versions during the project period. The models used
+across this period were from the GPT-5 family, including GPT-5.3-Codex and
+GPT-5.4 during earlier development and GPT-5.6 Sol during the final preparation
+stage.
 
-OpenAI ChatGPT was used for tasks including
-discussion of software and empirical-study design, code and documentation
-review, drafting and editing assistance, and analysis of research materials.
-OpenAI Codex was used for selected
-repository-analysis and software-development workflows.
+ChatGPT was used for discussion of software and empirical-study design, code
+and documentation review, drafting and editing assistance, and analysis of
+research materials. Codex was used for selected repository-analysis,
+code-development, testing, and software-maintenance workflows.
 
 All AI-assisted outputs included in the software, documentation, empirical
 materials, and manuscript were reviewed and validated by the author. The
