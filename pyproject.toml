@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
 authors = [
-    { name = "Ilya Shulepov" }
+    { name = "Ilya Shulepov", email = "theilyashulepov@gmail.com" }
 ]
 keywords = [
     "mutation testing",
