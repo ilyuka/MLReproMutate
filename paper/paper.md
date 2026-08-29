@@ -1,5 +1,6 @@
 ---
 title: "MLReproMutate: Mutation Testing for Reproducibility Safeguards in Machine-Learning Research Software"
+date: 29 August 2026
 tags:
   - Python
   - mutation testing
@@ -137,9 +138,10 @@ selected validation workflow did not detect that particular controlled change.
 MLReproMutate has already been used as the experimental instrument in an
 outcome-blind empirical study of reproducibility safeguards in real
 machine-learning research repositories [@shulepov2026empirical]. The study
-used frozen repository revisions, mutation candidates, and validation
-workflows and explicitly separated baseline executability, semantic
-equivalence, and mutation outcomes.
+evaluated 39 frozen repository--operator cases across four
+reproducibility-relevant mutation classes. It used frozen repository
+revisions, mutation candidates, and validation workflows and explicitly
+separated baseline executability, semantic equivalence, and mutation outcomes.
 
 The study and accompanying machine-readable artifacts provide a reproducible
 reference application of the software rather than a hypothetical future use

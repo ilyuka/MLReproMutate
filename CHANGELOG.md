@@ -48,7 +48,7 @@ releases.
 
 ### Added
 
-- Initial public repository structure.
+- Initial repository structure.
 - Initial project scope and research question.
 - Initial threat-model documentation.
 - Continuous integration setup.
