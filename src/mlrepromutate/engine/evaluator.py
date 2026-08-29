@@ -45,7 +45,12 @@ class MutationEvaluator:
             self.execution_mode,
             excludes=self.sandbox_excludes,
         ) as workspace:
-            result = self.runner.run(workspace)
+            result = self.runner.run(
+                workspace,
+                prefer_project_sources=(
+                    self.execution_mode is ExecutionMode.SANDBOX
+                ),
+            )
 
         if result.timed_out:
             raise BaselineValidationError(
@@ -74,7 +79,12 @@ class MutationEvaluator:
             excludes=self.sandbox_excludes,
         ) as workspace:
             operator.apply(workspace, candidate)
-            mutation_execution = self.runner.run(workspace)
+            mutation_execution = self.runner.run(
+                workspace,
+                prefer_project_sources=(
+                    self.execution_mode is ExecutionMode.SANDBOX
+                ),
+            )
 
         if mutation_execution.timed_out:
             outcome = MutationOutcome.TIMEOUT
