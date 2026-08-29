@@ -6,9 +6,9 @@ authors:
   - family-names: "Shulepov"
     given-names: "Ilya"
     orcid: "https://orcid.org/0009-0001-1348-9576"
-version: 0.1.1
-date-released: 2026-08-28
-doi: "10.5281/zenodo.22141449"
+version: 0.1.2
+date-released: 2026-08-29
+doi: "10.5281/zenodo.22126119"
 repository-code: "https://github.com/ilyuka/MLReproMutate"
 url: "https://github.com/ilyuka/MLReproMutate"
 license: MIT

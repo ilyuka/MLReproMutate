@@ -5,6 +5,15 @@ All notable changes to MLReproMutate will be documented in this file.
 MLReproMutate is currently pre-1.0 software; its public API may change between
 releases.
 
+## [0.1.2] - 2026-08-29
+
+### Fixed
+
+- Ensure sandbox validation prefers the sandbox project source tree over
+  inherited Python paths, preventing editable-installed original project
+  sources from causing false `SURVIVED` mutation outcomes.
+
+
 ## [0.1.1] - 2026-08-28
 
 ### Fixed

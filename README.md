@@ -363,8 +363,8 @@ Citation metadata is provided in [CITATION.cff](CITATION.cff).
 
 The current archived software release can be cited using:
 
-> Shulepov, Ilya. MLReproMutate, version 0.1.1. Zenodo, 2026.
-> https://doi.org/10.5281/zenodo.22141449
+> Shulepov, Ilya. MLReproMutate, version 0.1.2. Zenodo, 2026.
+> https://doi.org/10.5281/zenodo.22126119
 
 The frozen empirical study used MLReproMutate v0.1.0 and its associated
 archived artifacts (`10.5281/zenodo.22126120`); that version-specific archive
