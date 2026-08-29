@@ -162,6 +162,30 @@ A survived mutation does **not** by itself establish that a repository or its
 scientific results are irreproducible. It shows only that the selected
 validation workflow did not detect that particular controlled change.
 
+## Related tools
+
+| Tool or approach | Designed to evaluate | Relationship to MLReproMutate |
+| --- | --- | --- |
+| [Cosmic Ray](https://cosmic-ray.readthedocs.io/) and [mutmut](https://github.com/boxed/mutmut) | General-purpose Python mutation testing: mutate program source and use tests or other validation to determine whether the behavioral change is detected. | They are the appropriate references for conventional mutation testing. MLReproMutate complements rather than replaces them. |
+| [DeepMutation](https://doi.org/10.1109/ISSRE.2018.00021) | Source- and model-level mutations for deep-learning systems, designed in part to evaluate test-data quality. | Its principal measurement target differs from repository validation of reproducibility-relevant experimental choices. |
+| [DeepCrime](https://doi.org/10.1145/3460319.3464825) | Deep-learning-specific mutation operators derived from real deep-learning faults. | It primarily evaluates deep-learning testing mechanisms rather than the measurement question targeted here. |
+
+MLReproMutate targets controlled mutations to reproducibility-relevant choices
+encoded in ML research software: currently random seeds, dependency constraints,
+data-split stratification, and cross-validation fold counts. Its measurement
+target is whether an existing repository validation workflow detects the
+controlled change. The distinction is therefore the mutation model and
+evaluation target, not a claim that conventional or ML-specific mutation
+testing is absent.
+
+That measurement question also shapes the package design: baseline-first
+evaluation; candidate detection separated from mutation application; isolated
+workspace execution; explicit semantic-equivalence handling where needed,
+especially for resolved dependency mutations; and machine-readable result and
+provenance reporting. See the project [paper](paper/paper.md) and the concise
+[research context](docs/related-work.md) for the literature-supported
+positioning.
+
 ## Candidate preview
 
 Mutation candidates can be inspected without executing project code:
@@ -278,7 +302,7 @@ Research and design materials:
 
 - [Threat model](docs/threat-model.md)
 - [Research log](docs/research-log.md)
-- [Related-work notes](docs/related-work.md)
+- [Related tools and research context](docs/related-work.md)
 
 Command-line help for the installed version is also available with:
 

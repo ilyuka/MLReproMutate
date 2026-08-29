@@ -47,13 +47,17 @@ MLReproMutate is not intended to provide:
 
 ### KILLED
 
-A mutation is `KILLED` when an existing safeguard detects the intended
-reproducibility fault.
+At the execution level, a mutation is `KILLED` when the selected validation
+workflow returns a non-zero status after the mutation is applied.
 
 ### SURVIVED
 
-A mutation is `SURVIVED` when the intended reproducibility fault is
-successfully introduced but the configured safeguards do not detect it.
+At the execution level, a mutation is `SURVIVED` when the selected validation
+workflow completes successfully after the mutation is applied.
+
+A survived mutation does not prove that the repository or its scientific
+results are irreproducible. It means only that the selected validation workflow
+did not detect that controlled change.
 
 ### INVALID
 
