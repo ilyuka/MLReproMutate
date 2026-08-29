@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 class CommandResolutionError(ValueError):
-    """Raised when a requested Python executable cannot be resolved."""
+    """A requested ``python`` or ``python3`` executable was not found."""
 
 
 def resolve_command_executable(
@@ -45,7 +45,16 @@ def resolve_command_executable(
 
 @dataclass(frozen=True)
 class ExecutionResult:
-    """Result of executing a command inside a project workspace."""
+    """Result of executing a command inside a project workspace.
+
+    Attributes:
+        command: Resolved command passed to the subprocess.
+        return_code: Process exit status, or ``None`` after a timeout.
+        stdout: Captured standard output.
+        stderr: Captured standard error.
+        duration_seconds: Elapsed execution time in seconds.
+        timed_out: Whether execution exceeded the configured timeout.
+    """
 
     command: tuple[str, ...]
     return_code: int | None
@@ -56,7 +65,21 @@ class ExecutionResult:
 
 
 class ExperimentRunner:
-    """Execute experiment or validation commands in a project workspace."""
+    """Execute an experiment or validation command in a project workspace.
+
+    Args:
+        command: Command and arguments to execute.
+        timeout_seconds: Maximum execution time in seconds.
+
+    Attributes:
+        command: Resolved command and arguments.
+        timeout_seconds: Maximum execution time in seconds.
+
+    Raises:
+        ValueError: ``command`` is empty or ``timeout_seconds`` is not
+            positive.
+        CommandResolutionError: A requested Python executable is unavailable.
+    """
 
     def __init__(
         self,
@@ -78,7 +101,20 @@ class ExperimentRunner:
         *,
         prefer_project_sources: bool = False,
     ) -> ExecutionResult:
-        """Execute the configured command in the given project directory."""
+        """Execute the configured command in the given project directory.
+
+        Args:
+            project_root: Directory in which to execute the command.
+            prefer_project_sources: Prepend the workspace and its ``src``
+                directory to ``PYTHONPATH`` when true.
+
+        Returns:
+            Captured command result, including timeout status.
+
+        Raises:
+            FileNotFoundError: ``project_root`` does not exist.
+            NotADirectoryError: ``project_root`` is not a directory.
+        """
 
         project_root = project_root.resolve()
 
@@ -159,7 +195,17 @@ class ExperimentRunner:
         self,
         python_executable: Path,
     ) -> "ExperimentRunner":
-        """Return a runner using another Python executable."""
+        """Return a runner using another Python executable.
+
+        Args:
+            python_executable: Python executable for the returned runner.
+
+        Returns:
+            A new runner with the executable replaced.
+
+        Raises:
+            ValueError: The configured command is not a Python command.
+        """
 
         executable_name = Path(self.command[0]).name
 

@@ -25,7 +25,15 @@ _IGNORED_DIRECTORIES = {
 
 
 class ChangePythonRandomSeedOperator(MutationOperator):
-    """Change literal Python random seeds by one."""
+    """Change supported literal Python random seeds from ``N`` to ``N + 1``.
+
+    Args:
+        python_file: Optional project-relative Python file to inspect. When
+            omitted, the operator searches Python files under the project.
+
+    Attributes:
+        python_file: Optional project-relative file restriction.
+    """
 
     def __init__(
         self,
@@ -35,17 +43,30 @@ class ChangePythonRandomSeedOperator(MutationOperator):
 
     @property
     def name(self) -> str:
+        """Return the unique operator name."""
         return "change_python_random_seed"
 
     @property
     def category(self) -> str:
+        """Return the ``randomness`` threat category."""
         return "randomness"
 
     def detect(
         self,
         project_root: Path,
     ) -> list[MutationCandidate]:
-        """Detect supported literal seed calls."""
+        """Detect supported literal seed calls.
+
+        Args:
+            project_root: Root directory of the project to inspect.
+
+        Returns:
+            Candidates ordered by target path and source line.
+
+        Raises:
+            ValueError: ``python_file`` is absolute or outside the project.
+            FileNotFoundError: The requested ``python_file`` does not exist.
+        """
 
         project_root = project_root.resolve()
         candidates: list[MutationCandidate] = []
@@ -116,7 +137,17 @@ class ChangePythonRandomSeedOperator(MutationOperator):
         project_root: Path,
         candidate: MutationCandidate,
     ) -> None:
-        """Apply a detected seed mutation."""
+        """Apply a detected seed mutation.
+
+        Args:
+            project_root: Root directory of the workspace to modify.
+            candidate: Candidate previously detected by this operator.
+
+        Raises:
+            ValueError: The candidate is incompatible or no longer matches.
+            TypeError: Required candidate metadata has an invalid type.
+            FileNotFoundError: The candidate target is not a file.
+        """
 
         if candidate.operator != self.name:
             raise ValueError(

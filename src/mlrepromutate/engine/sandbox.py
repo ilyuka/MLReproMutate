@@ -37,7 +37,21 @@ def normalize_sandbox_excludes(
 
 
 class ProjectSandbox:
-    """Create an isolated temporary copy of a project."""
+    """Create an isolated temporary copy of a project.
+
+    The context manager removes its temporary directory on exit. Development
+    directories and configured project-relative exclusions are not copied.
+
+    Args:
+        project_root: Project directory to copy.
+        excludes: Additional project-relative paths to omit.
+
+    Attributes:
+        project_root: Resolved source project directory.
+        excludes: Validated project-relative exclusions.
+        workspace: Active temporary project path, or ``None`` outside the
+            context.
+    """
 
     _IGNORED_NAMES = (
         ".git",

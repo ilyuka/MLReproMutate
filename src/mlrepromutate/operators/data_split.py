@@ -20,7 +20,15 @@ _IGNORED_DIRECTORIES = {
 
 
 class RemoveTrainTestSplitStratificationOperator(MutationOperator):
-    """Disable explicit stratification in sklearn train_test_split calls."""
+    """Replace explicit ``train_test_split`` stratification with ``None``.
+
+    Args:
+        python_file: Optional project-relative Python file to inspect. When
+            omitted, the operator searches Python files under the project.
+
+    Attributes:
+        python_file: Optional project-relative file restriction.
+    """
 
     def __init__(
         self,
@@ -30,17 +38,30 @@ class RemoveTrainTestSplitStratificationOperator(MutationOperator):
 
     @property
     def name(self) -> str:
+        """Return the unique operator name."""
         return "remove_train_test_split_stratification"
 
     @property
     def category(self) -> str:
+        """Return the ``data_splitting`` threat category."""
         return "data_splitting"
 
     def detect(
         self,
         project_root: Path,
     ) -> list[MutationCandidate]:
-        """Detect sklearn train_test_split calls with stratify enabled."""
+        """Detect supported ``train_test_split`` calls using stratification.
+
+        Args:
+            project_root: Root directory of the project to inspect.
+
+        Returns:
+            Candidates ordered by target path and source line.
+
+        Raises:
+            ValueError: ``python_file`` is absolute or outside the project.
+            FileNotFoundError: The requested ``python_file`` does not exist.
+        """
 
         project_root = project_root.resolve()
         candidates: list[MutationCandidate] = []
@@ -135,7 +156,17 @@ class RemoveTrainTestSplitStratificationOperator(MutationOperator):
         project_root: Path,
         candidate: MutationCandidate,
     ) -> None:
-        """Replace the detected stratify expression with None."""
+        """Replace the detected ``stratify`` expression with ``None``.
+
+        Args:
+            project_root: Root directory of the workspace to modify.
+            candidate: Candidate previously detected by this operator.
+
+        Raises:
+            ValueError: The candidate is incompatible or no longer matches.
+            TypeError: Required candidate metadata has an invalid type.
+            FileNotFoundError: The candidate target is not a file.
+        """
 
         if candidate.operator != self.name:
             raise ValueError(

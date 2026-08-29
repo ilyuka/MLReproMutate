@@ -17,11 +17,22 @@ from mlrepromutate.operators.base import MutationOperator
 
 
 class BaselineValidationError(RuntimeError):
-    """Raised when the unmodified project does not pass validation."""
+    """The unmodified project failed or timed out during validation."""
 
 
 class MutationEvaluator:
-    """Evaluate mutation candidates against project safeguards."""
+    """Evaluate mutation candidates against a project's safeguards.
+
+    Args:
+        runner: Runner for the project's validation command.
+        execution_mode: Workspace isolation mode.
+        sandbox_excludes: Project-relative paths omitted from sandbox copies.
+
+    Attributes:
+        runner: Runner used for baseline and mutation validation.
+        execution_mode: Workspace isolation mode.
+        sandbox_excludes: Normalized tuple of sandbox exclusions.
+    """
 
     def __init__(
         self,
@@ -38,7 +49,19 @@ class MutationEvaluator:
         self,
         project_root: Path,
     ) -> ExecutionResult:
-        """Validate the unmodified project once."""
+        """Validate the unmodified project once.
+
+        Args:
+            project_root: Root directory of the project to validate.
+
+        Returns:
+            Successful baseline execution result.
+
+        Raises:
+            BaselineValidationError: Baseline validation fails or times out.
+            FileNotFoundError: ``project_root`` does not exist.
+            NotADirectoryError: ``project_root`` is not a directory.
+        """
 
         with ProjectWorkspace(
             project_root,
@@ -70,7 +93,18 @@ class MutationEvaluator:
         operator: MutationOperator,
         candidate: MutationCandidate,
     ) -> MutationResult:
-        """Evaluate one mutation after a successful baseline."""
+        """Evaluate one mutation after a successful baseline.
+
+        This method assumes baseline validation has already succeeded.
+
+        Args:
+            project_root: Root directory of the project to evaluate.
+            operator: Operator that detected and applies the candidate.
+            candidate: Candidate to apply and validate.
+
+        Returns:
+            Mutation result classified from the validation execution.
+        """
 
         with MutationWorkspace(
             project_root,
@@ -119,7 +153,19 @@ class MutationEvaluator:
         operator: MutationOperator,
         candidate: MutationCandidate,
     ) -> MutationResult:
-        """Validate the baseline and evaluate one mutation."""
+        """Validate the baseline and evaluate one mutation.
+
+        Args:
+            project_root: Root directory of the project to evaluate.
+            operator: Operator that detected and applies the candidate.
+            candidate: Candidate to apply and validate.
+
+        Returns:
+            Mutation result produced after a successful baseline.
+
+        Raises:
+            BaselineValidationError: Baseline validation fails or times out.
+        """
 
         self.validate_baseline(project_root)
 
@@ -130,6 +176,10 @@ class MutationEvaluator:
         )
 
     def run_metadata(self) -> dict[str, Any]:
-        """Return evaluator-specific run provenance."""
+        """Return evaluator-specific run provenance.
+
+        Returns:
+            Metadata to include in a run report.
+        """
 
         return {}

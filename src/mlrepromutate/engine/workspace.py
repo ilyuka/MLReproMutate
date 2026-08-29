@@ -9,14 +9,31 @@ from mlrepromutate.models import MutationCandidate
 
 
 class ExecutionMode(StrEnum):
-    """Supported project execution isolation modes."""
+    """Supported project execution isolation modes.
+
+    Attributes:
+        SANDBOX: Execute in a temporary project copy.
+        IN_PLACE: Execute in the supplied project directory.
+    """
 
     SANDBOX = "sandbox"
     IN_PLACE = "in-place"
 
 
 class ProjectWorkspace(AbstractContextManager[Path]):
-    """Provide a project workspace for baseline validation."""
+    """Provide a project workspace for baseline validation.
+
+    Args:
+        project_root: Project directory to expose through the context manager.
+        mode: Whether to create a sandbox or use the project in place.
+        excludes: Project-relative paths omitted from a sandbox copy.
+
+    Attributes:
+        project_root: Resolved source project directory.
+        mode: Selected execution mode.
+        excludes: Paths omitted from sandbox copies.
+        workspace: Active workspace path, or ``None`` outside the context.
+    """
 
     def __init__(
         self,
@@ -71,7 +88,25 @@ class ProjectWorkspace(AbstractContextManager[Path]):
 
 
 class MutationWorkspace(AbstractContextManager[Path]):
-    """Provide a workspace and restore in-place mutation targets."""
+    """Provide a mutation workspace and restore an in-place target.
+
+    In ``IN_PLACE`` mode, only the candidate target's original bytes are
+    restored. Side effects produced elsewhere by the validation command are
+    not reverted.
+
+    Args:
+        project_root: Project directory to expose through the context manager.
+        candidate: Candidate whose target may need restoration.
+        mode: Whether to create a sandbox or use the project in place.
+        excludes: Project-relative paths omitted from a sandbox copy.
+
+    Attributes:
+        project_root: Resolved source project directory.
+        candidate: Candidate associated with the workspace.
+        mode: Selected execution mode.
+        excludes: Paths omitted from sandbox copies.
+        workspace: Active workspace path, or ``None`` outside the context.
+    """
 
     def __init__(
         self,

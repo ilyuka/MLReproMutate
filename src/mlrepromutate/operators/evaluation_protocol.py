@@ -25,7 +25,15 @@ _IGNORED_DIRECTORIES = {
 
 
 class ChangeCrossValidationFoldCountOperator(MutationOperator):
-    """Increase an explicit cross-validation fold count by one."""
+    """Increase a supported literal cross-validation fold count by one.
+
+    Args:
+        python_file: Optional project-relative Python file to inspect. When
+            omitted, the operator searches Python files under the project.
+
+    Attributes:
+        python_file: Optional project-relative file restriction.
+    """
 
     def __init__(
         self,
@@ -35,17 +43,30 @@ class ChangeCrossValidationFoldCountOperator(MutationOperator):
 
     @property
     def name(self) -> str:
+        """Return the unique operator name."""
         return "change_cross_validation_fold_count"
 
     @property
     def category(self) -> str:
+        """Return the ``evaluation_protocol`` threat category."""
         return "evaluation_protocol"
 
     def detect(
         self,
         project_root: Path,
     ) -> list[MutationCandidate]:
-        """Detect supported CV splitters with literal n_splits values."""
+        """Detect supported CV splitters with literal ``n_splits`` values.
+
+        Args:
+            project_root: Root directory of the project to inspect.
+
+        Returns:
+            Candidates ordered by target path and source line.
+
+        Raises:
+            ValueError: ``python_file`` is absolute or outside the project.
+            FileNotFoundError: The requested ``python_file`` does not exist.
+        """
 
         project_root = project_root.resolve()
         candidates: list[MutationCandidate] = []
@@ -131,7 +152,17 @@ class ChangeCrossValidationFoldCountOperator(MutationOperator):
         project_root: Path,
         candidate: MutationCandidate,
     ) -> None:
-        """Apply a detected cross-validation fold-count mutation."""
+        """Apply a detected cross-validation fold-count mutation.
+
+        Args:
+            project_root: Root directory of the workspace to modify.
+            candidate: Candidate previously detected by this operator.
+
+        Raises:
+            ValueError: The candidate is incompatible or no longer matches.
+            TypeError: Required candidate metadata has an invalid type.
+            FileNotFoundError: The candidate target is not a file.
+        """
 
         if candidate.operator != self.name:
             raise ValueError(

@@ -14,7 +14,15 @@ _EXACT_PIN_PATTERN = re.compile(
 
 
 class RelaxRequirementsPinOperator(MutationOperator):
-    """Relax exact dependency pins in requirements files."""
+    """Relax exact requirements pins from ``==`` to ``>=``.
+
+    Args:
+        requirements_file: Optional project-relative requirements file. When
+            omitted, matching top-level ``requirements*.txt`` files are used.
+
+    Attributes:
+        requirements_file: Optional project-relative file restriction.
+    """
 
     def __init__(
         self,
@@ -24,13 +32,28 @@ class RelaxRequirementsPinOperator(MutationOperator):
 
     @property
     def name(self) -> str:
+        """Return the unique operator name."""
         return "relax_requirements_pin"
 
     @property
     def category(self) -> str:
+        """Return the ``dependency`` threat category."""
         return "dependency"
 
     def detect(self, project_root: Path) -> list[MutationCandidate]:
+        """Detect exact pins in supported requirements files.
+
+        Args:
+            project_root: Root directory of the project to inspect.
+
+        Returns:
+            Candidates in requirements-file and line order.
+
+        Raises:
+            ValueError: ``requirements_file`` is invalid or outside the
+                project.
+            FileNotFoundError: The requested requirements file does not exist.
+        """
         project_root = project_root.resolve()
         candidates: list[MutationCandidate] = []
 
@@ -112,6 +135,17 @@ class RelaxRequirementsPinOperator(MutationOperator):
         project_root: Path,
         candidate: MutationCandidate,
     ) -> None:
+        """Relax the exact pin represented by a detected candidate.
+
+        Args:
+            project_root: Root directory of the workspace to modify.
+            candidate: Candidate previously detected by this operator.
+
+        Raises:
+            ValueError: The candidate is incompatible or no longer matches.
+            TypeError: Required candidate metadata has an invalid type.
+            FileNotFoundError: The candidate target does not exist.
+        """
         if candidate.operator != self.name:
             raise ValueError(
                 f"Candidate belongs to operator {candidate.operator!r}, "

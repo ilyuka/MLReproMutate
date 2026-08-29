@@ -23,7 +23,14 @@ BaselinePassedCallback = Callable[[ExecutionResult], None]
 
 
 class MutationOrchestrator:
-    """Detect and evaluate mutations for a project."""
+    """Detect and evaluate mutations for a project.
+
+    Args:
+        evaluator: Evaluator used for baseline and candidate validation.
+
+    Attributes:
+        evaluator: Evaluator used by :meth:`run`.
+    """
 
     def __init__(self, evaluator: MutationEvaluator) -> None:
         self.evaluator = evaluator
@@ -38,7 +45,25 @@ class MutationOrchestrator:
         on_candidate_start: CandidateStartCallback | None = None,
         on_candidate_result: CandidateResultCallback | None = None,
     ) -> list[MutationResult]:
-        """Detect and evaluate selected mutation candidates."""
+        """Detect and evaluate selected mutation candidates.
+
+        The baseline is validated once before any selected candidate. No
+        validation is performed when the selected candidate list is empty.
+
+        Args:
+            project_root: Root directory of the project to evaluate.
+            operator: Operator used to detect and apply candidates.
+            candidates: Explicit candidates, or ``None`` to run detection.
+            on_baseline_passed: Callback receiving the baseline result.
+            on_candidate_start: Callback invoked before each candidate.
+            on_candidate_result: Callback invoked after each candidate.
+
+        Returns:
+            Results in candidate evaluation order.
+
+        Raises:
+            BaselineValidationError: Baseline validation fails or times out.
+        """
 
         if candidates is None:
             selected_candidates = list(operator.detect(project_root))
