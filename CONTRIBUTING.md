@@ -1,6 +1,6 @@
 # Contributing to MLReproMutate
 
-MLReproMutate is an early-stage research software project.
+MLReproMutate is an open-source research software project.
 
 Contributions, bug reports, research use cases, documentation improvements,
 and suggestions for reproducibility mutation operators are welcome.
@@ -27,10 +27,10 @@ Feedback is especially useful when it concerns:
 
 ## Development setup
 
-The development workflow will use a standard Python environment.
+The development workflow uses a standard Python environment.
 
 ```bash
-git clone git@github.com:ilyuka/MLReproMutate.git
+git clone https://github.com/ilyuka/MLReproMutate.git
 cd MLReproMutate
 python -m venv .venv
 source .venv/bin/activate
