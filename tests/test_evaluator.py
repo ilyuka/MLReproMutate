@@ -296,3 +296,64 @@ def test_evaluator_in_place_restores_target_after_timeout(
 
     assert result.outcome.value == "timeout"
     assert requirements.read_bytes() == original
+
+
+def test_sandbox_uses_mutated_src_tree_over_external_pythonpath(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from mlrepromutate.operators.randomness import (
+        ChangePythonRandomSeedOperator,
+    )
+
+    project = tmp_path / "project"
+    package = project / "src" / "sample_project"
+    package.mkdir(parents=True)
+
+    (package / "__init__.py").write_text(
+        "",
+        encoding="utf-8",
+    )
+
+    experiment = package / "experiment.py"
+    experiment.write_text(
+        "import random\n"
+        "\n"
+        "random.seed(42)\n"
+        "VALUE = random.random()\n",
+        encoding="utf-8",
+    )
+
+    (project / "validate.py").write_text(
+        "from sample_project.experiment import VALUE\n"
+        "\n"
+        "EXPECTED = 0.6394267984578837\n"
+        "raise SystemExit(0 if VALUE == EXPECTED else 1)\n",
+        encoding="utf-8",
+    )
+
+    # Simulate an editable-installed src-layout project whose original
+    # source tree is already visible to the validation interpreter.
+    monkeypatch.setenv(
+        "PYTHONPATH",
+        str(project / "src"),
+    )
+
+    operator = ChangePythonRandomSeedOperator(
+        python_file=Path("src/sample_project/experiment.py"),
+    )
+    candidate = operator.detect(project)[0]
+
+    evaluator = MutationEvaluator(
+        ExperimentRunner(
+            [sys.executable, "validate.py"],
+        ),
+    )
+
+    result = evaluator.evaluate(
+        project,
+        operator,
+        candidate,
+    )
+
+    assert result.outcome is MutationOutcome.KILLED

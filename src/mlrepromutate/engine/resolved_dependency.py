@@ -89,7 +89,10 @@ class ResolvedDependencyEvaluator(MutationEvaluator):
                 resolution.python_executable
             )
 
-            result = resolved_runner.run(sandbox)
+            result = resolved_runner.run(
+                sandbox,
+                prefer_project_sources=True,
+            )
 
         if result.timed_out:
             raise BaselineValidationError(
@@ -257,7 +260,10 @@ class ResolvedDependencyEvaluator(MutationEvaluator):
                 resolution.python_executable
             )
 
-            validation = resolved_runner.run(sandbox)
+            validation = resolved_runner.run(
+                sandbox,
+                prefer_project_sources=True,
+            )
 
         metadata = {
             "dependency_mode": "resolved",

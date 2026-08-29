@@ -1,3 +1,4 @@
+import os
 import shutil
 import subprocess
 import time
@@ -71,7 +72,12 @@ class ExperimentRunner:
         self.command = resolve_command_executable(command)
         self.timeout_seconds = timeout_seconds
 
-    def run(self, project_root: Path) -> ExecutionResult:
+    def run(
+        self,
+        project_root: Path,
+        *,
+        prefer_project_sources: bool = False,
+    ) -> ExecutionResult:
         """Execute the configured command in the given project directory."""
 
         project_root = project_root.resolve()
@@ -86,12 +92,31 @@ class ExperimentRunner:
                 f"Project root is not a directory: {project_root}"
             )
 
+        environment: dict[str, str] | None = None
+
+        if prefer_project_sources:
+            environment = os.environ.copy()
+            python_paths: list[str] = []
+
+            src_path = project_root / "src"
+            if src_path.is_dir():
+                python_paths.append(str(src_path))
+
+            python_paths.append(str(project_root))
+
+            inherited_python_path = environment.get("PYTHONPATH")
+            if inherited_python_path:
+                python_paths.append(inherited_python_path)
+
+            environment["PYTHONPATH"] = os.pathsep.join(python_paths)
+
         start_time = time.monotonic()
 
         try:
             completed = subprocess.run(
                 self.command,
                 cwd=project_root,
+                env=environment,
                 stdin=subprocess.DEVNULL,
                 capture_output=True,
                 text=True,
