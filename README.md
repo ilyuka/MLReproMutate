@@ -1,5 +1,10 @@
 # MLReproMutate
 
+[![CI](https://github.com/ilyuka/MLReproMutate/actions/workflows/ci.yml/badge.svg)](https://github.com/ilyuka/MLReproMutate/actions/workflows/ci.yml)
+[![PyPI version](https://img.shields.io/pypi/v/mlrepromutate.svg)](https://pypi.org/project/mlrepromutate/)
+[![Python versions](https://img.shields.io/pypi/pyversions/mlrepromutate.svg)](https://pypi.org/project/mlrepromutate/)
+
+
 MLReproMutate is research software for mutation testing of
 reproducibility-relevant safeguards in machine-learning research software.
 
