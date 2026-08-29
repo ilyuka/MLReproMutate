@@ -1,0 +1,69 @@
+name: Usability / research feedback
+description: Share experience applying MLReproMutate to a real workflow or repository
+title: "[Feedback]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Feedback from real research and software workflows is especially useful.
+        You do not need to have found a bug.
+
+  - type: dropdown
+    id: use_case
+    attributes:
+      label: What did you use MLReproMutate for?
+      options:
+        - Research repository
+        - Software testing
+        - Reproducibility evaluation
+        - Teaching or demonstration
+        - Initial usability evaluation
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: operator
+    attributes:
+      label: Mutation operator
+      multiple: true
+      options:
+        - random-seed
+        - dependency-pin
+        - data-split
+        - cv-fold-count
+        - Not operator-specific
+    validations:
+      required: true
+
+  - type: textarea
+    id: workflow
+    attributes:
+      label: Workflow or repository
+      description: |
+        Briefly describe what you tested. A public repository link is welcome
+        but not required.
+    validations:
+      required: true
+
+  - type: textarea
+    id: experience
+    attributes:
+      label: What happened?
+      description: |
+        What worked well, what was confusing, or what prevented you from using
+        the software as intended?
+    validations:
+      required: true
+
+  - type: textarea
+    id: docs
+    attributes:
+      label: Documentation feedback
+      description: Was anything missing or difficult to understand?
+
+  - type: textarea
+    id: suggestions
+    attributes:
+      label: Suggestions
+      description: Optional ideas for improving the software or workflow.
