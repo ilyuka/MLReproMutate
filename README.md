@@ -296,6 +296,7 @@ User documentation:
 - [Quick start](docs/quickstart.md)
 - [Command-line interface](docs/cli.md)
 - [Python API](docs/api.md)
+- [Development and maintenance](docs/development.md)
 - [Examples](examples/README.md)
 
 Research and design materials:
