@@ -5,6 +5,22 @@ All notable changes to MLReproMutate will be documented in this file.
 MLReproMutate is currently pre-1.0 software; its public API may change between
 releases.
 
+## [0.1.4] - 2026-08-30
+
+### Documentation
+
+- Expand Python API documentation with direct usage examples for supported
+  public interfaces ahead of software peer review.
+
+
+## [0.1.3] - 2026-08-29
+
+### Changed
+
+- Add package-author contact metadata.
+- Add CI, PyPI version, and supported-Python-version badges to the README.
+
+
 ## [0.1.2] - 2026-08-29
 
 ### Fixed
