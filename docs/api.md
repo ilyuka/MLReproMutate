@@ -55,6 +55,35 @@ A frozen data class containing the evaluated `candidate`, its `outcome`, and
 optional `duration_seconds`, explanatory `reason`, and evaluation-specific
 `metadata`.
 
+Operators normally construct candidates and evaluators construct results, but
+the objects can also be constructed and consumed directly. For example:
+
+```python
+from pathlib import Path
+
+from mlrepromutate.models import (
+    MutationCandidate,
+    MutationOutcome,
+    MutationResult,
+)
+
+candidate = MutationCandidate(
+    operator="relax_requirements_pin",
+    category="dependency",
+    target=Path("requirements.txt"),
+    description="Relax exact dependency pin for numpy from ==2.0.0 to >=2.0.0.",
+    metadata={"package": "numpy", "version": "2.0.0", "line_number": 1},
+)
+result = MutationResult(
+    candidate=candidate,
+    outcome=MutationOutcome.SURVIVED,
+    duration_seconds=0.42,
+    reason="Existing safeguards completed successfully.",
+)
+
+print(result.candidate.target, result.outcome.value)
+```
+
 ## Mutation operator interface
 
 Import the extension interface from the operators package:
@@ -128,6 +157,55 @@ Concrete operators are imported from their implementation modules:
   scikit-learn cross-validation splitters. Its optional `python_file` argument
   restricts detection to one project-relative file.
 
+The built-in operators return the same `MutationCandidate` objects described
+above. These examples inspect the repository's small demonstration projects:
+
+```python
+from pathlib import Path
+
+from mlrepromutate.operators.dependency import RelaxRequirementsPinOperator
+
+project_root = Path("examples/dependency-pin")
+operator = RelaxRequirementsPinOperator(
+    requirements_file=Path("requirements.txt")
+)
+for candidate in operator.detect(project_root):
+    print(candidate.target, candidate.metadata["package"])
+```
+
+```python
+from pathlib import Path
+
+from mlrepromutate.operators.data_split import (
+    RemoveTrainTestSplitStratificationOperator,
+)
+from mlrepromutate.operators.evaluation_protocol import (
+    ChangeCrossValidationFoldCountOperator,
+)
+
+operator_projects = [
+    (
+        RemoveTrainTestSplitStratificationOperator(
+            python_file=Path("experiment.py")
+        ),
+        Path("examples/data-split"),
+    ),
+    (
+        ChangeCrossValidationFoldCountOperator(
+            python_file=Path("experiment.py")
+        ),
+        Path("examples/evaluation-protocol"),
+    ),
+]
+
+for operator, project_root in operator_projects:
+    candidates = operator.detect(project_root)
+    print(operator.name, candidates[0].description)
+```
+
+Call `operator.apply(workspace, candidate)` only in a sandbox or mutation
+workspace, as shown below; it modifies the candidate target in that workspace.
+
 ## Execution API
 
 The execution layer is exported from `mlrepromutate.engine`:
@@ -162,6 +240,98 @@ from mlrepromutate.engine import (
 Evaluation is baseline-first: mutation outcomes are interpreted only after the
 unmodified project passes the same validation command. The orchestrator runs
 that baseline once before evaluating a non-empty candidate list.
+
+### Running a validation command
+
+`ExperimentRunner.run()` executes in the supplied directory. Its
+`ExecutionResult` makes the resolved command and all captured process details
+available to the caller:
+
+```python
+from pathlib import Path
+
+from mlrepromutate.engine import ExperimentRunner
+
+project_root = Path("examples/random-seed")
+runner = ExperimentRunner(
+    ["python", "validate_guarded.py"],
+    timeout_seconds=30.0,
+)
+execution = runner.run(project_root)
+
+print(execution.command)
+print(execution.return_code, execution.timed_out)
+print(execution.stdout, execution.stderr)
+print(f"{execution.duration_seconds:.3f} seconds")
+
+# Make a new runner for the same Python command and timeout.
+venv_runner = runner.with_python_executable(
+    project_root / ".venv" / "bin" / "python"
+)
+```
+
+`with_python_executable()` constructs a new runner; it does not check or run
+the supplied executable until `run()` is called. It raises `ValueError` when
+the configured command is not a Python command.
+
+### Evaluating candidates
+
+`validate_baseline()` runs only the unmodified workflow.
+`evaluate_mutation()` assumes that baseline validation has already succeeded,
+whereas `evaluate()` performs both steps for one candidate. `run_metadata()`
+returns evaluator-specific report provenance; the standard evaluator currently
+returns an empty dictionary.
+
+```python
+from pathlib import Path
+
+from mlrepromutate.engine import ExecutionMode, ExperimentRunner, MutationEvaluator
+from mlrepromutate.operators.randomness import ChangePythonRandomSeedOperator
+
+project_root = Path("examples/random-seed")
+operator = ChangePythonRandomSeedOperator(python_file=Path("experiment.py"))
+candidate = operator.detect(project_root)[0]
+evaluator = MutationEvaluator(
+    ExperimentRunner(["python", "validate_guarded.py"]),
+    ExecutionMode.SANDBOX,
+)
+
+baseline = evaluator.validate_baseline(project_root)
+result = evaluator.evaluate_mutation(project_root, operator, candidate)
+print(baseline.return_code, result.outcome.value)
+
+# For a standalone candidate, this combines baseline and mutation evaluation.
+result_with_baseline = evaluator.evaluate(project_root, operator, candidate)
+print(result_with_baseline.reason)
+print(evaluator.run_metadata())  # {}
+```
+
+Command resolution and baseline failures can be handled through the exported
+exceptions. A `CommandResolutionError` is possible while constructing a runner
+if neither requested Python alias is available on `PATH`:
+
+```python
+from pathlib import Path
+
+from mlrepromutate.engine import (
+    BaselineValidationError,
+    CommandResolutionError,
+    ExperimentRunner,
+    MutationEvaluator,
+)
+
+try:
+    runner = ExperimentRunner(["python", "-c", "raise SystemExit(1)"])
+except CommandResolutionError as error:
+    print(f"Python command unavailable: {error}")
+else:
+    try:
+        MutationEvaluator(runner).validate_baseline(Path("examples/random-seed"))
+    except BaselineValidationError as error:
+        print(f"Baseline rejected: {error}")
+```
+
+### Orchestrating all detected candidates
 
 For example:
 
@@ -215,6 +385,58 @@ limited to the mutation target: arbitrary files or other side effects created
 or changed by the validation command are not reverted. Use in-place execution
 only in a disposable or version-controlled workspace where those side effects
 are safe.
+
+Use `ProjectSandbox` directly when an isolated copy is all that is needed, or
+`ProjectWorkspace` when the execution mode is selected dynamically:
+
+```python
+from pathlib import Path
+
+from mlrepromutate.engine import ExecutionMode, ProjectSandbox, ProjectWorkspace
+
+project_root = Path("examples/random-seed")
+
+with ProjectSandbox(project_root) as sandbox:
+    assert sandbox != project_root.resolve()
+    # Writes below sandbox affect only the temporary copy.
+
+with ProjectWorkspace(project_root, ExecutionMode.SANDBOX) as workspace:
+    assert (workspace / "experiment.py").is_file()
+# Each temporary copy is removed when its context exits.
+```
+
+`MutationWorkspace` additionally restores the mutation target in
+`IN_PLACE` mode, even if the context exits because of an exception. The
+following example is safe for the checked-in demonstration because it verifies
+the target's bytes after restoration:
+
+```python
+from pathlib import Path
+
+from mlrepromutate.engine import ExecutionMode, MutationWorkspace
+from mlrepromutate.operators.randomness import ChangePythonRandomSeedOperator
+
+project_root = Path("examples/random-seed")
+operator = ChangePythonRandomSeedOperator(python_file=Path("experiment.py"))
+candidate = operator.detect(project_root)[0]
+target = project_root / candidate.target
+original_bytes = target.read_bytes()
+
+with MutationWorkspace(
+    project_root,
+    candidate,
+    ExecutionMode.IN_PLACE,
+) as workspace:
+    operator.apply(workspace, candidate)
+    assert target.read_bytes() != original_bytes
+
+assert target.read_bytes() == original_bytes
+```
+
+Only `candidate.target` is restored in this mode. If a validation command
+creates or changes any other file, environment, service, or external resource,
+those side effects remain; use `SANDBOX` unless such effects are known to be
+safe.
 
 ## Stability
 
