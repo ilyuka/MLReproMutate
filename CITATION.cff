@@ -8,7 +8,7 @@ authors:
     orcid: "https://orcid.org/0009-0001-1348-9576"
 version: 0.1.4
 date-released: 2026-08-30
-doi: "10.5281/zenodo.22126119"
+doi: "10.5281/zenodo.22172133"
 repository-code: "https://github.com/ilyuka/MLReproMutate"
 url: "https://github.com/ilyuka/MLReproMutate"
 license: MIT
